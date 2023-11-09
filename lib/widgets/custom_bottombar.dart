@@ -7,9 +7,14 @@ import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+  final int bottomNavIndex;
+  final Function(int index)? onChanged;
 
-  Function(BottomBarEnum)? onChanged;
+  CustomBottomBar({Key? key, required this.bottomNavIndex, this.onChanged})
+      : super(key: key);
+  // CustomBottomBar({this.onChanged});
+
+  // Function(BottomBarEnum)? onChanged;
 
   @override
   CustomBottomBarState createState() => CustomBottomBarState();
@@ -18,7 +23,14 @@ class CustomBottomBar extends StatefulWidget {
 class CustomBottomBarState extends State<CustomBottomBar> {
   int selectedIndex = 0;
 
-  List<BottomMenuModel> bottomMenuList = [
+  @override
+  void initState() {
+    selectedIndex = widget.bottomNavIndex;
+
+    super.initState();
+  }
+
+  static List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
       icon: IconConstant.icHome,
       activeIcon: IconConstant.icHomeSelected,
@@ -115,7 +127,9 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           }),
           onTap: (index) {
             selectedIndex = index;
-            widget.onChanged?.call(bottomMenuList[index].type);
+            print('custom_bottombar ontap function index: ${index}');
+
+            widget.onChanged?.call(index);
             setState(() {});
           },
         ),

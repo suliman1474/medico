@@ -1,66 +1,105 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-//
-// import '../screens/main_page.dart';
-//
-// class ScreenController extends GetxController {
-//   var pages = <Widget>[].obs;
-//   var stack = <Widget>[].obs;
-//   @override
-//   void onInit() async {
-//     // Initialize your pages here, you can fetch them from your API or wherever you need.
-//     await assignAll();
-//     stack.assignAll([const MainPage()]);
-//     super.onInit();
-//   }
-//
-//   Future? assignAll() {
-//     pages.assignAll([
-//       const MainPage(),
-//       const MainPage(),
-//       const MainPage(),
-//       const MainPage(),
-//     ]);
-//     update();
-//     return null;
-//   }
-//
-//   void updatePageAtIndex(int index, Widget newPage) async {
-//     if (index >= 0 && index < pages.length) {
-//       await pushPage(pages[index]);
-//       pages[index] = newPage;
-//     }
-//   }
-//
-//   Future pushPage(Widget page) async {
-//     stack.add(page);
-//     print('page added to stack');
-//     update();
-//   }
-//
-//   Future popPage() async {
-//     print('poping stack last');
-//     stack.removeLast();
-//     update();
-//   }
-//
-//   void popUntil(int atScreen, int remainingStack) {
-//     while (stack.length != remainingStack) {
-//       print('loop of popUntil');
-//       updateStack(atScreen);
-//     }
-//   }
-//
-//   void updateStack(index) async {
-//     //await popPage();
-//     if (stack.isNotEmpty) {
-//       print('stack not empty');
-//       pages[index] = stack.last;
-//       await popPage();
-//     } else {
-//       print('stack is empty');
-//       assignAll();
-//     }
-//   }
-// }
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+
+import '../screens/home/about_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/home/news_feed_screen.dart';
+import '../screens/home/profile_screen.dart';
+
+enum AppPage {
+  HomeScreen,
+  NewsFeedScreen,
+  AboutScreen,
+  ProfileScreen,
+}
+
+extension AppPageExtension on AppPage {
+  int get index {
+    switch (this) {
+      case AppPage.HomeScreen:
+        return 0;
+      case AppPage.NewsFeedScreen:
+        return 1;
+      case AppPage.AboutScreen:
+        return 2;
+      case AppPage.ProfileScreen:
+        return 3;
+      default:
+        return -1;
+    }
+  }
+}
+
+class ScreenController extends GetxController {
+  var pages = <Widget>[].obs;
+  var stack = <Widget>[].obs;
+  @override
+  void onInit() async {
+    // Initialize your pages here, you can fetch them from your API or wherever you need.
+    await assignAll();
+    stack.assignAll([HomeScreen()]);
+    super.onInit();
+  }
+
+  Future? assignAll() {
+    pages.assignAll([
+      const HomeScreen(),
+      const NewsFeedScreen(),
+      const AboutScreen(),
+      const ProfileScreen(),
+    ]);
+    update();
+    return null;
+  }
+
+  void updatePageAt(AppPage pageEnum, Widget newPage) async {
+    int index = pageEnum.index;
+    // int index = pages.indexWhere((page) {
+    //   print('index pageenum name: ${pageEnum}');
+    //   print('index page key : ${page.key}');
+    //   print('index where pageEnum: ${AppPage}');
+    //   if (page.key == pageEnum.index) {
+    //     print('where page meeets');
+    //     return true;
+    //   }
+    //   return false;
+    // });
+    print('index in update page at: ${index}');
+    if (index >= 0 && index < pages.length) {
+      await pushPage(pages[index]);
+      pages[index] = newPage;
+    }
+  }
+
+  Future pushPage(Widget page) async {
+    stack.add(page);
+    print('page added to stack');
+    update();
+  }
+
+  Future popPage() async {
+    print('poping stack last');
+    stack.removeLast();
+    update();
+  }
+
+  void popUntil(AppPage atScreen, int remainingStack) {
+    while (stack.length != remainingStack) {
+      print('loop of popUntil');
+      goBackAt(atScreen);
+    }
+  }
+
+  void goBackAt(AppPage pageEnum) async {
+    //await popPage();
+    int index = pageEnum.index;
+    if (stack.isNotEmpty) {
+      print('stack not empty');
+      pages[index] = stack.last;
+      await popPage();
+    } else {
+      print('stack is empty');
+      assignAll();
+    }
+  }
+}

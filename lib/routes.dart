@@ -2,22 +2,22 @@
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:medico/screens/about.dart';
-import 'package:medico/screens/home.dart';
-import 'package:medico/screens/navigation.dart';
-import 'package:medico/screens/news_feed.dart';
-import 'package:medico/screens/profile.dart';
+import 'package:medico/screens/home/about_screen.dart';
+import 'package:medico/screens/home/home_screen.dart';
+import 'package:medico/screens/home/main_page.dart';
+import 'package:medico/screens/home/news_feed_screen.dart';
+import 'package:medico/screens/home/profile_screen.dart';
 
 Routes() => [
       GetPage(
         name: '/',
-        page: () => const Navigation(),
+        page: () => const MainPage(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),
       GetPage(
         name: '/home',
-        page: () => const HomeScreen(),
+        page: () => HomeScreen(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),

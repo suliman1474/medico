@@ -105,8 +105,10 @@ class CustomImageView extends StatelessWidget {
           svgPath!,
           height: height,
           width: width,
+          colorFilter: ColorFilter.mode(
+              color!, BlendMode.srcIn), // color is deprecated used this one
+          // color: color,
           fit: fit ?? BoxFit.contain,
-          color: color,
         ),
       );
     } else if (file != null && file!.path.isNotEmpty) {

@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:medico/core/colors.dart';
-import 'package:medico/core/text_theme.dart';
 import 'package:medico/routes.dart';
 
 import 'binding.dart';
+import 'core/text_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
