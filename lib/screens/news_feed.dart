@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medico/core/text_theme.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class NewsFeedScreen extends StatelessWidget {
+  const NewsFeedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Container(
           child: Text(
-            'Home',
+            'newsfeed',
             style: customTexttheme.titleLarge,
           ),
         ),
