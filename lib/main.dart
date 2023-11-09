@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:medico/core/colors.dart';
+import 'package:medico/core/text_theme.dart';
 import 'package:medico/routes.dart';
 
 import 'binding.dart';
@@ -15,7 +15,7 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: lavendar));
+        SystemUiOverlayStyle(statusBarColor: color1));
 
     runApp(DevicePreview(
       enabled: !kReleaseMode,
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(1280, 720),
+      designSize: const Size(424, 917),
       minTextAdapt: true,
       builder: (_, child) {
         return GetMaterialApp(
@@ -41,9 +41,8 @@ class MyApp extends StatelessWidget {
           title: 'Medico',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            textTheme: GoogleFonts.signikaNegativeTextTheme(
-                Theme.of(context).textTheme),
-            colorScheme: ColorScheme.fromSeed(seedColor: themePurple),
+            textTheme: customTexttheme.apply(fontSizeFactor: 1.sp),
+            colorScheme: ColorScheme.fromSeed(seedColor: white),
             useMaterial3: true,
           ),
           initialBinding: Binding(),
