@@ -63,6 +63,7 @@ class CustomImageView extends StatelessWidget {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: InkWell(
+        splashFactory: NoSplash.splashFactory,
         onTap: onTap,
         child: _buildCircleImage(),
       ),

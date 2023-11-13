@@ -21,13 +21,17 @@ class _HomeScreenState extends State<HomeScreen> {
     print('home screen called');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Screen 1'),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Home Screen 1 main',
+          style: customTexttheme.titleLarge,
+        ),
       ),
       body: Center(
         child: GestureDetector(
           onTap: () {
             print('should go to another page');
-            screenController.updatePageAt(AppPage.HomeScreen, Home2());
+            screenController.updatePageAt(AppPage.HomeScreen, Home2()); //Get.to
           },
           child: Container(
             child: Text(

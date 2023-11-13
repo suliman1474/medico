@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medico/core/app_export.dart';
@@ -61,77 +59,90 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        height: 93.h,
+        height: 100.h,
         width: 424.w,
         decoration: BoxDecoration(
           color: color1,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
         ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          elevation: 0,
-          currentIndex: selectedIndex,
-          type: BottomNavigationBarType.fixed,
-          items: List.generate(bottomMenuList.length, (index) {
-            return BottomNavigationBarItem(
-              icon: Column(
-                children: [
-                  CustomImageView(
-                    svgPath: bottomMenuList[index].icon,
-                    height: 20.h,
-                    width: 20.h,
-                    margin: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                    color: offwhite,
-                  ),
-                  Text(
-                    bottomMenuList[index].title ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    style: customTexttheme.labelSmall,
-                  ),
-                ],
-              ),
-              activeIcon: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  CustomImageView(
-                    svgPath: bottomMenuList[index].activeIcon,
-                    height: 20.h,
-                    width: 20.h,
-                    color: white,
-                    margin: const EdgeInsets.only(bottom: 5).h,
-                  ),
-                  Text(
-                    bottomMenuList[index].title ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    style: customTexttheme.labelSmall!.copyWith(color: white),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5).h,
-                    height: 3.h,
-                    width: 5.h,
-                    decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(10).w,
+        child: Theme(
+          data: ThemeData(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.transparent,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            elevation: 0,
+            currentIndex: selectedIndex,
+            type: BottomNavigationBarType.fixed,
+            items: List.generate(bottomMenuList.length, (index) {
+              return BottomNavigationBarItem(
+                icon: Column(
+                  children: [
+                    CustomImageView(
+                      svgPath: bottomMenuList[index].icon,
+                      height: 20.h,
+                      width: 20.h,
+                      margin: EdgeInsets.only(bottom: 5.h),
+                      color: offwhite,
                     ),
-                  )
-                ],
-              ),
-              label: '',
-            );
-          }),
-          onTap: (index) {
-            selectedIndex = index;
-            print('custom_bottombar ontap function index: ${index}');
+                    Container(
+                      height: 18.h,
+                      child: Text(
+                        bottomMenuList[index].title ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: customTexttheme.labelSmall,
+                      ),
+                    ),
+                  ],
+                ),
+                activeIcon: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CustomImageView(
+                      svgPath: bottomMenuList[index].activeIcon,
+                      height: 20.h,
+                      width: 30.h,
+                      color: white,
+                      margin: EdgeInsets.only(bottom: 5.h),
+                    ),
+                    Container(
+                      height: 18.h,
+                      child: Text(
+                        bottomMenuList[index].title ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: customTexttheme.labelSmall!
+                            .copyWith(color: white, fontSize: 12.sp),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 5.h),
+                      height: 3.h,
+                      width: 5.h,
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10).r,
+                      ),
+                    )
+                  ],
+                ),
+                label: '',
+              );
+            }),
+            onTap: (index) {
+              selectedIndex = index;
+              print('custom_bottombar ontap function index: ${index}');
 
-            widget.onChanged?.call(index);
-            setState(() {});
-          },
+              widget.onChanged?.call(index);
+              setState(() {});
+            },
+          ),
         ),
       ),
     );

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1038885316501",
+    "project_id": "medico-3e595",
+    "storage_bucket": "medico-3e595.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038885316501:android:08d115e4d0b5e777caf89c",
+        "android_client_info": {
+          "package_name": "com.example.medico"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038885316501-nc87gk6halnmdc0gh1cpitov3q0nudo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medico",
+            "certificate_hash": "f6b3adf3a352a48a9b0f893dae3af1b11fd372a4"
+          }
+        },
+        {
+          "client_id": "1038885316501-bbpiea3v14b7nhn0vd4i0cbsvlremdej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV1PyzmLBmsGJMCmRdD4su8lX8GCkwrD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038885316501-bbpiea3v14b7nhn0vd4i0cbsvlremdej.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1038885316501-oc8bgtqgb2bjr84tb0dmr7g2h1sl98ob.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.medico"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
