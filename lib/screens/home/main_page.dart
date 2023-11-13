@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/screens/home/about_screen.dart';
@@ -32,16 +33,24 @@ class _MainPageState extends State<MainPage> {
         body: Obx(() {
           return screenController.pages[_bottomNavIndex];
         }),
-        bottomNavigationBar: CustomBottomBar(
-            bottomNavIndex: _bottomNavIndex,
-            onChanged: (index) {
-              print('main_page onchanged function called index: ${index}');
-              if (index == _bottomNavIndex) {
-                screenController.assignAll();
-              } else {
-                setState(() => _bottomNavIndex = index);
-              }
-            }),
+        bottomNavigationBar: Container(
+          height: 93.h,
+          width: 424.w,
+          decoration: BoxDecoration(
+            color: color1,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+          ),
+          child: CustomBottomBar(
+              bottomNavIndex: _bottomNavIndex,
+              onChanged: (index) {
+                print('main_page onchanged function called index: ${index}');
+                if (index == _bottomNavIndex) {
+                  screenController.assignAll();
+                } else {
+                  setState(() => _bottomNavIndex = index);
+                }
+              }),
+        ),
       ),
     );
   }

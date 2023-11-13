@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:medico/screens/home/profile_screen.dart';
 
 import '../screens/home/about_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/news_feed_screen.dart';
+import '../screens/home/profile_screen.dart';
 
 enum AppPage {
   HomeScreen,
@@ -47,7 +47,6 @@ class ScreenController extends GetxController {
       const NewsFeedScreen(),
       const AboutScreen(),
       const ProfileScreen(),
-      //const ProfileScreen(),
     ]);
     update();
     return null;
@@ -65,7 +64,7 @@ class ScreenController extends GetxController {
     //   }
     //   return false;
     // });
-
+    print('index in update page at: ${index}');
     if (index >= 0 && index < pages.length) {
       await pushPage(pages[index]);
       pages[index] = newPage;
@@ -74,17 +73,19 @@ class ScreenController extends GetxController {
 
   Future pushPage(Widget page) async {
     stack.add(page);
-
+    print('page added to stack');
     update();
   }
 
   Future popPage() async {
+    print('poping stack last');
     stack.removeLast();
     update();
   }
 
   void popUntil(AppPage atScreen, int remainingStack) {
     while (stack.length != remainingStack) {
+      print('loop of popUntil');
       goBackAt(atScreen);
     }
   }
@@ -93,9 +94,11 @@ class ScreenController extends GetxController {
     //await popPage();
     int index = pageEnum.index;
     if (stack.isNotEmpty) {
+      print('stack not empty');
       pages[index] = stack.last;
       await popPage();
     } else {
+      print('stack is empty');
       assignAll();
     }
   }

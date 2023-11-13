@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/screen_controller.dart';
+import 'package:medico/screens/home/home5.dart';
+import 'package:medico/screens/home/home6.dart';
+import 'package:medico/widgets/folder.dart';
 
 class Home4 extends StatefulWidget {
   const Home4({super.key});
@@ -11,6 +14,38 @@ class Home4 extends StatefulWidget {
 
 class _Home4State extends State<Home4> {
   final ScreenController screenController = Get.find();
+  List<Widget> folders = [
+    Folder(
+      screen: Home5(),
+      update: true,
+      name: 'Slides',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home4(),
+      update: false,
+      name: 'MCQs',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home4(),
+      update: false,
+      name: 'Past Papers',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home4(),
+      update: true,
+      name: 'Books',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home6(),
+      update: true,
+      name: 'Video Lectures',
+      downloaded: true,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +60,16 @@ class _Home4State extends State<Home4> {
             )),
         title: Text('Home Screen 4'),
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: [
-              // Obx(() {
+      body: ListView.builder(
+        itemCount: folders.length,
+        itemBuilder: (context, index) {
+          return folders[index];
+        },
+      ),
+    );
+  }
+}
+// Obx(() {
               //   return ListView.builder(
               //     scrollDirection: Axis.horizontal,
               //     itemCount: screenController.stack.length,
@@ -48,19 +88,3 @@ class _Home4State extends State<Home4> {
               //     },
               //   );
               // }),
-              GestureDetector(
-                  onTap: () {
-                    print('should=to home 2');
-                    // screenController.updatePageAt(AppPage.HomeScreen, Home4());
-                  },
-                  child: Text(
-                    'Go to Home 1',
-                    style: TextStyle(fontSize: 20),
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/screen_controller.dart';
+import 'package:medico/widgets/folder.dart';
 
 import 'home3.dart';
 
@@ -14,6 +15,44 @@ class Home2 extends StatefulWidget {
 
 class _Home2State extends State<Home2> {
   final ScreenController screenController = Get.find();
+  List<Widget> folders = [
+    Folder(
+      screen: Home3(),
+      update: false,
+      name: '1st Semester',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home3(),
+      update: false,
+      name: '2nd Semester',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home3(),
+      update: true,
+      name: '3rd Semester',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home3(),
+      update: true,
+      name: '4th Semester',
+      downloaded: false,
+    ),
+    Folder(
+      screen: Home3(),
+      update: true,
+      name: '5th Semester',
+      downloaded: false,
+    ),
+    Folder(
+      screen: Home3(),
+      update: true,
+      name: '6th Semester',
+      downloaded: false,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +68,11 @@ class _Home2State extends State<Home2> {
             )),
         title: Text('Home Screen 2'),
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    print('should=to home 2');
-                    screenController.updatePageAt(AppPage.HomeScreen, Home3());
-                  },
-                  child: Text(
-                    'Go to Home 3',
-                    style: TextStyle(fontSize: 20),
-                  )),
-            ],
-          ),
-        ),
+      body: ListView.builder(
+        itemCount: folders.length,
+        itemBuilder: (context, index) {
+          return folders[index];
+        },
       ),
     );
   }

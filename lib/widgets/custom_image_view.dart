@@ -63,7 +63,6 @@ class CustomImageView extends StatelessWidget {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: InkWell(
-        splashFactory: NoSplash.splashFactory,
         onTap: onTap,
         child: _buildCircleImage(),
       ),
@@ -106,8 +105,8 @@ class CustomImageView extends StatelessWidget {
           svgPath!,
           height: height,
           width: width,
-          colorFilter: ColorFilter.mode(
-              color!, BlendMode.srcIn), // color is deprecated used this one
+          // colorFilter: ColorFilter.mode(
+          //     color!, BlendMode.srcIn), // color is deprecated used this one
           // color: color,
           fit: fit ?? BoxFit.contain,
         ),

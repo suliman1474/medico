@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:medico/core/text_theme.dart';
+import 'package:medico/widgets/folder.dart';
 
 import '../../controllers/screen_controller.dart';
 import 'home2.dart';
@@ -15,31 +15,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ScreenController screenController = Get.find<ScreenController>();
+  List<Widget> folders = [
+    Folder(
+      screen: Home2(),
+      update: true,
+      name: 'Bs Nursing',
+      downloaded: true,
+    ),
+    Folder(
+      screen: Home2(),
+      update: false,
+      name: 'KMUCAT',
+      downloaded: true,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     print('home screen called');
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Home Screen 1 main',
-          style: customTexttheme.titleLarge,
-        ),
+        title: Text('Home Screen 1'),
       ),
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            print('should go to another page');
-            screenController.updatePageAt(AppPage.HomeScreen, Home2()); //Get.to
-          },
-          child: Container(
-            child: Text(
-              'Go to another page Home 2:',
-              style: customTexttheme.titleLarge,
-            ),
-          ),
-        ),
+      body: ListView.builder(
+        itemCount: folders.length,
+        itemBuilder: (context, index) {
+          return folders[index];
+        },
       ),
     );
   }
