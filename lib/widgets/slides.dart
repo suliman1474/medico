@@ -6,6 +6,7 @@ import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
+// ignore: must_be_immutable
 class Slides extends StatefulWidget {
   int index;
   bool update;
