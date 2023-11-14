@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: controller.email,
                     validator: (text) {
                       if (text == null || text.isEmpty) {
-                        return 'Email is empty';
+                        return 'Email is empty here';
                       }
                       return null;
                     },
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: controller.password,
                     validator: (text) {
                       if (text == null || text.isEmpty) {
-                        return 'Password is empty';
+                        return 'Password is empty here';
                       }
                       return null;
                     },
