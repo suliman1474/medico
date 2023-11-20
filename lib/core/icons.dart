@@ -15,4 +15,6 @@ class IconConstant {
   static String icDownloadOrange = 'assets/icons/download_orange.svg';
   static String icForward = 'assets/icons/forward.svg';
   static String icOption = 'assets/icons/options.svg';
+  static String icAdd = 'assets/icons/add.svg';
+  static String icBack = 'assets/icons/arrow_back.svg';
 }
