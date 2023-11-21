@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/screen_controller.dart';
+import 'package:medico/core/app_export.dart';
+import 'package:medico/core/text_theme.dart';
+import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/folder.dart';
 
 import 'home3.dart';
 
@@ -17,34 +22,93 @@ class _Home2State extends State<Home2> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () {
-              print('should go back to home 1');
-              screenController.goBackAt(AppPage.HomeScreen);
-            },
-            child: Icon(
-              Icons.arrow_back,
-            )),
-        title: Text('Home Screen 2'),
+    List<Widget> folders = [
+      Folder(
+        screen: Home3(),
+        update: true,
+        name: '1st Semester',
+        downloaded: true,
       ),
-      body: Container(
-        child: Center(
-          child: Column(
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '2nd Semester',
+        downloaded: true,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '3rd Semester',
+        downloaded: true,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '4th Semester',
+        downloaded: true,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '5th Semester',
+        downloaded: true,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '6th Semester',
+        downloaded: false,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '7th Semester',
+        downloaded: false,
+      ),
+      Folder(
+        screen: Home3(),
+        update: false,
+        name: '8th Semester',
+        downloaded: false,
+      ),
+    ];
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size(ScreenUtil().screenWidth, 50.h),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+          child: Row(
             children: [
               GestureDetector(
-                  onTap: () {
-                    print('should=to home 2');
-                    screenController.updatePageAt(AppPage.HomeScreen, Home3());
-                  },
-                  child: Text(
-                    'Go to Home 3',
-                    style: TextStyle(fontSize: 20),
-                  )),
+                onTap: () {
+                  print('should go back to home 1');
+                  screenController.goBackAt(AppPage.HomeScreen);
+                },
+                child: CustomImageView(
+                  svgPath: IconConstant.icBack,
+                  height: 30.h,
+                  width: 30.w,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('should go back to home 1');
+                  screenController.goBackAt(AppPage.HomeScreen);
+                },
+                child: Text(
+                  r'Bs Nursing\',
+                  style: customTexttheme.displayLarge,
+                ),
+              ),
             ],
           ),
         ),
+      ),
+      body: ListView.builder(
+        itemCount: folders.length,
+        itemBuilder: (context, index) {
+          return folders[index];
+        },
       ),
     );
   }

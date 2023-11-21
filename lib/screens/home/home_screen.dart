@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:medico/core/text_theme.dart';
+import 'package:medico/widgets/folder.dart';
 
 import '../../controllers/screen_controller.dart';
 import 'home2.dart';
@@ -18,29 +19,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> folders = [
+      Folder(
+        screen: Home2(),
+        update: true,
+        name: 'Bs Nursing',
+        downloaded: true,
+      ),
+      Folder(
+        screen: Home2(),
+        update: false,
+        name: 'KMUCAT',
+        downloaded: true,
+      ),
+    ];
     print('home screen called');
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Home Screen 1 main',
-          style: customTexttheme.titleLarge,
-        ),
-      ),
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            print('should go to another page');
-            screenController.updatePageAt(AppPage.HomeScreen, Home2()); //Get.to
+      body: Padding(
+        padding: EdgeInsets.only(top: 20.h),
+        child: ListView.builder(
+          itemCount: folders.length,
+          itemBuilder: (context, index) {
+            return folders[index];
           },
-          child: Container(
-            child: Text(
-              'Go to another page Home 2:',
-              style: customTexttheme.titleLarge,
-            ),
-          ),
         ),
       ),
+      // floatingActionButton: CustomFloatingButton(),
     );
   }
 }

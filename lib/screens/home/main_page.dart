@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:medico/core/colors.dart';
-import 'package:medico/screens/home/about_screen.dart';
-import 'package:medico/screens/home/home_screen.dart';
-import 'package:medico/screens/home/news_feed_screen.dart';
-import 'package:medico/screens/home/profile_screen.dart';
+import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/custom_appbar.dart';
 import 'package:medico/widgets/custom_bottombar.dart';
+import 'package:medico/widgets/floating_button.dart';
 
 import '../../controllers/screen_controller.dart';
 
@@ -42,39 +39,8 @@ class _MainPageState extends State<MainPage> {
                 setState(() => _bottomNavIndex = index);
               }
             }),
+        floatingActionButton: CustomFloatingButton(),
       ),
     );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return '/home';
-      case BottomBarEnum.NewFeed:
-        return '/newsfeed';
-      case BottomBarEnum.About:
-        return '/about';
-      case BottomBarEnum.Profile:
-        return '/profile';
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case '/home':
-        return HomeScreen();
-      case '/newsfeed':
-        return NewsFeedScreen();
-      case '/about':
-        return AboutScreen();
-      case '/profile':
-        return ProfileScreen();
-      default:
-        return DefaultWidget();
-    }
   }
 }

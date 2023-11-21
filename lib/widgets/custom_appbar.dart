@@ -31,6 +31,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           elevation: 0,
+          leading: GestureDetector(
+            child: Container(
+              margin: EdgeInsets.only(top: 20.h),
+              height: 30.h,
+              width: 30.w,
+              child: CustomImageView(
+                svgPath: IconConstant.icNewsFeedSelected,
+                height: 30.h,
+                width: 30.w,
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+          ),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 20, top: 20).h,
