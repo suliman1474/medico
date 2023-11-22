@@ -14,7 +14,23 @@ class IconConstant {
   static String icDownload = 'assets/icons/download_black.svg';
   static String icDownloadOrange = 'assets/icons/download_orange.svg';
   static String icForward = 'assets/icons/forward.svg';
+  static String icForwardWhite = 'assets/icons/forward_white.svg';
   static String icOption = 'assets/icons/options.svg';
   static String icAdd = 'assets/icons/add.svg';
   static String icBack = 'assets/icons/arrow_back.svg';
+  static String icHeart = 'assets/icons/heart.svg';
+  static String icShare = 'assets/icons/share.svg';
+  static String icAppLogo = 'assets/icons/app_logo.png';
+  static String icPrivacy = 'assets/icons/privacy.svg';
+  static String icContactus = 'assets/icons/contact_us.svg';
+  static String icShareapp = 'assets/icons/share_app.svg';
+  static String icRate = 'assets/icons/rate.svg';
+  static String icReset = 'assets/icons/reset.svg';
+  static String icDegree = 'assets/icons/degree.svg';
+  static String icContact = 'assets/icons/contact.svg';
+  static String icCollege = 'assets/icons/college.svg';
+  static String icEdit = 'assets/icons/edit.svg';
+  static String icGmail = 'assets/icons/gmail.png';
+  static String icInsta = 'assets/icons/instagram.png';
+  static String icWhatsapp = 'assets/icons/whatsapp.png';
 }
