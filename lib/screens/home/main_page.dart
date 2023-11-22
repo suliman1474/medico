@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/custom_appbar.dart';
 import 'package:medico/widgets/custom_bottombar.dart';
-import 'package:medico/widgets/floating_button.dart';
 
 import '../../controllers/screen_controller.dart';
 
@@ -39,7 +38,7 @@ class _MainPageState extends State<MainPage> {
                 setState(() => _bottomNavIndex = index);
               }
             }),
-        floatingActionButton: CustomFloatingButton(),
+        // floatingActionButton: CustomFloatingButton(),
       ),
     );
   }
