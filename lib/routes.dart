@@ -7,11 +7,18 @@ import 'package:medico/screens/home/home_screen.dart';
 import 'package:medico/screens/home/main_page.dart';
 import 'package:medico/screens/home/news_feed_screen.dart';
 import 'package:medico/screens/home/profile_screen.dart';
+import 'package:medico/screens/home/splash_screen.dart';
 
 Routes() => [
       GetPage(
         name: '/',
         page: () => const MainPage(),
+        transition: Transition.leftToRightWithFade,
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+      GetPage(
+        name: '/splash',
+        page: () => const SplashScreen(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),

@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           initialBinding: Binding(),
-          initialRoute: '/',
+          initialRoute: '/splash',
           getPages: Routes(),
         );
       },
