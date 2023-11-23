@@ -43,7 +43,7 @@ class AuthenticationController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    isLoggedIn();
+    // isLoggedIn();
   }
 
   toggleObsecure() {
