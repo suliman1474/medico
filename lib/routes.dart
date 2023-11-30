@@ -2,6 +2,8 @@
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:medico/screens/Authentication/login_screen.dart';
+import 'package:medico/screens/Authentication/signup_screen.dart';
 import 'package:medico/screens/home/about_screen.dart';
 import 'package:medico/screens/home/home_screen.dart';
 import 'package:medico/screens/home/main_page.dart';
@@ -19,6 +21,12 @@ Routes() => [
       GetPage(
         name: '/splash',
         page: () => const SplashScreen(),
+        transition: Transition.leftToRightWithFade,
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+      GetPage(
+        name: '/login',
+        page: () => const LoginScreen(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),
@@ -43,6 +51,12 @@ Routes() => [
       GetPage(
         name: '/profile',
         page: () => const ProfileScreen(),
+        transition: Transition.leftToRightWithFade,
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+      GetPage(
+        name: '/signup',
+        page: () => const SignUpScreen(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),
