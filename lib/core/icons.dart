@@ -31,6 +31,8 @@ class IconConstant {
   static String icCollege = 'assets/icons/college.svg';
   static String icEdit = 'assets/icons/edit.svg';
   static String icGmail = 'assets/icons/gmail.png';
+  static String icApple = 'assets/icons/apple.svg';
+  static String icGoogle = 'assets/icons/google.svg';
   static String icInsta = 'assets/icons/instagram.png';
   static String icWhatsapp = 'assets/icons/whatsapp.png';
 }
