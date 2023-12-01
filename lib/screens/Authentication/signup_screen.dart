@@ -18,20 +18,21 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController collegeController = TextEditingController();
-  TextEditingController disciplineController = TextEditingController();
-  TextEditingController semesterController = TextEditingController();
-  TextEditingController contactController = TextEditingController();
-  AuthenticationController controller = Get.find<AuthenticationController>();
-  @override
-  void dispose() {
-    // Dispose of resources in the dispose method
-    controller.email.dispose();
-    controller.password.dispose();
 
-    super.dispose();
-  }
+  AuthenticationController authController = Get.find<AuthenticationController>();
+  @override
+  // void dispose() {
+  //   // Dispose of resources in the dispose method
+  //   authController.email.dispose();
+  //   authController.password.dispose();
+  //   authController.discipline.dispose();
+  //   authController.contact.dispose();
+  //   authController.name.dispose();
+  //   authController.college.dispose();
+  //   authController.semester.dispose();
+  //   authController.confirmpassword.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +73,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: nameController,
+                         controller: authController.name,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Name is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -112,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: controller.email,
+                          controller: authController.email,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Email is empty here';
@@ -147,14 +148,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: controller.password,
+                          controller: authController.password,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Password is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -167,10 +168,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             labelStyle: TextStyle(
                                 color: Colors.black.withOpacity(0.25)),
                             suffixIcon: GestureDetector(
-                              onTap: controller
+                              onTap: authController
                                   .toggleObsecure, // Remove the () here
                               child: Icon(
-                                controller.isObsecure.value
+                                authController.isObsecure.value
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 color: textColor.withOpacity(0.5),
@@ -194,14 +195,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: collegeController,
+                          controller: authController.college,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'info is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -231,14 +232,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: disciplineController,
+                          controller: authController.discipline,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'KMUKAT is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -268,14 +269,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: semesterController,
+                          controller: authController.semester,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'SemesterField is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -305,14 +306,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                          controller: contactController,
+                          controller: authController.contact,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Contact is empty here';
                             }
                             return null;
                           },
-                          obscureText: controller.isObsecure.value,
+                          obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -334,9 +335,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 height: 60.h,
               ),
-              AuthScreenButton(
-                  color: const Color.fromRGBO(0, 63, 150, 1.0),
-                  text: 'Sign Up'),
+              GestureDetector(
+                onTap: () async{
+                if(_formKey.currentState!.validate()) {
+                  await authController.createUser();
+                }
+                },
+                child: AuthScreenButton(
+                    color: const Color.fromRGBO(0, 63, 150, 1.0),
+                    text: 'Sign Up'),
+              ),
               SizedBox(
                 height: 30.h,
               ),

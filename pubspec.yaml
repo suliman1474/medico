@@ -44,12 +44,16 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   crypto: ^3.0.3
   intl: ^0.18.1
+  hive: ^2.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 
   flutter_lints: ^2.0.0
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.7
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -10,7 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../models/userModel.dart';
+import '../models/user_model.dart';
 import '../screens/Authentication/login_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/main_page.dart';
@@ -19,9 +19,14 @@ import '../widgets/indicator.dart';
 
 class AuthenticationController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmpassword = TextEditingController();
+ TextEditingController email = TextEditingController();
+   TextEditingController password = TextEditingController();
+TextEditingController confirmpassword = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController college = TextEditingController();
+  TextEditingController discipline = TextEditingController();
+  TextEditingController semester = TextEditingController();
+  TextEditingController contact = TextEditingController();
   RxBool isObsecure = true.obs;
   RxBool isObsecure2 = true.obs;
 
@@ -92,6 +97,7 @@ class AuthenticationController extends GetxController {
 
   createUser() async {
     try {
+      print('create user function');
       Indicator.showLoading();
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -100,6 +106,7 @@ class AuthenticationController extends GetxController {
       )
           .whenComplete(() async {
         user.value = _auth.currentUser;
+        print('creatting defaultt user');
         await createDefaultUserProfile();
         Indicator.closeLoading();
         Get.toNamed('/home');
@@ -202,14 +209,14 @@ class AuthenticationController extends GetxController {
 
   Future<void> createDefaultUserProfile() async {
     final userId = _auth.currentUser?.uid;
-    String email = _auth.currentUser?.email ?? "";
-    List<String> parts = email.split("@");
+  //  String email = _auth.currentUser?.email ?? "";
+   // List<String> parts = email.split("@");
     if (userId != null) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .set(UserModel(id: userId, name: parts.first).toJson());
-      userProfile.value = UserModel(id: userId, name: parts.first);
+          .set(UserModel(id: userId, name: name.text, college: college.text, contact: contact.text, discipline: discipline.text, email: email.text, semester: semester.text,).toJson());
+     // userProfile.value = UserModel(id: userId, name: parts.first);
     }
   }
 

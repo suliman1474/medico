@@ -1,38 +1,49 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
 @JsonSerializable()
+@HiveType(typeId: 4)
 class UserModel {
-  final String id;
-  final String? name;
-  final String? username;
-  final String? email;
-  final String? phone;
-  final String password;
-  final String? photo;
-  final String? level;
-  final String? wallet;
-  final String? user_type;
-  final String? is_verified;
-  final String? hash_code;
+  @HiveField(0)
+  String id;
+  @HiveField(1)
+  String name;
+  @HiveField(2)
+  String email;
+  @HiveField(3)
+  String? image;
+  @HiveField(4)
+  String college;
+  @HiveField(5)
+  String discipline;
+  @HiveField(6)
+  String semester;
+  @HiveField(7)
+  String contact;
+  @HiveField(8)
+  String role;
+
+
+
 
   UserModel({
     required this.id,
-    this.name,
-    this.username,
-    this.email,
-    this.phone,
-    required this.password,
-    this.photo,
-    this.level,
-    this.wallet,
-    this.user_type,
-    this.is_verified,
-    this.hash_code,
+    required this.name,
+    required this.college,
+  required this.contact,
+    required this.discipline,
+    required this.email,
+ this.image,
+    this.role = 'user',
+    required this.semester,
+
+
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
+
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
