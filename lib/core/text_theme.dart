@@ -11,6 +11,8 @@ TextTheme customTexttheme = TextTheme(
   bodyLarge: bodytext1,
   bodyMedium: bodytext2,
   bodySmall: bodytext3,
+  labelLarge: label,
+  labelMedium: label2,
   labelSmall: bottombarText,
 );
 
@@ -58,4 +60,14 @@ TextStyle bottombarText = TextStyle(
   fontSize: 12.sp,
   fontWeight: FontWeight.w700,
   color: offwhite,
+);
+TextStyle label2 = TextStyle(
+  fontSize: 14.sp,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+TextStyle label = TextStyle(
+  fontSize: 14.sp,
+  fontWeight: FontWeight.w400,
+  color: color1,
 );

@@ -35,4 +35,10 @@ class IconConstant {
   static String icGoogle = 'assets/icons/google.svg';
   static String icInsta = 'assets/icons/instagram.png';
   static String icWhatsapp = 'assets/icons/whatsapp.png';
+  static String icName = 'assets/icons/name.svg';
+  static String icEmail = 'assets/icons/email.svg';
+  static String icPassword = 'assets/icons/password.svg';
+  static String icCollegeAuth = 'assets/icons/college_auth.svg';
+  static String icDegreeAuth = 'assets/icons/degree_auth.svg';
+  static String icContactAuth = 'assets/icons/contact_auth.svg';
 }
