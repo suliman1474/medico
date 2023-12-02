@@ -88,7 +88,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
+
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -222,6 +223,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                           obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -301,7 +303,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -371,7 +373,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -441,7 +443,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -511,7 +513,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -561,7 +563,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               GestureDetector(
                 onTap: () async {
+                  print('===================sign up clicked =================');
                   if (_formKey.currentState!.validate()) {
+                    print("==================calling user");
                     await authController.createUser();
                   }
                 },

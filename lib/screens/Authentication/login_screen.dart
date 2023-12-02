@@ -19,12 +19,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   AuthenticationController controller = Get.find<AuthenticationController>();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   @override
   void dispose() {
     // Dispose of resources in the dispose method
-    controller.email.dispose();
-    controller.password.dispose();
-
+    email.dispose();
+    password.dispose();
+    controller.isObsecure.value = true;
+    controller.isObsecure2.value = true;
     super.dispose();
   }
 
@@ -74,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 49.h,
                       child: TextFormField(
-                        controller: controller.email,
+                        controller: email,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
                             return 'Email is empty here';
@@ -139,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 49.h,
                       child: TextFormField(
-                        controller: controller.password,
+                        controller: password,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
                             return 'Password is empty here';
@@ -219,9 +222,19 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 60.h,
             ),
-            AuthScreenButton(
-              color: color1,
-              text: 'Log in',
+            GestureDetector(
+              onTap: () async {
+                print('===================login clicked =================');
+                if (_formKey.currentState!.validate()) {
+                  print("==================calling user");
+                  await controller.signInWithEmailandPassword(
+                      email.text, password.text);
+                }
+              },
+              child: AuthScreenButton(
+                color: color1,
+                text: 'Log in',
+              ),
             ),
             SizedBox(
               height: 20.h,
@@ -237,7 +250,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Column(
                     children: [
-                      SocialButton(image: IconConstant.icGoogle),
+                      GestureDetector(
+                          onTap: () {
+                            controller.signInWithGoogle();
+                          },
+                          child: SocialButton(image: IconConstant.icGoogle)),
                       SizedBox(height: 5.h),
                       Text(
                         'Google',
