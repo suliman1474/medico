@@ -34,21 +34,22 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Obx(() {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: 322.w,
               child: Form(
                 key: _formKey,
                 child: OverflowBar(
-                  overflowSpacing: 5,
+                  overflowSpacing: 3,
                   children: [
                     SizedBox(
-                      height: 60.h,
+                      height: 150.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Log in', style: customTexttheme.titleLarge),
+                        Text('Log In', style: customTexttheme.titleLarge),
                       ],
                     ),
                     SizedBox(
@@ -56,13 +57,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Row(
                       children: [
-                        CustomImageView(svgPath: IconConstant.icProfile),
+                        CustomImageView(
+                          svgPath: IconConstant.icEmail,
+                          height: 25.h,
+                          width: 25.w,
+                        ),
                         SizedBox(
-                          width: 8.w,
+                          width: 5.w,
                         ),
                         Text(
                           'Email',
-                          style: customTexttheme.bodyMedium,
+                          style: customTexttheme.bodySmall,
                         ),
                       ],
                     ),
@@ -77,14 +82,37 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                         decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle:
-                              TextStyle(color: textColor.withOpacity(0.25)),
+                          hintText: 'Email',
+                          hintStyle: customTexttheme.bodySmall!.copyWith(
+                            color: textColor.withOpacity(0.25),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 5.h,
+                            horizontal: 15.w,
+                          ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: textColor.withOpacity(0.6)),
-                            borderRadius: BorderRadius.circular(
-                                10.0.r), // Set your desired border radius
+                            borderSide: BorderSide(
+                              color: textColor.withOpacity(0.6),
+                            ),
+                            borderRadius: BorderRadius.circular(10.0.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: textColor.withOpacity(0.6),
+                            ),
+                            borderRadius: BorderRadius.circular(10.0.r),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: textColor.withOpacity(0.6),
+                            ),
+                            borderRadius: BorderRadius.circular(10.0.r),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.red.withOpacity(0.6),
+                            ),
+                            borderRadius: BorderRadius.circular(10.0.r),
                           ),
                         ),
                       ),
@@ -94,11 +122,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Row(
                       children: [
-                        CustomImageView(svgPath: IconConstant.icPrivacy),
-                        SizedBox(
-                          width: 8.w,
+                        CustomImageView(
+                          svgPath: IconConstant.icPassword,
+                          height: 25.h,
+                          width: 20.w,
                         ),
-                        const Text('Password')
+                        SizedBox(
+                          width: 5.w,
+                        ),
+                        Text(
+                          'Password',
+                          style: customTexttheme.bodySmall,
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -120,9 +155,35 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius:
                                 BorderRadius.circular(10.0.r), // Set y
                           ),
-                          labelText: '********************',
-                          labelStyle:
-                              TextStyle(color: Colors.black.withOpacity(0.25)),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: textColor.withOpacity(0.6),
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(10.0.r), // Set y
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: textColor.withOpacity(0.6),
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(10.0.r), // Set y
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.red.withOpacity(0.6),
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(10.0.r), // Set y
+                          ),
+                          hintText: '**********',
+                          hintStyle: customTexttheme.bodySmall!.copyWith(
+                            color: textColor.withOpacity(0.25),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 5.h,
+                            horizontal: 15.w,
+                          ),
                           suffixIcon: GestureDetector(
                             onTap:
                                 controller.toggleObsecure, // Remove the () here
@@ -140,17 +201,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                                padding:
-                                    MaterialStateProperty.all(EdgeInsets.zero)),
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                  fontSize: 13.86,
-                                  fontWeight: FontWeight.w600,
-                                  color: textColor.withOpacity(0.6)),
-                            )),
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          ),
+                          child: Text(
+                            'Forgot Password?',
+                            style: customTexttheme.labelMedium,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -161,20 +220,20 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 60.h,
             ),
             AuthScreenButton(
-                color: const Color.fromRGBO(214, 90, 0, 1.0), text: 'Log in'),
+              color: color1,
+              text: 'Log in',
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            AuthScreenButton(color: color2, text: 'Log in as Admin'),
             SizedBox(
               height: 30.h,
-            ),
-            AuthScreenButton(
-                color: const Color.fromRGBO(0, 63, 150, 1.0),
-                text: 'Log in as Admin'),
-            SizedBox(
-              height: 60.h,
             ),
             SizedBox(
               width: 177.w,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     children: [
@@ -182,14 +241,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 5.h),
                       Text(
                         'Google',
-                        style:
-                            TextStyle(color: Colors.black, fontSize: 13.86.sp),
+                        style: customTexttheme.labelMedium,
                       )
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 14.h),
-                    child: const Text('or'),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Text(
+                      'or',
+                      style: customTexttheme.labelMedium,
+                    ),
                   ),
                   Column(
                     children: [
@@ -197,33 +258,37 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 5.h),
                       Text(
                         'Apple',
-                        style:
-                            TextStyle(color: Colors.black, fontSize: 13.86.sp),
+                        style: customTexttheme.labelMedium,
                       )
                     ],
                   )
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an Account?",
-                  style: TextStyle(fontSize: 13.86.sp),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontSize: 13.86.sp,
-                      color: const Color.fromRGBO(26, 76, 110, 100),
-                    ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an Account?",
+                    style: customTexttheme.labelMedium,
                   ),
-                )
-              ],
-            )
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/signup');
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Text(
+                        'Sign Up',
+                        style: customTexttheme.labelLarge,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         );
       }),

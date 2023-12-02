@@ -19,7 +19,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  AuthenticationController authController = Get.find<AuthenticationController>();
+  AuthenticationController authController =
+      Get.find<AuthenticationController>();
   @override
   // void dispose() {
   //   // Dispose of resources in the dispose method
@@ -63,17 +64,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.person, color: textColor.withOpacity(0.5)),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icName,
+                            height: 25.h,
+                            width: 25.w,
                           ),
-                          const Text('Name')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'Name',
+                            style: customTexttheme.bodySmall,
+                          ),
                         ],
                       ),
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
-                         controller: authController.name,
+                          controller: authController.name,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Name is empty here';
@@ -89,9 +97,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: 'Fola B',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            hintText: 'Fola B',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                           ),
                         ),
                       ),
@@ -100,13 +132,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icProfile),
+                          CustomImageView(
+                            svgPath: IconConstant.icEmail,
+                            height: 25.h,
+                            width: 25.w,
+                          ),
                           SizedBox(
-                            width: 8.w,
+                            width: 5.w,
                           ),
                           Text(
                             'Email',
-                            style: customTexttheme.bodyMedium,
+                            style: customTexttheme.bodySmall,
                           ),
                         ],
                       ),
@@ -121,14 +157,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle:
-                                TextStyle(color: textColor.withOpacity(0.25)),
+                            hintText: 'fola@gmail.com',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: textColor.withOpacity(0.6)),
-                              borderRadius: BorderRadius.circular(
-                                  10.0.r), // Set your desired border radius
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         ),
@@ -138,11 +197,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icPrivacy),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icPassword,
+                            height: 25.h,
+                            width: 20.w,
                           ),
-                          const Text('Password')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'Password',
+                            style: customTexttheme.bodySmall,
+                          )
                         ],
                       ),
                       SizedBox(
@@ -164,9 +230,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: '********************',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            hintText: '**********',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                             suffixIcon: GestureDetector(
                               onTap: authController
                                   .toggleObsecure, // Remove the () here
@@ -185,11 +277,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icCollege),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icCollegeAuth,
+                            height: 25.h,
+                            width: 25.w,
                           ),
-                          const Text('College')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'College',
+                            style: customTexttheme.bodySmall,
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -211,9 +310,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: 'info@example.com',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            hintText: 'Khyber Medical College',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                           ),
                         ),
                       ),
@@ -222,11 +347,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icDegree),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icDegreeAuth,
+                            height: 25.h,
+                            width: 25.w,
                           ),
-                          const Text('Discipline')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'Discipline',
+                            style: customTexttheme.bodySmall,
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -248,9 +380,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: 'KUMCAT',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            hintText: 'Bs Nursing',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                           ),
                         ),
                       ),
@@ -259,11 +417,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icDegree),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icDegreeAuth,
+                            height: 25.h,
+                            width: 25.w,
                           ),
-                          const Text('Semester')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'Semester',
+                            style: customTexttheme.bodySmall,
+                          )
                         ],
                       ),
                       SizedBox(
@@ -285,9 +450,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: '7th',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            hintText: '7th',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                           ),
                         ),
                       ),
@@ -296,11 +487,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Row(
                         children: [
-                          CustomImageView(svgPath: IconConstant.icContact),
-                          SizedBox(
-                            width: 8.w,
+                          CustomImageView(
+                            svgPath: IconConstant.icContactAuth,
+                            height: 25.h,
+                            width: 25.w,
                           ),
-                          const Text('Contact')
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'Contact',
+                            style: customTexttheme.bodySmall,
+                          )
                         ],
                       ),
                       SizedBox(
@@ -322,9 +520,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            labelText: 'info@exaple.com',
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.25)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            hintText: '+92344587382',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
                           ),
                         ),
                       ),
@@ -336,14 +560,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 60.h,
               ),
               GestureDetector(
-                onTap: () async{
-                if(_formKey.currentState!.validate()) {
-                  await authController.createUser();
-                }
+                onTap: () async {
+                  if (_formKey.currentState!.validate()) {
+                    await authController.createUser();
+                  }
                 },
-                child: AuthScreenButton(
-                    color: const Color.fromRGBO(0, 63, 150, 1.0),
-                    text: 'Sign Up'),
+                child: AuthScreenButton(color: color1, text: 'Sign Up'),
               ),
               SizedBox(
                 height: 30.h,
@@ -351,7 +573,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 width: 201.42.w,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
                       children: [
@@ -359,14 +581,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 5.h),
                         Text(
                           'Google',
-                          style: TextStyle(
-                              color: Colors.black, fontSize: 13.86.sp),
+                          style: customTexttheme.labelMedium,
                         )
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 14.h),
-                      child: const Text('or'),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 20.h,
+                      ),
+                      child: Text(
+                        'or',
+                        style: customTexttheme.labelMedium,
+                      ),
                     ),
                     Column(
                       children: [
@@ -374,33 +601,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 5.h),
                         Text(
                           'Apple',
-                          style: TextStyle(
-                              color: Colors.black, fontSize: 13.86.sp),
+                          style: customTexttheme.labelMedium,
                         )
                       ],
                     )
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an Account?",
-                    style: TextStyle(fontSize: 13.86.sp),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontSize: 13.86.sp,
-                        color: const Color.fromRGBO(26, 76, 110, 100),
-                      ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have an Account?",
+                      style: customTexttheme.labelMedium,
                     ),
-                  )
-                ],
-              )
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/login');
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Text(
+                          'Sign In',
+                          style: customTexttheme.labelLarge,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         );
