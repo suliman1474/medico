@@ -24,29 +24,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode nameFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
-  FocusNode collegeFocusNode = FocusNode();
-  FocusNode disciplineFocusNode = FocusNode();
-  FocusNode semesterFocusNode = FocusNode();
-  FocusNode contactFocusNode = FocusNode();
 
   @override
   void dispose() {
     // Dispose of resources in the dispose method
     authController.email.dispose();
     authController.password.dispose();
-    authController.discipline.dispose();
-    authController.contact.dispose();
     authController.name.dispose();
-    authController.college.dispose();
-    authController.semester.dispose();
     authController.confirmpassword.dispose();
     emailFocusNode.dispose();
     nameFocusNode.dispose();
     passwordFocusNode.dispose();
-    collegeFocusNode.dispose();
-    disciplineFocusNode.dispose();
-    semesterFocusNode.dispose();
-    contactFocusNode.dispose();
     super.dispose();
   }
 
@@ -104,7 +92,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -244,11 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           },
                           focusNode: passwordFocusNode,
-                          onFieldSubmitted: (value) {
-                            collegeFocusNode.requestFocus();
-                          },
                           obscureText: authController.isObsecure.value,
-                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -301,287 +284,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(
                         height: 10.h,
-                      ),
-                      Row(
-                        children: [
-                          CustomImageView(
-                            svgPath: IconConstant.icCollegeAuth,
-                            height: 25.h,
-                            width: 25.w,
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(
-                            'College',
-                            style: customTexttheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 49.h,
-                        child: TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: authController.college,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'info is empty here';
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            hintText: 'Khyber Medical College',
-                            hintStyle: customTexttheme.bodySmall!.copyWith(
-                              color: textColor.withOpacity(0.25),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 15.w,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Row(
-                        children: [
-                          CustomImageView(
-                            svgPath: IconConstant.icDegreeAuth,
-                            height: 25.h,
-                            width: 25.w,
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(
-                            'Discipline',
-                            style: customTexttheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 49.h,
-                        child: TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: authController.discipline,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'discipline is empty here';
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            hintText: 'Bs Nursing',
-                            hintStyle: customTexttheme.bodySmall!.copyWith(
-                              color: textColor.withOpacity(0.25),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 15.w,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Row(
-                        children: [
-                          CustomImageView(
-                            svgPath: IconConstant.icDegreeAuth,
-                            height: 25.h,
-                            width: 25.w,
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(
-                            'Semester',
-                            style: customTexttheme.bodySmall,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 49.h,
-                        child: TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: authController.semester,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'SemesterField is empty here';
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            hintText: '7th',
-                            hintStyle: customTexttheme.bodySmall!.copyWith(
-                              color: textColor.withOpacity(0.25),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 15.w,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Row(
-                        children: [
-                          CustomImageView(
-                            svgPath: IconConstant.icContactAuth,
-                            height: 25.h,
-                            width: 25.w,
-                          ),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          Text(
-                            'Contact',
-                            style: customTexttheme.bodySmall,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 49.h,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: authController.contact,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'Contact is empty here';
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.red.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
-                            hintText: '+92344587382',
-                            hintStyle: customTexttheme.bodySmall!.copyWith(
-                              color: textColor.withOpacity(0.25),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 15.w,
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),

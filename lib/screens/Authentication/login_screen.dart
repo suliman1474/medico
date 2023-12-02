@@ -21,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   AuthenticationController controller = Get.find<AuthenticationController>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   @override
   void dispose() {
     // Dispose of resources in the dispose method
@@ -28,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     password.dispose();
     controller.isObsecure.value = true;
     controller.isObsecure2.value = true;
+
     super.dispose();
   }
 
