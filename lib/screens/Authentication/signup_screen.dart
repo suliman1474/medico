@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/auth_screen_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
-import 'package:medico/widgets/indicator.dart';
 import 'package:medico/widgets/social_button.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -105,10 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          focusNode: nameFocusNode,
-                          onFieldSubmitted: (value) {
-                            emailFocusNode.requestFocus();
-                          },
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -252,6 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             collegeFocusNode.requestFocus();
                           },
                           obscureText: authController.isObsecure.value,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -332,10 +329,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          focusNode: collegeFocusNode,
-                          onFieldSubmitted: (value) {
-                            disciplineFocusNode.requestFocus();
-                          },
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -406,10 +400,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          focusNode: disciplineFocusNode,
-                          onFieldSubmitted: (value) {
-                            semesterFocusNode.requestFocus();
-                          },
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -480,10 +471,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          focusNode: semesterFocusNode,
-                          onFieldSubmitted: (value) {
-                            contactFocusNode.requestFocus();
-                          },
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -554,7 +542,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          focusNode: contactFocusNode,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -603,11 +591,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 60.h,
               ),
               GestureDetector(
-                onTap: () {
-                  // if (_formKey.currentState!.validate()) {
-                  //   await authController.createUser();
-                  // }
-                  Indicator.showLoading();
+                onTap: () async {
+                  print('===================sign up clicked =================');
+                  if (_formKey.currentState!.validate()) {
+                    print("==================calling user");
+                    await authController.createUser();
+                  }
                 },
                 child: AuthScreenButton(color: color1, text: 'Sign Up'),
               ),

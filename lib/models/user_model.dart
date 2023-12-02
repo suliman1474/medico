@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user_model.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: 4)
+@HiveType(typeId: 0)
 class UserModel {
   @HiveField(0)
   String id;
@@ -25,21 +25,16 @@ class UserModel {
   @HiveField(8)
   String role;
 
-
-
-
   UserModel({
     required this.id,
     required this.name,
     required this.college,
-  required this.contact,
+    required this.contact,
     required this.discipline,
     required this.email,
- this.image,
+    this.image = '',
     this.role = 'user',
     required this.semester,
-
-
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

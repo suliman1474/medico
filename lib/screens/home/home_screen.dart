@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/widgets/folder.dart';
 
+import '../../constants/user_role.dart';
+import '../../controllers/auth_controller.dart';
 import '../../controllers/screen_controller.dart';
 import 'home2.dart';
 
@@ -16,6 +19,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ScreenController screenController = Get.find<ScreenController>();
+  AuthenticationController authController = Get.find();
+  DbController dbController = Get.find();
+
+  void loadUser() async {
+    await dbController.loadUserRole();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadUser();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +51,41 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ];
     print('home screen called');
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: 20.h),
-        child: ListView.builder(
-          itemCount: folders.length,
-          itemBuilder: (context, index) {
-            return folders[index];
-          },
+    return Obx(() {
+      return Scaffold(
+        appBar: AppBar(
+          actions: [
+            // Add the IconButton with the logout icon
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                // Call the signOut function when the button is pressed
+                await authController.logout();
+
+                // Navigate to the login or home screen after signing out
+                // You may replace '/login' with the appropriate route
+                Get.offNamed('/login');
+              },
+            ),
+          ],
         ),
-      ),
-      // floatingActionButton: CustomFloatingButton(),
-    );
+        body: dbController.userRole.value == UserRole.USER
+            ? Padding(
+                padding: EdgeInsets.only(top: 20.h),
+                child: ListView.builder(
+                  itemCount: folders.length,
+                  itemBuilder: (context, index) {
+                    return folders[index];
+                  },
+                ),
+              )
+            : Container(
+                child: Center(
+                  child: Text('Ehhhhh  heeee You are Admin'),
+                ),
+              ),
+        // floatingActionButton: CustomFloatingButton(),
+      );
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:medico/controllers/auth_controller.dart';
 
+import 'controllers/db_controller.dart';
 import 'controllers/screen_controller.dart';
 
 class Binding extends Bindings {
@@ -8,5 +9,6 @@ class Binding extends Bindings {
   void dependencies() {
     Get.put(AuthenticationController());
     Get.put(ScreenController());
+    Get.put(DbController());
   }
 }

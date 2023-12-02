@@ -32,7 +32,7 @@ Routes() => [
       ),
       GetPage(
         name: '/home',
-        page: () => HomeScreen(),
+        page: () => MainPage(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),

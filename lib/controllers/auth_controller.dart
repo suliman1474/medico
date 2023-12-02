@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
 import '../screens/Authentication/login_screen.dart';
+import '../screens/Authentication/signup_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/main_page.dart';
 import '../services/firebase_services.dart';
@@ -19,9 +21,9 @@ import '../widgets/indicator.dart';
 
 class AuthenticationController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
- TextEditingController email = TextEditingController();
-   TextEditingController password = TextEditingController();
-TextEditingController confirmpassword = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController college = TextEditingController();
   TextEditingController discipline = TextEditingController();
@@ -32,8 +34,10 @@ TextEditingController confirmpassword = TextEditingController();
 
   Rx<User?> user = Rx<User?>(null);
 
+  DbController dbController = Get.find();
   Rx<UserModel?> userProfile = Rx<UserModel?>(null);
   FirebaseService firebaseService = FirebaseService();
+
   void isLoggedIn() async {
     if (_auth.currentUser != null) {
       // user.value = _auth.currentUser;
@@ -71,17 +75,18 @@ TextEditingController confirmpassword = TextEditingController();
     }
   }
 
-  signInWithEmailandPassword() async {
+  signInWithEmailandPassword(String email, String password) async {
     try {
       Indicator.showLoading();
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text, password: password.text);
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      await fetchUserProfile();
+      await dbController.storeUser(userProfile.value!);
+
       Indicator.closeLoading();
-      email.text = "";
-      password.text = "";
-      user.value = _auth.currentUser;
-      // await createDefaultUserProfile();
-      Get.to(() => const HomeScreen());
+
+      Get.offAndToNamed('/home');
     } on FirebaseAuthException catch (e) {
       Indicator.closeLoading();
 
@@ -99,18 +104,32 @@ TextEditingController confirmpassword = TextEditingController();
     try {
       print('create user function');
       Indicator.showLoading();
+      print('email.text = ${email.text}');
+      print('password.text = ${password.text}');
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
         email: email.text.trimRight(),
-        password: confirmpassword.text,
+        password: password.text,
       )
           .whenComplete(() async {
         user.value = _auth.currentUser;
         print('creatting defaultt user');
         await createDefaultUserProfile();
-        Indicator.closeLoading();
-        Get.toNamed('/home');
       });
+      // UserModel userToStore = UserModel(
+      //   id: user.value!.uid,
+      //   name: name.text,
+      //   college: college.text,
+      //   contact: contact.text,
+      //   discipline: discipline.text,
+      //   email: email.text,
+      //   semester: semester.text,
+      // );
+      await fetchUserProfile();
+      await dbController.storeUser(userProfile.value!);
+      Indicator.closeLoading();
+
+      Get.offAndToNamed('/home');
     } on FirebaseAuthException catch (e) {
       Indicator.closeLoading();
       return Get.snackbar(
@@ -141,8 +160,9 @@ TextEditingController confirmpassword = TextEditingController();
         .signInWithCredential(credential)
         .whenComplete(() async {
       user.value = _auth.currentUser;
-      //  await createDefaultUserProfile();
-      fetchUserProfile();
+
+      await fetchUserProfile();
+      await dbController.storeUser(userProfile.value!);
       Indicator.closeLoading();
       Get.toNamed('/home');
     });
@@ -184,13 +204,17 @@ TextEditingController confirmpassword = TextEditingController();
     });
   }
 
-  void logout() async {
+  Future<void> logout() async {
+    print('logoutt function');
     Indicator.showLoading();
-    await FirebaseAuth.instance.signOut().whenComplete(() {
+    await FirebaseAuth.instance.signOut().whenComplete(() async {
+      await GoogleSignIn().signOut();
+
+      await dbController.signOut();
       Indicator.closeLoading();
+      print('goinng tto sign up screen');
       Get.off(() => const LoginScreen());
     });
-    await GoogleSignIn().signOut();
   }
 
   Future<void> fetchUserProfile() async {
@@ -209,14 +233,21 @@ TextEditingController confirmpassword = TextEditingController();
 
   Future<void> createDefaultUserProfile() async {
     final userId = _auth.currentUser?.uid;
-  //  String email = _auth.currentUser?.email ?? "";
-   // List<String> parts = email.split("@");
+    //  String email = _auth.currentUser?.email ?? "";
+    // List<String> parts = email.split("@");
     if (userId != null) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .set(UserModel(id: userId, name: name.text, college: college.text, contact: contact.text, discipline: discipline.text, email: email.text, semester: semester.text,).toJson());
-     // userProfile.value = UserModel(id: userId, name: parts.first);
+          .set(UserModel(
+            id: userId,
+            name: name.text,
+            college: college.text,
+            contact: contact.text,
+            discipline: discipline.text,
+            email: email.text,
+            semester: semester.text,
+          ).toJson());
     }
   }
 
