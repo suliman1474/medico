@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/auth_screen_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 import 'package:medico/widgets/social_button.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -21,19 +22,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   AuthenticationController authController =
       Get.find<AuthenticationController>();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode collegeFocusNode = FocusNode();
+  FocusNode disciplineFocusNode = FocusNode();
+  FocusNode semesterFocusNode = FocusNode();
+  FocusNode contactFocusNode = FocusNode();
+
   @override
-  // void dispose() {
-  //   // Dispose of resources in the dispose method
-  //   authController.email.dispose();
-  //   authController.password.dispose();
-  //   authController.discipline.dispose();
-  //   authController.contact.dispose();
-  //   authController.name.dispose();
-  //   authController.college.dispose();
-  //   authController.semester.dispose();
-  //   authController.confirmpassword.dispose();
-  //   super.dispose();
-  // }
+  void dispose() {
+    // Dispose of resources in the dispose method
+    authController.email.dispose();
+    authController.password.dispose();
+    authController.discipline.dispose();
+    authController.contact.dispose();
+    authController.name.dispose();
+    authController.college.dispose();
+    authController.semester.dispose();
+    authController.confirmpassword.dispose();
+    emailFocusNode.dispose();
+    nameFocusNode.dispose();
+    passwordFocusNode.dispose();
+    collegeFocusNode.dispose();
+    disciplineFocusNode.dispose();
+    semesterFocusNode.dispose();
+    contactFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.name,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
@@ -88,7 +105,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          focusNode: nameFocusNode,
+                          onFieldSubmitted: (value) {
+                            emailFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -149,12 +169,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: authController.email,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Email is empty here';
                             }
                             return null;
+                          },
+                          focusNode: emailFocusNode,
+                          onFieldSubmitted: (value) {
+                            passwordFocusNode.requestFocus();
                           },
                           decoration: InputDecoration(
                             hintText: 'fola@gmail.com',
@@ -214,12 +239,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.password,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return 'Password is empty here';
                             }
                             return null;
+                          },
+                          focusNode: passwordFocusNode,
+                          onFieldSubmitted: (value) {
+                            collegeFocusNode.requestFocus();
                           },
                           obscureText: authController.isObsecure.value,
                           decoration: InputDecoration(
@@ -294,6 +324,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.college,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
@@ -301,7 +332,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          focusNode: collegeFocusNode,
+                          onFieldSubmitted: (value) {
+                            disciplineFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -364,14 +398,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.discipline,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'KMUKAT is empty here';
+                              return 'discipline is empty here';
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          focusNode: disciplineFocusNode,
+                          onFieldSubmitted: (value) {
+                            semesterFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -434,6 +472,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.semester,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
@@ -441,7 +480,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          focusNode: semesterFocusNode,
+                          onFieldSubmitted: (value) {
+                            contactFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -504,6 +546,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 49.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: authController.contact,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
@@ -511,7 +554,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          obscureText: authController.isObsecure.value,
+                          focusNode: contactFocusNode,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -560,10 +603,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 60.h,
               ),
               GestureDetector(
-                onTap: () async {
-                  if (_formKey.currentState!.validate()) {
-                    await authController.createUser();
-                  }
+                onTap: () {
+                  // if (_formKey.currentState!.validate()) {
+                  //   await authController.createUser();
+                  // }
+                  Indicator.showLoading();
                 },
                 child: AuthScreenButton(color: color1, text: 'Sign Up'),
               ),

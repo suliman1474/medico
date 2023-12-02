@@ -19,12 +19,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   AuthenticationController controller = Get.find<AuthenticationController>();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   @override
   void dispose() {
     // Dispose of resources in the dispose method
     controller.email.dispose();
     controller.password.dispose();
-
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -74,12 +77,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 49.h,
                       child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         controller: controller.email,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
                             return 'Email is empty here';
                           }
                           return null;
+                        },
+                        focusNode: emailFocusNode,
+                        onFieldSubmitted: (value) {
+                          passwordFocusNode.requestFocus();
                         },
                         decoration: InputDecoration(
                           hintText: 'Email',
@@ -139,6 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 49.h,
                       child: TextFormField(
+                        keyboardType: TextInputType.text,
                         controller: controller.password,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
@@ -146,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
+                        focusNode: passwordFocusNode,
                         obscureText: controller.isObsecure.value,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -224,11 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Log in',
             ),
             SizedBox(
-              height: 20.h,
-            ),
-            AuthScreenButton(color: color2, text: 'Log in as Admin'),
-            SizedBox(
-              height: 30.h,
+              height: 50.h,
             ),
             SizedBox(
               width: 177.w,
