@@ -33,6 +33,7 @@ extension AppPageExtension on AppPage {
 class ScreenController extends GetxController {
   var pages = <Widget>[].obs;
   var stack = <Widget>[].obs;
+  RxInt bottomNavIndex = 0.obs;
   @override
   void onInit() async {
     // Initialize your pages here, you can fetch them from your API or wherever you need.

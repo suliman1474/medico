@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _animation;
   DbController dbController = Get.find();
   delayMethod() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 4));
     // ignore: use_build_context_synchronously
     if (await dbController.isLoggedIn()) {
       Get.offAllNamed('/home');
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
       vsync: this,
     );
     CurvedAnimation curvedAnimation = CurvedAnimation(

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/auth_screen_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
-import 'package:medico/widgets/social_button.dart';
 
 import '../../controllers/auth_controller.dart';
 import '../../core/text_theme.dart';
@@ -21,19 +20,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   AuthenticationController authController =
       Get.find<AuthenticationController>();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode confirmpasswordFocusNode = FocusNode();
+  FocusNode collegeFocusNode = FocusNode();
+  FocusNode disciplineFocusNode = FocusNode();
+  FocusNode semesterFocusNode = FocusNode();
+  FocusNode contactFocusNode = FocusNode();
+
   @override
-  // void dispose() {
-  //   // Dispose of resources in the dispose method
-  //   authController.email.dispose();
-  //   authController.password.dispose();
-  //   authController.discipline.dispose();
-  //   authController.contact.dispose();
-  //   authController.name.dispose();
-  //   authController.college.dispose();
-  //   authController.semester.dispose();
-  //   authController.confirmpassword.dispose();
-  //   super.dispose();
-  // }
+  void dispose() {
+    // Dispose of resources in the dispose method
+    authController.email.dispose();
+    authController.password.dispose();
+    authController.name.dispose();
+    authController.confirmpassword.dispose();
+    emailFocusNode.dispose();
+    nameFocusNode.dispose();
+    passwordFocusNode.dispose();
+    confirmpasswordFocusNode.dispose();
+    collegeFocusNode.dispose();
+    disciplineFocusNode.dispose();
+    semesterFocusNode.dispose();
+    contactFocusNode.dispose();
+    authController.isObsecure.value = true;
+    authController.isObsecure2.value = true;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: 322.w,
@@ -51,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     overflowSpacing: 5,
                     children: [
                       SizedBox(
-                        height: 40.h,
+                        height: 60.h,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -60,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 20.h,
                       ),
                       Row(
                         children: [
@@ -79,18 +94,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.name,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'Name is empty here';
+                              return 'Name required';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
-
+                          focusNode: nameFocusNode,
+                          onFieldSubmitted: (value) {
+                            emailFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -148,16 +172,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: authController.email,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'Email is empty here';
+                              return 'Email required';
                             }
                             return null;
                           },
+                          focusNode: emailFocusNode,
+                          onFieldSubmitted: (value) {
+                            passwordFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             hintText: 'fola@gmail.com',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
@@ -213,18 +248,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.password,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'Password is empty here';
+                              return 'Password required';
                             }
                             return null;
                           },
+                          focusNode: passwordFocusNode,
+                          onFieldSubmitted: (value) {
+                            confirmpasswordFocusNode.requestFocus();
+                          },
                           obscureText: authController.isObsecure.value,
-                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -253,7 +298,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            hintText: '**********',
+                            hintText: 'fola99caus9',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
                             ),
@@ -280,31 +325,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Row(
                         children: [
                           CustomImageView(
-                            svgPath: IconConstant.icCollegeAuth,
+                            svgPath: IconConstant.icPassword,
                             height: 25.h,
-                            width: 25.w,
+                            width: 20.w,
                           ),
                           SizedBox(
                             width: 5.w,
                           ),
                           Text(
-                            'College',
+                            'Confirm Password',
                             style: customTexttheme.bodySmall,
-                          ),
+                          )
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
-                          controller: authController.college,
+                          keyboardType: TextInputType.text,
+                          controller: authController.confirmpassword,
                           validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'info is empty here';
+                            if ((text == null || text.isEmpty) &&
+                                authController.confirmpassword.text ==
+                                    authController.password.text) {
+                              return 'Password doesnt match';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
+                          focusNode: confirmpasswordFocusNode,
+                          onFieldSubmitted: (value) {
+                            collegeFocusNode.requestFocus();
+                          },
+                          obscureText: authController.isObsecure2.value,
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -333,7 +391,93 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            hintText: 'Khyber Medical College',
+                            hintText: 'fola99caus9',
+                            hintStyle: customTexttheme.bodySmall!.copyWith(
+                              color: textColor.withOpacity(0.25),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 15.w,
+                            ),
+                            suffixIcon: GestureDetector(
+                              onTap: authController
+                                  .toggleObsecure2, // Remove the () here
+                              child: Icon(
+                                authController.isObsecure2.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: textColor.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Row(
+                        children: [
+                          CustomImageView(
+                            svgPath: IconConstant.icCollegeAuth,
+                            height: 25.h,
+                            width: 25.w,
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            'College',
+                            style: customTexttheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50.h,
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: authController.college,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'College required';
+                            }
+                            return null;
+                          },
+                          focusNode: collegeFocusNode,
+                          onFieldSubmitted: (value) {
+                            disciplineFocusNode.requestFocus();
+                          },
+                          decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(10.0.r), // Set y
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            hintText: 'NorthWest Institute',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
                             ),
@@ -344,9 +488,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
+                      SizedBox(height: 10.h),
                       Row(
                         children: [
                           CustomImageView(
@@ -364,17 +506,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.discipline,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'KMUKAT is empty here';
+                              return 'Degree required';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
+                          focusNode: disciplineFocusNode,
+                          onFieldSubmitted: (value) {
+                            semesterFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -389,19 +541,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red.withOpacity(0.6),
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                             hintText: 'Bs Nursing',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
@@ -414,9 +564,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
+                      SizedBox(height: 10.h),
                       Row(
                         children: [
                           CustomImageView(
@@ -430,21 +578,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Text(
                             'Semester',
                             style: customTexttheme.bodySmall,
-                          )
+                          ),
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
                           controller: authController.semester,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'SemesterField is empty here';
+                              return 'Semester required';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
+                          focusNode: semesterFocusNode,
+                          onFieldSubmitted: (value) {
+                            contactFocusNode.requestFocus();
+                          },
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -459,21 +617,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red.withOpacity(0.6),
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
-                            hintText: '7th',
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            hintText: '6th',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
                             ),
@@ -484,9 +640,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
+                      SizedBox(height: 10.h),
                       Row(
                         children: [
                           CustomImageView(
@@ -500,21 +654,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Text(
                             'Contact',
                             style: customTexttheme.bodySmall,
-                          )
+                          ),
                         ],
                       ),
                       SizedBox(
-                        height: 49.h,
+                        height: 50.h,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: authController.contact,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'Contact is empty here';
+                              return 'Contact required';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.number,
+                          focusNode: contactFocusNode,
                           decoration: InputDecoration(
+                            errorStyle: customTexttheme.bodySmall!.copyWith(
+                              color: Colors.red.withOpacity(0.6),
+                              height: 0.1.h,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12.sp,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: textColor.withOpacity(0.6),
@@ -529,21 +690,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
-                            ),
                             errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.red.withOpacity(0.6),
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(10.0.r), // Set y
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
-                            hintText: '+92344587382',
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: textColor.withOpacity(0.6),
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            hintText: '03448765322',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
                             ),
@@ -573,44 +732,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(
                 height: 30.h,
-              ),
-              SizedBox(
-                width: 201.42.w,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        SocialButton(image: IconConstant.icGoogle),
-                        SizedBox(height: 5.h),
-                        Text(
-                          'Google',
-                          style: customTexttheme.labelMedium,
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 20.h,
-                      ),
-                      child: Text(
-                        'or',
-                        style: customTexttheme.labelMedium,
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        SocialButton(image: IconConstant.icApple),
-                        SizedBox(height: 5.h),
-                        Text(
-                          'Apple',
-                          style: customTexttheme.labelMedium,
-                        )
-                      ],
-                    )
-                  ],
-                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.h),

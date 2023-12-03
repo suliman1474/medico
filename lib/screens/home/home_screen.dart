@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/widgets/floating_button.dart';
 import 'package:medico/widgets/folder.dart';
 
 import '../../constants/user_role.dart';
@@ -69,22 +70,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: dbController.userRole.value == UserRole.USER
-            ? Padding(
-                padding: EdgeInsets.only(top: 20.h),
-                child: ListView.builder(
-                  itemCount: folders.length,
-                  itemBuilder: (context, index) {
-                    return folders[index];
-                  },
-                ),
-              )
-            : Container(
-                child: Center(
-                  child: Text('Ehhhhh  heeee You are Admin'),
-                ),
-              ),
-        // floatingActionButton: CustomFloatingButton(),
+        body: Padding(
+          padding: EdgeInsets.only(top: 20.h),
+          child: ListView.builder(
+            itemCount: folders.length,
+            itemBuilder: (context, index) {
+              return folders[index];
+            },
+          ),
+        ),
+        floatingActionButton: dbController.userRole.value == UserRole.ADMIN
+            ? CustomFloatingButton()
+            : null,
       );
     });
   }
