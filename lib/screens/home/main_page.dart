@@ -15,7 +15,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-  var _bottomNavIndex = 0;
+  // var _bottomNavIndex = 0;
 
   ScreenController screenController = Get.find<ScreenController>();
 
@@ -26,16 +26,16 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: white,
         appBar: CustomAppBar(),
         body: Obx(() {
-          return screenController.pages[_bottomNavIndex];
+          return screenController.pages[screenController.bottomNavIndex.value];
         }),
         bottomNavigationBar: CustomBottomBar(
-            bottomNavIndex: _bottomNavIndex,
+            bottomNavIndex: screenController.bottomNavIndex.value,
             onChanged: (index) {
               print('main_page onchanged function called index: ${index}');
-              if (index == _bottomNavIndex) {
+              if (index == screenController.bottomNavIndex) {
                 screenController.assignAll();
               } else {
-                setState(() => _bottomNavIndex = index);
+                setState(() => screenController.bottomNavIndex.value = index);
               }
             }),
         // floatingActionButton: CustomFloatingButton(),
