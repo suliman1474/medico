@@ -29,13 +29,24 @@ class FirebaseService {
     }
   }
 
-  Future<UserModel> updateUser(String name, XFile? selectedImage) async {
+  Future<UserModel> updateUser(
+    String name,
+    String college,
+    String discipline,
+    String semester,
+    String contact,
+    XFile? selectedImage,
+  ) async {
     final userFirestoreRef = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
 
     await userFirestoreRef.update({
       'name': name,
+      'college': college,
+      'discipline': discipline,
+      'semester': semester,
+      'contact': contact,
     });
 
     if (selectedImage != null) {

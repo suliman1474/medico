@@ -32,7 +32,7 @@ class _MainPageState extends State<MainPage> {
             bottomNavIndex: screenController.bottomNavIndex.value,
             onChanged: (index) {
               print('main_page onchanged function called index: ${index}');
-              if (index == screenController.bottomNavIndex) {
+              if (index == screenController.bottomNavIndex.value) {
                 screenController.assignAll();
               } else {
                 setState(() => screenController.bottomNavIndex.value = index);
