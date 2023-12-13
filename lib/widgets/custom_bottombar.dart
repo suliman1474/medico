@@ -24,7 +24,6 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   @override
   void initState() {
     selectedIndex = widget.bottomNavIndex;
-
     super.initState();
   }
 
@@ -138,7 +137,6 @@ class CustomBottomBarState extends State<CustomBottomBar> {
             onTap: (index) {
               selectedIndex = index;
               print('custom_bottombar ontap function index: ${index}');
-
               widget.onChanged?.call(index);
               setState(() {});
             },

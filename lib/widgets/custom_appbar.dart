@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
+import 'package:medico/screens/home/edit_profile_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 import '../controllers/screen_controller.dart';
@@ -14,7 +15,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => Size(mediaQueryData.size.width, 90.h);
+  Size get preferredSize => Size(ScreenUtil().screenWidth, 90.h);
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
@@ -51,14 +52,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
           actions: [
             screenController.bottomNavIndex.value == 3
-                ? GestureDetector(
-                    onTap: () {},
-                    child: CustomImageView(
-                      svgPath: IconConstant.icEdit,
-                      height: 35.h,
-                      width: 35.w,
-                      margin: EdgeInsets.only(right: 20.w, top: 20.h),
-                    ),
+                ? CustomImageView(
+                    svgPath: IconConstant.icEdit,
+                    height: 35.h,
+                    width: 35.w,
+                    margin: EdgeInsets.only(right: 20.w, top: 20.h),
+                    onTap: () {
+                      Get.to(EditProfileScreen());
+                    },
                   )
                 : Container(
                     margin: EdgeInsets.only(right: 20.w, top: 20.h),
@@ -74,7 +75,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         imagePath: IconConstant.icTopbarProfile,
                         fit: BoxFit.cover,
                         onTap: () {
-                          Get.toNamed('/profile');
+                          setState(() {
+                            screenController.bottomNavIndex.value = 3;
+                          });
                         },
                       ),
                     ),

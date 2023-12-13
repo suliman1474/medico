@@ -13,8 +13,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
 import '../screens/Authentication/login_screen.dart';
-import '../screens/Authentication/signup_screen.dart';
-import '../screens/home/home_screen.dart';
 import '../screens/home/main_page.dart';
 import '../services/firebase_services.dart';
 import '../widgets/indicator.dart';
@@ -63,13 +61,27 @@ class AuthenticationController extends GetxController {
     isObsecure2.value = !isObsecure2.value;
   }
 
-  Future<void> updateUserProfile(String name, XFile? selectedImage) async {
+  Future<void> updateUserProfile(
+    String name,
+    String college,
+    String discipline,
+    String semester,
+    String contact,
+    XFile? selectedImage,
+  ) async {
     try {
       Indicator.showLoading();
-      userProfile.value = await firebaseService.updateUser(name, selectedImage);
+      userProfile.value = await firebaseService.updateUser(
+        name,
+        college,
+        discipline,
+        semester,
+        contact,
+        selectedImage,
+      );
 
       Indicator.closeLoading();
-      Get.offNamed('/home');
+      // Get.offNamed('/home');
     } catch (e) {
       print(e);
     }

@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medico/constants/user_role.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
@@ -30,6 +32,12 @@ class Folder extends StatefulWidget {
 
 class _FolderState extends State<Folder> {
   ScreenController screenController = Get.find<ScreenController>();
+  DbController dbController = Get.find();
+
+  void loadUser() async {
+    await dbController.loadUserRole();
+  }
+
   late Widget newscreen;
   late bool visibility;
   late String foldername;
@@ -37,6 +45,7 @@ class _FolderState extends State<Folder> {
   @override
   void initState() {
     super.initState();
+    loadUser();
     newscreen = widget.screen;
     visibility = widget.update;
     foldername = widget.name;
@@ -45,7 +54,7 @@ class _FolderState extends State<Folder> {
 
   @override
   Widget build(BuildContext context) {
-    return ifdownloaded
+    return dbController.userRole.value == UserRole.ADMIN || ifdownloaded
         ? GestureDetector(
             onTap: () {
               print('should go to another page');
@@ -82,7 +91,8 @@ class _FolderState extends State<Folder> {
                           ),
                         ),
                         Visibility(
-                          visible: visibility,
+                          visible: visibility &&
+                              dbController.userRole.value == UserRole.USER,
                           child: Container(
                             margin: EdgeInsets.only(left: 5.w, top: 5.h),
                             height: 15.h,
@@ -109,7 +119,8 @@ class _FolderState extends State<Folder> {
                   Expanded(
                     flex: 1,
                     child: Visibility(
-                      visible: visibility,
+                      visible: visibility &&
+                          dbController.userRole.value == UserRole.USER,
                       child: CustomImageView(
                         svgPath: IconConstant.icDownload,
                         height: 38.h,
@@ -120,11 +131,18 @@ class _FolderState extends State<Folder> {
                   Expanded(
                     flex: 1,
                     child: CustomImageView(
-                      svgPath: IconConstant.icForward,
-                      height: 14.h,
-                      width: 9.w,
-                      margin: EdgeInsets.only(right: 10).w,
-                    ),
+                        svgPath: dbController.userRole.value == UserRole.USER
+                            ? IconConstant.icForward
+                            : IconConstant.icOption,
+                        height: 14.h,
+                        width: 9.w,
+                        margin: EdgeInsets.only(right: 10.w),
+                        onTap: dbController.userRole.value == UserRole.USER
+                            ? () {
+                                screenController.updatePageAt(
+                                    AppPage.HomeScreen, newscreen);
+                              }
+                            : () {}),
                   ),
                 ],
               ),

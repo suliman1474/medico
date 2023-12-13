@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:medico/constants/user_role.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
@@ -17,19 +20,26 @@ class Slides extends StatefulWidget {
 }
 
 class _SlidesState extends State<Slides> {
+  DbController dbController = Get.find();
+
+  void loadUser() async {
+    await dbController.loadUserRole();
+  }
+
   late int unit;
   late bool updated;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    loadUser();
     unit = widget.index;
     updated = widget.update;
   }
 
   @override
   Widget build(BuildContext context) {
-    return updated
+    return dbController.userRole.value == UserRole.USER && updated
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -41,7 +51,7 @@ class _SlidesState extends State<Slides> {
                 ),
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
-                  height: 190.h,
+                  // height: 190.h,
                   width: 192.w,
                   decoration: BoxDecoration(
                     color: secondryColor,
@@ -51,7 +61,9 @@ class _SlidesState extends State<Slides> {
                     children: [
                       Container(
                         margin: EdgeInsets.symmetric(
-                            vertical: 10.h, horizontal: 10.w),
+                          vertical: 10.h,
+                          horizontal: 10.w,
+                        ),
                         height: 71.h,
                         width: 171.w,
                         decoration: BoxDecoration(
@@ -61,47 +73,45 @@ class _SlidesState extends State<Slides> {
                       ),
                       Row(
                         children: [
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                              height: 44.h,
-                              width: 44.w,
-                              decoration: BoxDecoration(
-                                color: color2,
-                                borderRadius: BorderRadius.circular(15).r,
-                              ),
-                              child: Center(
-                                child: CustomImageView(
-                                  svgPath: IconConstant.icFile,
-                                  height: 35.h,
-                                  width: 35.w,
-                                  fit: BoxFit.scaleDown,
-                                ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5.w),
+                            height: 44.h,
+                            width: 40.w,
+                            decoration: BoxDecoration(
+                              color: color2,
+                              borderRadius: BorderRadius.circular(15).r,
+                            ),
+                            child: Center(
+                              child: CustomImageView(
+                                svgPath: IconConstant.icFile,
+                                height: 35.h,
+                                width: 35.w,
+                                fit: BoxFit.scaleDown,
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 6,
-                            child: Container(
-                              //margin: EdgeInsets.only(top: 10.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Unit $unit: Nursing Process_Medico Slides.ppt',
-                                    style: customTexttheme.bodySmall,
+                          Container(
+                            width: 120.w,
+                            margin: EdgeInsets.symmetric(
+                              vertical: 0.h,
+                              horizontal: 5.w,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Unit $unit: Nursing Process_Medico Slides.ppt',
+                                  style: customTexttheme.bodySmall,
+                                ),
+                                Text(
+                                  '60 Slides . 1.4 MB . PPT',
+                                  style: customTexttheme.bodySmall!.copyWith(
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: textColor.withOpacity(0.5),
                                   ),
-                                  Text(
-                                    '60 Slides . 1.4 MB . PPT',
-                                    style: customTexttheme.bodySmall!.copyWith(
-                                      fontSize: 8.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: textColor.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -139,47 +149,45 @@ class _SlidesState extends State<Slides> {
                 ),
                 Row(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5.w),
-                        height: 44.h,
-                        width: 44.w,
-                        decoration: BoxDecoration(
-                          color: color2,
-                          borderRadius: BorderRadius.circular(15).r,
-                        ),
-                        child: Center(
-                          child: CustomImageView(
-                            svgPath: IconConstant.icFile,
-                            height: 35.h,
-                            width: 35.w,
-                            fit: BoxFit.scaleDown,
-                          ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.w),
+                      height: 44.h,
+                      width: 40.w,
+                      decoration: BoxDecoration(
+                        color: color2,
+                        borderRadius: BorderRadius.circular(15).r,
+                      ),
+                      child: Center(
+                        child: CustomImageView(
+                          svgPath: IconConstant.icFile,
+                          height: 35.h,
+                          width: 35.w,
+                          fit: BoxFit.scaleDown,
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 6,
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Unit $unit: Nursing Process_Medico Slides.ppt',
-                              style: customTexttheme.bodySmall,
+                    Container(
+                      width: 120.w,
+                      margin: EdgeInsets.symmetric(
+                        vertical: 5.h,
+                        horizontal: 5.w,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Unit $unit: Nursing Process_Medico Slides.ppt',
+                            style: customTexttheme.bodySmall,
+                          ),
+                          Text(
+                            '60 Slides . 1.4 MB . PPT',
+                            style: customTexttheme.bodySmall!.copyWith(
+                              fontSize: 8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: textColor.withOpacity(0.5),
                             ),
-                            Text(
-                              '60 Slides . 1.4 MB . PPT',
-                              style: customTexttheme.bodySmall!.copyWith(
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.w400,
-                                color: textColor.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
