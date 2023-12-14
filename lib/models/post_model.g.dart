@@ -20,14 +20,15 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
       id: fields[0] as String,
       description: fields[1] as String?,
       image: fields[2] as String?,
-      timeposted: fields[3] as DateTime,
+      timestamp: fields[3] as DateTime,
+      like: (fields[4] as List?)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, PostModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
       ..writeByte(2)
       ..write(obj.image)
       ..writeByte(3)
-      ..write(obj.timeposted);
+      ..write(obj.timestamp)
+      ..writeByte(4)
+      ..write(obj.like);
   }
 
   @override
@@ -57,12 +60,14 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       id: json['id'] as String,
       description: json['description'] as String?,
       image: json['image'] as String?,
-      timeposted: DateTime.parse(json['timeposted'] as String),
+      timestamp: DateTime.parse(json['timestamp'] as String),
+      like: (json['like'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'id': instance.id,
       'description': instance.description,
       'image': instance.image,
-      'timeposted': instance.timeposted.toIso8601String(),
+      'timestamp': instance.timestamp.toIso8601String(),
+      'like': instance.like,
     };
