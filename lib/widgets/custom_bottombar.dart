@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  final int bottomNavIndex;
   final Function(int index)? onChanged;
 
-  CustomBottomBar({Key? key, required this.bottomNavIndex, this.onChanged})
-      : super(key: key);
+  CustomBottomBar({Key? key, this.onChanged}) : super(key: key);
   // CustomBottomBar({this.onChanged});
 
   // Function(BottomBarEnum)? onChanged;
@@ -19,11 +20,12 @@ class CustomBottomBar extends StatefulWidget {
 }
 
 class CustomBottomBarState extends State<CustomBottomBar> {
+  ScreenController screenController = Get.find();
   int selectedIndex = 0;
 
   @override
   void initState() {
-    selectedIndex = widget.bottomNavIndex;
+    selectedIndex = screenController.bottomNavIndex.value;
     super.initState();
   }
 
@@ -56,94 +58,96 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: 100.h,
-        width: 424.w,
-        decoration: BoxDecoration(
-          color: color1,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-        ),
-        child: Theme(
-          data: ThemeData(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
+    return Obx(() {
+      return SafeArea(
+        child: Container(
+          height: 100.h,
+          width: 424.w,
+          decoration: BoxDecoration(
+            color: color1,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
           ),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            elevation: 0,
-            currentIndex: selectedIndex,
-            type: BottomNavigationBarType.fixed,
-            items: List.generate(bottomMenuList.length, (index) {
-              return BottomNavigationBarItem(
-                icon: Column(
-                  children: [
-                    CustomImageView(
-                      svgPath: bottomMenuList[index].icon,
-                      height: 20.h,
-                      width: 20.h,
-                      margin: EdgeInsets.only(bottom: 5.h),
-                      color: offwhite,
-                    ),
-                    Container(
-                      height: 18.h,
-                      child: Text(
-                        bottomMenuList[index].title ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: customTexttheme.labelSmall,
+          child: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              elevation: 0,
+              currentIndex: screenController.bottomNavIndex.value,
+              type: BottomNavigationBarType.fixed,
+              items: List.generate(bottomMenuList.length, (index) {
+                return BottomNavigationBarItem(
+                  icon: Column(
+                    children: [
+                      CustomImageView(
+                        svgPath: bottomMenuList[index].icon,
+                        height: 20.h,
+                        width: 20.h,
+                        margin: EdgeInsets.only(bottom: 5.h),
+                        color: offwhite,
                       ),
-                    ),
-                  ],
-                ),
-                activeIcon: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomImageView(
-                      svgPath: bottomMenuList[index].activeIcon,
-                      height: 20.h,
-                      width: 30.h,
-                      color: white,
-                      margin: EdgeInsets.only(bottom: 5.h),
-                    ),
-                    Container(
-                      height: 18.h,
-                      child: Text(
-                        bottomMenuList[index].title ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: customTexttheme.labelSmall!
-                            .copyWith(color: white, fontSize: 12.sp),
+                      Container(
+                        height: 18.h,
+                        child: Text(
+                          bottomMenuList[index].title ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: customTexttheme.labelSmall,
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 5.h),
-                      height: 3.h,
-                      width: 5.h,
-                      decoration: BoxDecoration(
+                    ],
+                  ),
+                  activeIcon: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      CustomImageView(
+                        svgPath: bottomMenuList[index].activeIcon,
+                        height: 20.h,
+                        width: 30.h,
                         color: white,
-                        borderRadius: BorderRadius.circular(10).r,
+                        margin: EdgeInsets.only(bottom: 5.h),
                       ),
-                    )
-                  ],
-                ),
-                label: '',
-              );
-            }),
-            onTap: (index) {
-              selectedIndex = index;
-              print('custom_bottombar ontap function index: ${index}');
-              widget.onChanged?.call(index);
-              setState(() {});
-            },
+                      Container(
+                        height: 18.h,
+                        child: Text(
+                          bottomMenuList[index].title ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: customTexttheme.labelSmall!
+                              .copyWith(color: white, fontSize: 12.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 5.h),
+                        height: 3.h,
+                        width: 5.h,
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(10).r,
+                        ),
+                      )
+                    ],
+                  ),
+                  label: '',
+                );
+              }),
+              onTap: (index) {
+                screenController.bottomNavIndex.value = index;
+                print('custom_bottombar ontap function index: ${index}');
+                widget.onChanged?.call(index);
+                setState(() {});
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

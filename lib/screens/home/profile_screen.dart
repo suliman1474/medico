@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -20,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool contactus = false;
   DbController dbController = Get.find();
   late Future<UserModel?> user;
-
+  late Future<Uint8List?> profile;
   @override
   void initState() {
     user = dbController.getUser();
@@ -36,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               final user = snapshot.data!;
+              profile = dbController.getUserImage(user);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -46,14 +51,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Row(
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: CustomImageView(
-                                imagePath: IconConstant.icTopbarProfile,
-                                height: 100.h,
-                                width: 100.w,
-                                radius: BorderRadius.circular(50).r,
-                              ),
+                            FutureBuilder<Uint8List?>(
+                              future: profile,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  Uint8List? imageBytes = snapshot.data;
+                                  print('imagebytes : $imageBytes');
+
+                                  if (imageBytes != null) {
+                                    //   final img = File.fromRawPath(imageBytes);
+                                    print('image is found in hive');
+
+                                    //  final img = MemoryImage(imageBytes);
+                                    try {
+                                      return Container(
+                                        width:
+                                            100.w, // Set your preferred width
+                                        height:
+                                            100.h, // Set your preferred height
+                                        child: Image.memory(
+                                          imageBytes,
+                                          fit: BoxFit
+                                              .cover, // You can adjust the BoxFit based on your UI requirements
+                                          errorBuilder:
+                                              (context, e, stackTrace) {
+                                            print(
+                                                'Error in image displaying: $e');
+                                            print('stack trace: $stackTrace');
+                                            return Container(
+                                              color: Colors
+                                                  .grey, // Replace with your preferred error color or default image
+                                            );
+                                          },
+                                        ),
+                                      );
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          child: Image.memory(imageBytes),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      print('Error decoding image: $e');
+                                      return Container();
+                                    }
+                                  } else {
+                                    return Expanded(
+                                      flex: 1,
+                                      child: CustomImageView(
+                                        imagePath: IconConstant.icTopbarProfile,
+                                        height: 100.h,
+                                        width: 100.w,
+                                        radius: BorderRadius.circular(50).r,
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  print('image is not found in hive');
+                                  return Container();
+                                }
+                              },
                             ),
                             Expanded(
                               flex: 3,
