@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive/hive.dart';
@@ -9,6 +12,7 @@ class DbController extends GetxController {
   final String userBox = 'user';
   final String isLoggedInBox = 'isLoggedIn';
   final String roleBox = 'role';
+  final String profileBox = 'profile_image';
   RxString userRole = 'user'.obs;
   // static const String quizAttemptId = 'quiz_attempt_id';
   // static const String quizModelAttempt = 'quiz';
@@ -31,7 +35,32 @@ class DbController extends GetxController {
     print('make is logged in true');
     await isLoggedInIdBox.put('isLoggedIn', true);
     await roleIdBox.put('role', user.role);
-    return userIdBox.put('current_user', user);
+    var imageBox = await Hive.openBox<Uint8List>(profileBox);
+    print('in storing user');
+    if (user.image!.isNotEmpty) {
+      print('image is not null');
+      try {
+        String imageName = user.image!.split('/').last.split('?').first;
+        imageName = imageName.replaceAll('%', '_');
+
+        final identifier = '${user.id}_$imageName';
+        final storageRef = FirebaseStorage.instance.refFromURL(user.image!);
+        final imageData = await storageRef.getData();
+        //  final imageBytes = imageData?.buffer.asUint8List();
+        if (imageData != null) {
+          await imageBox.put(identifier, imageData);
+        }
+      } on FirebaseException catch (e) {
+        print('Error downloading image: $e');
+      }
+    }
+
+    return userIdBox.put('current_user', user).whenComplete(() async {
+      await userIdBox.close();
+      await isLoggedInIdBox.close();
+      await roleIdBox.close();
+      await imageBox.close();
+    });
   }
 
   Future<UserModel?> getUser() async {
@@ -53,7 +82,6 @@ class DbController extends GetxController {
   Future<void> signOut() async {
     var isLoggedInIdBox = await Hive.openBox(isLoggedInBox);
 
-    print('Setting isLoggedIn to false');
     await isLoggedInIdBox.put('isLoggedIn', false);
 
     // You may also want to clear other user-related data when signing out
@@ -61,7 +89,21 @@ class DbController extends GetxController {
     var userIdBox = await Hive.openBox<UserModel>(userBox);
     await userIdBox.clear();
   }
-  // static Future<String?> getQuizId() async {
+
+  Future<Uint8List?> getUserImage(UserModel user) async {
+    String imageName = user.image!.split('/').last.split('?').first;
+    imageName = imageName.replaceAll('%', '_');
+    final identifier =
+        '${user.id}_$imageName'; // Update identifier logic if needed
+    final imageBox = await Hive.openBox<Uint8List>(profileBox);
+
+    final imageData = await imageBox.get(identifier);
+
+    // Convert ByteData to Uint8List if needed
+    return imageData?.buffer.asUint8List();
+  }
+
+// static Future<String?> getQuizId() async {
   //   var quizIdBox = await Hive.openBox(Db.quizIdBox);
   //   print(' get quiz id === ${quizIdBox.get('id')}');
   //   return quizIdBox.get('id');

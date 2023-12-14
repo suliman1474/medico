@@ -58,7 +58,7 @@ class FirebaseService {
       final updatedProfileUrl = await storageRef.getDownloadURL();
 
       await userFirestoreRef.update({
-        'profile': updatedProfileUrl,
+        'image': updatedProfileUrl,
       });
 
       final updatedUserDoc = await userFirestoreRef.get();

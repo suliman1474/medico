@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/screens/home/profile_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
@@ -50,7 +51,7 @@ class AuthenticationController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    // isLoggedIn();
+    isLoggedIn();
   }
 
   toggleObsecure() {
@@ -61,7 +62,7 @@ class AuthenticationController extends GetxController {
     isObsecure2.value = !isObsecure2.value;
   }
 
-  Future<void> updateUserProfile(
+  updateUserProfile(
     String name,
     String college,
     String discipline,
@@ -71,6 +72,11 @@ class AuthenticationController extends GetxController {
   ) async {
     try {
       Indicator.showLoading();
+      print('name: ' + name);
+      print('college: ' + college);
+      print(' discipline: ' + discipline);
+      print(' semester: ' + semester);
+      print(' contact: ' + contact);
       userProfile.value = await firebaseService.updateUser(
         name,
         college,
@@ -79,11 +85,18 @@ class AuthenticationController extends GetxController {
         contact,
         selectedImage,
       );
-
+      await dbController.storeUser(userProfile.value!);
       Indicator.closeLoading();
-      // Get.offNamed('/home');
-    } catch (e) {
-      print(e);
+      Get.off(MainPage());
+    } on FirebaseAuthException catch (e) {
+      Indicator.closeLoading();
+      return Get.snackbar(
+        'Error',
+        e.message ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -231,15 +244,19 @@ class AuthenticationController extends GetxController {
 
   Future<void> fetchUserProfile() async {
     final userId = _auth.currentUser?.uid;
-    if (userId != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      if (doc.exists) {
-        userProfile.value =
-            UserModel.fromJson(doc.data() as Map<String, dynamic>);
+    try {
+      if (userId != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+        if (doc.exists) {
+          userProfile.value =
+              UserModel.fromJson(doc.data() as Map<String, dynamic>);
+        }
       }
+    } catch (e) {
+      print('e: $e');
     }
   }
 
