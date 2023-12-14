@@ -13,13 +13,16 @@ class PostModel {
   @HiveField(2)
   String? image;
   @HiveField(3)
-  DateTime timeposted;
+  DateTime timestamp;
+  @HiveField(4)
+  List<String>? like;
 
   PostModel({
     required this.id,
     this.description,
     this.image,
-    required this.timeposted,
+    required this.timestamp,
+    this.like,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>
