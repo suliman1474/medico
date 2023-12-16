@@ -34,7 +34,7 @@ class CustomFloatingButton extends StatelessWidget {
     );
   }
 
-  void addOptions(BuildContext context) {
+  addOptions(BuildContext context) {
     showDialog(
         barrierColor: Colors.transparent,
         context: context,

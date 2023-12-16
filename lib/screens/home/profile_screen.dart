@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
@@ -57,38 +54,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 if (snapshot.hasData) {
                                   Uint8List? imageBytes = snapshot.data;
                                   print('imagebytes : $imageBytes');
-
                                   if (imageBytes != null) {
-                                    //   final img = File.fromRawPath(imageBytes);
                                     print('image is found in hive');
-
-                                    //  final img = MemoryImage(imageBytes);
                                     try {
                                       return Container(
-                                        width:
-                                            100.w, // Set your preferred width
-                                        height:
-                                            100.h, // Set your preferred height
-                                        child: Image.memory(
-                                          imageBytes,
-                                          fit: BoxFit
-                                              .cover, // You can adjust the BoxFit based on your UI requirements
-                                          errorBuilder:
-                                              (context, e, stackTrace) {
-                                            print(
-                                                'Error in image displaying: $e');
-                                            print('stack trace: $stackTrace');
-                                            return Container(
-                                              color: Colors
-                                                  .grey, // Replace with your preferred error color or default image
-                                            );
-                                          },
+                                        width: 100.w,
+                                        height: 100.h,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
                                         ),
-                                      );
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          child: Image.memory(imageBytes),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            50.r,
+                                          ),
+                                          child: Image.memory(
+                                            imageBytes,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, e, stackTrace) {
+                                              print(
+                                                'Error in image displaying: $e',
+                                              );
+                                              print('stack trace: $stackTrace');
+                                              return Container(
+                                                color: Colors.grey,
+                                              );
+                                            },
+                                          ),
                                         ),
                                       );
                                     } catch (e) {

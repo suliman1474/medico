@@ -44,4 +44,5 @@ class IconConstant {
   static String icContactAuth = 'assets/icons/contact_auth.svg';
   static String icAddPicture = 'assets/icons/add_pic.svg';
   static String icPost = 'assets/icons/post.svg';
+  static String icSearch = 'assets/icons/search.svg';
 }
