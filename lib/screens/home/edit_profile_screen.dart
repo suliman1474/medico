@@ -40,16 +40,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
   }
 
-  void pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      imageFile = pickedImage;
-    }
-  }
-
   void selectImage() async {
     final XFile? selectedImage =
         await imagePicker.pickImage(source: ImageSource.gallery);

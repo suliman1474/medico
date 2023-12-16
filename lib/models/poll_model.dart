@@ -12,16 +12,22 @@ class PollModel {
   @HiveField(1)
   String question;
   @HiveField(2)
+  String? timestamp;
+  @HiveField(3)
   List<OptionModel> options;
 
   PollModel({
     required this.id,
     required this.question,
     required this.options,
+    this.timestamp,
   });
 
   factory PollModel.fromJson(Map<String, dynamic> json) =>
       _$PollModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PollModelToJson(this);
+  Map<String, dynamic> toJson() => _$PollModelToJson(this)
+    ..addAll({
+      'options': options.map((option) => option.toJson()).toList(),
+    });
 }
