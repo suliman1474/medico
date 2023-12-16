@@ -205,10 +205,10 @@ class _FolderState extends State<Folder> {
                                     });
                                   // break;
                                   case 'Appearance':
-                                    // Handle delete action
-                                    setState(() {
-                                      appearance = !appearance;
-                                    });
+                                  // Handle delete action
+                                  // setState(() {
+                                  //   appearance = !appearance;
+                                  // });
                                   // break;
                                 }
                               },
@@ -270,9 +270,9 @@ class _FolderState extends State<Folder> {
                                                     child: Switch(
                                                       value: appearance,
                                                       onChanged: (value) {
-                                                        setState(() {
-                                                          appearance = value;
-                                                        });
+                                                        // setState(() {
+                                                        //   appearance = value;
+                                                        // });
                                                       },
                                                       activeColor: color1,
                                                       inactiveTrackColor:

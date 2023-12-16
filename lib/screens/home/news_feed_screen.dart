@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/screens/home/add_post_screen.dart';
@@ -27,26 +26,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
     getPostsAndPolls = feedController.getPostsAndPolls();
   }
 
-  @override
-  State<NewsFeedScreen> createState() => _NewsFeedScreenState();
-}
-
-class _NewsFeedScreenState extends State<NewsFeedScreen> {
-  FeedController feedController = Get.find();
-  late Future<List<dynamic>> getPostsAndPolls;
-
-  @override
-  void initState() {
-    super.initState();
-
-    getPostsAndPolls = feedController.getPostsAndPolls();
-  }
-
-  @override
-  State<NewsFeedScreen> createState() => _NewsFeedScreenState();
-}
-
-class _NewsFeedScreenState extends State<NewsFeedScreen> {
   @override
   Widget build(BuildContext context) {
     // List<Widget> posts = [
