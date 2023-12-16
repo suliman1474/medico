@@ -2,7 +2,6 @@
 
 import 'dart:ui';
 
-import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -47,7 +46,6 @@ class _FolderState extends State<Folder> {
     'Sharing',
     'Appearance',
   ];
-  CustomPopupMenuController _controller = CustomPopupMenuController();
 
   late Widget newscreen;
   late bool visibility;
