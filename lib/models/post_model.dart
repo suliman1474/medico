@@ -13,7 +13,7 @@ class PostModel {
   @HiveField(2)
   String? image;
   @HiveField(3)
-  DateTime timestamp;
+  String? timestamp;
   @HiveField(4)
   List<String>? like;
 
@@ -21,7 +21,7 @@ class PostModel {
     required this.id,
     this.description,
     this.image,
-    required this.timestamp,
+    this.timestamp,
     this.like,
   });
 

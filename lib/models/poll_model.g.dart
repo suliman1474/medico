@@ -19,19 +19,22 @@ class PollModelAdapter extends TypeAdapter<PollModel> {
     return PollModel(
       id: fields[0] as String,
       question: fields[1] as String,
-      options: (fields[2] as List).cast<OptionModel>(),
+      options: (fields[3] as List).cast<OptionModel>(),
+      timestamp: fields[2] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PollModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.question)
       ..writeByte(2)
+      ..write(obj.timestamp)
+      ..writeByte(3)
       ..write(obj.options);
   }
 
@@ -56,10 +59,12 @@ PollModel _$PollModelFromJson(Map<String, dynamic> json) => PollModel(
       options: (json['options'] as List<dynamic>)
           .map((e) => OptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      timestamp: json['timestamp'] as String?,
     );
 
 Map<String, dynamic> _$PollModelToJson(PollModel instance) => <String, dynamic>{
       'id': instance.id,
       'question': instance.question,
+      'timestamp': instance.timestamp,
       'options': instance.options,
     };
