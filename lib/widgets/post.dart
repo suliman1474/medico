@@ -7,6 +7,7 @@ import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:medico/screens/home/image_full_view.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 import '../controllers/db_controller.dart';
@@ -33,6 +34,20 @@ class _PostState extends State<Post> {
     super.initState();
   }
 
+  String formatLikeCount(int? likeCount) {
+    if (likeCount == null) {
+      return '0';
+    }
+
+    if (likeCount < 1000) {
+      return likeCount.toString();
+    } else if (likeCount < 1000000) {
+      return '${(likeCount / 1000).toStringAsFixed(1)}k';
+    } else {
+      return '${(likeCount / 1000000).toStringAsFixed(1)}M';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -54,6 +69,7 @@ class _PostState extends State<Post> {
           borderRadius: BorderRadius.circular(20).r,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -98,7 +114,9 @@ class _PostState extends State<Post> {
               child: post.description != null && post.description!.isNotEmpty
                   ? Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 20.w, vertical: 10.h),
+                        horizontal: 35.w,
+                        vertical: 10.h,
+                      ),
                       child: Text(
                         post.description! ?? '',
                         style: customTexttheme.bodyLarge,
@@ -107,12 +125,34 @@ class _PostState extends State<Post> {
                   : const SizedBox.shrink(),
             ),
             Container(
+              height: 200.h,
+              width: 293.w,
+              margin: EdgeInsets.symmetric(horizontal: 35.w),
               child: post.image != null && post.image!.isNotEmpty
-                  ? Image.network(
-                      post.image!,
-                      height: 172.h,
-                      width: 293.w,
-                      fit: BoxFit.cover,
+                  ? GestureDetector(
+                      onTap: () {
+                        Get.to(
+                          ImageViewScreen(
+                            image: post.image!,
+                            isfile: false,
+                          ),
+                        );
+                      },
+                      onDoubleTap: () {
+                        if (post.like!.contains(userId)) {
+                          post.like?.remove(userId);
+                        } else {
+                          post.like?.add(userId);
+                        }
+                        feedController.isLiked.value = !isLiked;
+                        feedController.likePost(post.id, userId);
+                      },
+                      child: Image.network(
+                        post.image!,
+                        // height: 172.h,
+                        // width: 293.w,
+                        fit: BoxFit.cover,
+                      ),
                     )
                   : const SizedBox.shrink(),
             ),
@@ -126,14 +166,6 @@ class _PostState extends State<Post> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    post.like?.length.toString() ?? '0,87429385709425',
-                    style: customTexttheme.bodySmall!.copyWith(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isLiked == true ? Colors.red : textColor,
-                    ),
-                  ),
                   GestureDetector(
                     onTap: () {
                       if (dbController.userRole.value == UserRole.USER) {
@@ -152,18 +184,22 @@ class _PostState extends State<Post> {
                     },
                     child: Padding(
                       padding:
-                          EdgeInsets.only(right: 8.w, left: 5.w, bottom: 5.h),
+                          EdgeInsets.only(right: 0.w, left: 0.w, bottom: 5.h),
                       child: isLiked == true
                           ? Icon(
                               Icons.favorite,
                               color: Colors.red,
                             )
                           : Icon(Icons.favorite_border),
-                      // child: CustomImageView(
-                      //   svgPath: IconConstant.icHeart,
-                      //   height: 35.h,
-                      //   width: 35.w,
-                      // ),
+                    ),
+                  ),
+                  Text(
+                    formatLikeCount(post.like?.length),
+                    // post.like?.length.toString() ?? '0',
+                    style: customTexttheme.bodySmall!.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                      color: isLiked == true ? Colors.red : textColor,
                     ),
                   ),
 

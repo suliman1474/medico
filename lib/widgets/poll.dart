@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/text_theme.dart';
@@ -24,12 +22,6 @@ class Poll extends StatefulWidget {
 }
 
 class _PollState extends State<Poll> {
-  // List<PollOption> options = [
-  //   PollOption("Very Good"),
-  //   PollOption("Good"),
-  //   PollOption("Average"),
-  //   PollOption("Poor"),
-  // ];
   FeedController feedController = Get.find();
   List<double> votes = [45, 60, 34, 14];
   int selectedOptionIndex = -1;
@@ -92,7 +84,7 @@ class _PollState extends State<Poll> {
                   isSelected: selectedOptionIndex == index,
                   // value: 0.5,
                   value: totalVotes > 0 && options[index].voterId!.length > 0
-                      ? totalVotes / options[index].voterId!.length
+                      ? options[index].voterId!.length / totalVotes
                       : 0,
                   //value: totalVotes > 0 ? votes[index] / totalVotes : 0,
                   onTap: () {

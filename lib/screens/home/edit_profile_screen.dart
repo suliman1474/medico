@@ -12,6 +12,7 @@ import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/user_model.dart';
 import 'package:medico/widgets/custom_elevated_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -456,12 +457,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   );
                 } else {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Indicator.loader(),
                   );
                 }
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Indicator.loader(),
                 );
               }
             },

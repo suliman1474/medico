@@ -8,10 +8,10 @@ import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/option_model.dart';
+import 'package:medico/screens/home/image_full_view.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 import '../../models/poll_model.dart';
-import '../../models/post_model.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -167,6 +167,7 @@ class _AddPostScreenState extends State<AddPostScreen>
                         width: 340.w,
                         child: TextFormField(
                           controller: description,
+                          minLines: 1,
                           maxLines: 5,
                           decoration: InputDecoration(
                             filled: true,
@@ -188,14 +189,22 @@ class _AddPostScreenState extends State<AddPostScreen>
                       imageFile != null
                           ? Padding(
                               padding: EdgeInsets.only(top: 15.h, bottom: 8.h),
-                              child: Container(
-                                height: 200.h,
-                                width: 340.w,
-                                child: Image.file(
-                                  File(
-                                    imageFile!.path,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(ImageViewScreen(
+                                    image: imageFile!.path,
+                                    isfile: true,
+                                  ));
+                                },
+                                child: Container(
+                                  height: 200.h,
+                                  width: 340.w,
+                                  child: Image.file(
+                                    File(
+                                      imageFile!.path,
+                                    ),
+                                    fit: BoxFit.scaleDown,
                                   ),
-                                  fit: BoxFit.cover,
                                 ),
                               ),
                             )
@@ -277,6 +286,7 @@ class _AddPostScreenState extends State<AddPostScreen>
                       Form(
                         key: _formKey,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               height: 45.h,
@@ -303,6 +313,25 @@ class _AddPostScreenState extends State<AddPostScreen>
                                     borderRadius: BorderRadius.circular(10.r),
                                     borderSide: BorderSide.none,
                                   ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.red.withOpacity(0.6),
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorStyle:
+                                      customTexttheme.bodySmall!.copyWith(
+                                    color: Colors.red.withOpacity(0.6),
+                                    height: 0.1.h,
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 12.sp,
+                                  ),
+                                  isCollapsed: false,
+                                  isDense: false,
                                 ),
                               ),
                             ),
@@ -343,6 +372,25 @@ class _AddPostScreenState extends State<AddPostScreen>
                                     vertical: 5.h,
                                     horizontal: 10.w,
                                   ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.red.withOpacity(0.6),
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorStyle:
+                                      customTexttheme.bodySmall!.copyWith(
+                                    color: Colors.red.withOpacity(0.6),
+                                    height: 0.1.h,
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 12.sp,
+                                  ),
+                                  isCollapsed: false,
+                                  isDense: false,
                                 ),
                               ),
                             ),
@@ -380,6 +428,25 @@ class _AddPostScreenState extends State<AddPostScreen>
                                     vertical: 5.h,
                                     horizontal: 10.w,
                                   ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.red.withOpacity(0.6),
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ),
+                                  errorStyle:
+                                      customTexttheme.bodySmall!.copyWith(
+                                    color: Colors.red.withOpacity(0.6),
+                                    height: 0.1.h,
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 12.sp,
+                                  ),
+                                  isCollapsed: false,
+                                  isDense: false,
                                 ),
                               ),
                             ),
