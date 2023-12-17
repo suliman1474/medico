@@ -13,12 +13,15 @@ import 'package:medico/screens/home/main_page.dart';
 import 'package:medico/widgets/indicator.dart';
 import 'dart:async';
 import '../models/poll_model.dart';
+import '../models/user_model.dart';
 import '../services/firebase_services.dart';
 
 class FeedController extends GetxController {
   FirebaseService firebaseService = FirebaseService();
   RxList<PostModel> postModels = <PostModel>[].obs;
   RxList<PollModel> pollModels = <PollModel>[].obs;
+  RxList<UserModel> likedBy = <UserModel>[].obs;
+  RxList<UserModel> votedBy = <UserModel>[].obs;
   RxInt selectedOptionIndex = RxInt(-1.obs);
   RxBool isLiked = false.obs;
   void createPost(String? description, XFile? image) async {

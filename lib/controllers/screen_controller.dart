@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:medico/constants/user_role.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/screens/home/profile_screen.dart';
+import 'package:medico/screens/home/users_screen.dart';
 
 import '../screens/home/about_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -34,6 +37,7 @@ class ScreenController extends GetxController {
   var pages = <Widget>[].obs;
   var stack = <Widget>[].obs;
   RxInt bottomNavIndex = 0.obs;
+  DbController dbController = Get.find();
   @override
   void onInit() async {
     // Initialize your pages here, you can fetch them from your API or wherever you need.
@@ -47,7 +51,9 @@ class ScreenController extends GetxController {
       const HomeScreen(),
       const NewsFeedScreen(),
       const AboutScreen(),
-      const ProfileScreen(),
+      dbController.userRole.value == UserRole.ADMIN
+          ? UsersScreen()
+          : ProfileScreen(),
       //const ProfileScreen(),
     ]);
     update();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
@@ -135,13 +136,19 @@ class _PostState extends State<Post> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (post.like!.contains(userId)) {
-                        post.like?.remove(userId);
+                      if (dbController.userRole.value == UserRole.USER) {
+                        // if user cllicks on like then update that
+                        if (post.like!.contains(userId)) {
+                          post.like?.remove(userId);
+                        } else {
+                          post.like?.add(userId);
+                        }
+                        feedController.isLiked.value = !isLiked;
+                        feedController.likePost(post.id, userId);
                       } else {
-                        post.like?.add(userId);
+                        // IF ADMIN CLICKS ON LIKE BUTTON HE SHOULD SEE ALL USERS WHO'VE LIKED THE POST
+                        print('admin clicked on it');
                       }
-                      feedController.isLiked.value = !isLiked;
-                      feedController.likePost(post.id, userId);
                     },
                     child: Padding(
                       padding:

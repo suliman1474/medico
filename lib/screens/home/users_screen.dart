@@ -43,6 +43,7 @@ class _UsersScreenState extends State<UsersScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: ListView.builder(
+        itemCount: users.length,
         itemBuilder: (context, index) {
           return users[index];
         },
