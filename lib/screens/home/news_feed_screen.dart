@@ -1,17 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/screens/home/add_post_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 import 'package:medico/widgets/poll.dart';
 import 'package:medico/widgets/post.dart';
-import 'package:rxdart/rxdart.dart';
-import '../../models/poll_model.dart';
-import '../../models/post_model.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   const NewsFeedScreen({super.key});

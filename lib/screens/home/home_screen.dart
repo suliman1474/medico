@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/widgets/floating_button.dart';
@@ -70,14 +69,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.only(top: 20.h),
-          child: ListView.builder(
-            itemCount: folders.length,
-            itemBuilder: (context, index) {
-              return folders[index];
-            },
-          ),
+        body: Stack(
+          children: [
+            ListView.builder(
+              itemCount: folders.length,
+              itemBuilder: (context, index) {
+                return folders[index];
+              },
+            ),
+          ],
         ),
         floatingActionButton: dbController.userRole.value == UserRole.ADMIN
             ? CustomFloatingButton()

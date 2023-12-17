@@ -38,10 +38,22 @@ class _FolderState extends State<Folder> {
     await dbController.loadUserRole();
   }
 
+  List<String> menuOptions = [
+    'Rename',
+    'Copy',
+    'Move',
+    'Delete',
+    'Sharing',
+    'Appearance',
+  ];
+
   late Widget newscreen;
   late bool visibility;
   late String foldername;
   late bool ifdownloaded;
+  bool options = false;
+  bool sharing = false;
+  bool appearance = false;
   @override
   void initState() {
     super.initState();
@@ -55,98 +67,237 @@ class _FolderState extends State<Folder> {
   @override
   Widget build(BuildContext context) {
     return dbController.userRole.value == UserRole.ADMIN || ifdownloaded
-        ? GestureDetector(
-            onTap: () {
-              print('should go to another page');
-              screenController.updatePageAt(AppPage.HomeScreen, newscreen);
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-              width: 379.w,
-              height: 76.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20).r,
-                color: secondryColor,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Stack(
-                      alignment: Alignment.topLeft,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(10).w,
-                          width: 55.w,
-                          height: 55.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15).r,
-                            color: color2,
-                          ),
-                          child: CustomImageView(
-                            svgPath: IconConstant.icFolder,
-                            height: 30.h,
-                            width: 30.w,
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ),
-                        Visibility(
-                          visible: visibility &&
-                              dbController.userRole.value == UserRole.USER,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 5.w, top: 5.h),
-                            height: 15.h,
-                            width: 15.w,
-                            decoration: BoxDecoration(
-                              color: color1,
-                              shape: BoxShape.circle,
+        ? Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                width: 379.w,
+                height: 76.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20).r,
+                  color: secondryColor,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Stack(
+                        alignment: Alignment.topLeft,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              print('should go to another page');
+                              screenController.updatePageAt(
+                                  AppPage.HomeScreen, newscreen);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10).w,
+                              width: 55.w,
+                              height: 55.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15).r,
+                                color: color2,
+                              ),
+                              child: CustomImageView(
+                                svgPath: IconConstant.icFolder,
+                                height: 30.h,
+                                width: 30.w,
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
                           ),
+                          Visibility(
+                            visible: visibility &&
+                                dbController.userRole.value == UserRole.USER,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 5.w, top: 5.h),
+                              height: 15.h,
+                              width: 15.w,
+                              decoration: BoxDecoration(
+                                color: color1,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: GestureDetector(
+                        onTap: () {
+                          print('should go to another page');
+                          screenController.updatePageAt(
+                              AppPage.HomeScreen, newscreen);
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            foldername,
+                            style: customTexttheme.displayLarge,
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        foldername,
-                        style: customTexttheme.displayLarge,
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Visibility(
-                      visible: visibility &&
-                          dbController.userRole.value == UserRole.USER,
-                      child: CustomImageView(
-                        svgPath: IconConstant.icDownload,
-                        height: 38.h,
-                        width: 38.w,
+                    Expanded(
+                      flex: 1,
+                      child: Visibility(
+                        visible: visibility &&
+                            dbController.userRole.value == UserRole.USER,
+                        child: CustomImageView(
+                          svgPath: IconConstant.icDownload,
+                          height: 38.h,
+                          width: 38.w,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: CustomImageView(
-                        svgPath: dbController.userRole.value == UserRole.USER
-                            ? IconConstant.icForward
-                            : IconConstant.icOption,
-                        height: 14.h,
-                        width: 9.w,
-                        margin: EdgeInsets.only(right: 10.w),
-                        onTap: dbController.userRole.value == UserRole.USER
-                            ? () {
+                    Expanded(
+                      flex: 1,
+                      child: dbController.userRole.value == UserRole.USER
+                          ? CustomImageView(
+                              svgPath: IconConstant.icForward,
+                              height: 14.h,
+                              width: 9.w,
+                              margin: EdgeInsets.only(right: 10.w),
+                              onTap: () {
                                 screenController.updatePageAt(
-                                    AppPage.HomeScreen, newscreen);
-                              }
-                            : () {}),
-                  ),
-                ],
+                                  AppPage.HomeScreen,
+                                  newscreen,
+                                );
+                              },
+                            )
+                          : PopupMenuButton<String>(
+                              constraints: BoxConstraints(
+                                maxHeight: 400.h,
+                                maxWidth: 205.w,
+                              ),
+                              color: Colors.white,
+                              surfaceTintColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              padding: EdgeInsets.zero,
+                              icon: CustomImageView(
+                                svgPath: IconConstant.icOption,
+                                height: 20.h,
+                                width: 10.w,
+                                margin: EdgeInsets.only(right: 10.w),
+                              ),
+                              onSelected: (value) {
+                                // Handle the selected option
+                                switch (value) {
+                                  case 'Rename':
+                                  // Handle rename action
+                                  // break;
+                                  case 'Copy':
+                                  // Handle copy action
+                                  // break;
+                                  case 'Move':
+                                  // Handle move action
+                                  // break;
+                                  case 'Delete':
+                                  // Handle delete action
+                                  // break;
+                                  case 'Sharing':
+                                    // Handle delete action
+                                    setState(() {
+                                      sharing = !sharing;
+                                    });
+                                  // break;
+                                  case 'Appearance':
+                                  // Handle delete action
+                                  // setState(() {
+                                  //   appearance = !appearance;
+                                  // });
+                                  // break;
+                                }
+                              },
+                              itemBuilder: (BuildContext context) {
+                                return {
+                                  'Rename',
+                                  'Copy',
+                                  'Move',
+                                  'Delete',
+                                  'Sharing',
+                                  'Appearance',
+                                }.map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    height: 40.h,
+                                    textStyle: customTexttheme.displaySmall,
+                                    value: choice,
+                                    child: choice == 'Sharing'
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                choice,
+                                                style: customTexttheme
+                                                    .displaySmall,
+                                              ),
+                                              Transform.scale(
+                                                scale: 0.6,
+                                                child: Switch(
+                                                  value: sharing,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      sharing = value;
+                                                    });
+                                                  },
+                                                  activeColor: color1,
+                                                  inactiveTrackColor:
+                                                      Colors.grey,
+                                                  materialTapTargetSize:
+                                                      MaterialTapTargetSize
+                                                          .shrinkWrap,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : choice == 'Appearance'
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    choice,
+                                                    style: customTexttheme
+                                                        .displaySmall,
+                                                  ),
+                                                  Transform.scale(
+                                                    scale: 0.6,
+                                                    child: Switch(
+                                                      value: appearance,
+                                                      onChanged: (value) {
+                                                        // setState(() {
+                                                        //   appearance = value;
+                                                        // });
+                                                      },
+                                                      activeColor: color1,
+                                                      inactiveTrackColor:
+                                                          Colors.grey,
+                                                      materialTapTargetSize:
+                                                          MaterialTapTargetSize
+                                                              .shrinkWrap,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Text(
+                                                choice,
+                                                style: customTexttheme
+                                                    .displaySmall,
+                                              ),
+                                  );
+                                }).toList();
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           )
         : Stack(
             alignment: Alignment.centerRight,
