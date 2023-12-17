@@ -1,17 +1,14 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/models/post_model.dart';
 import 'package:medico/screens/home/main_page.dart';
 import 'package:medico/widgets/indicator.dart';
-import 'dart:async';
+
 import '../models/poll_model.dart';
 import '../models/user_model.dart';
 import '../services/firebase_services.dart';
@@ -59,6 +56,30 @@ class FeedController extends GetxController {
       );
     } catch (e) {
       print('error in posting poll data');
+    }
+  }
+
+  Future<List<UserModel>> getLikedByUsers(PostModel post) async {
+    List<UserModel> likedByUsers = [];
+    print('get likes ==');
+    if (post.like != null && post.like!.isNotEmpty) {
+      print('condition true');
+      for (int i = 0; i < post.like!.length; i++) {
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(post.like![i])
+            .get();
+        if (userSnapshot.exists) {
+          likedByUsers.add(
+              UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>));
+        }
+      }
+
+      // Update the PostModel with the list of liked users
+      //  post.like = likedByUsers;
+      return likedByUsers;
+    } else {
+      return [];
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/screens/home/image_full_view.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 
 import '../controllers/db_controller.dart';
 import '../models/post_model.dart';
@@ -180,6 +181,7 @@ class _PostState extends State<Post> {
                       } else {
                         // IF ADMIN CLICKS ON LIKE BUTTON HE SHOULD SEE ALL USERS WHO'VE LIKED THE POST
                         print('admin clicked on it');
+                        Indicator.openbottomSheet(post);
                       }
                     },
                     child: Padding(
