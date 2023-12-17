@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     loadUser();
-
+    print(dbController.userRole.value);
     super.initState();
   }
 

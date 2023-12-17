@@ -10,6 +10,7 @@ import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/user_model.dart';
 import 'package:medico/screens/home/edit_profile_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 
 import '../controllers/screen_controller.dart';
 
@@ -213,12 +214,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             );
                           } else {
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: Indicator.loader(),
                             );
                           }
                         } else {
                           return Center(
-                            child: CircularProgressIndicator(),
+                            child: Indicator.loader(),
                           );
                         }
                       },

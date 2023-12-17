@@ -16,6 +16,14 @@ class Indicator {
     );
   }
 
+  static Widget loader() {
+    return LoadingAnimationWidget.flickr(
+      leftDotColor: color1,
+      rightDotColor: color2,
+      size: 40,
+    );
+  }
+
   static void closeLoading() {
     if (Get.isDialogOpen!) {
       Get.back();

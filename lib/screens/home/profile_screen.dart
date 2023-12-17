@@ -7,6 +7,7 @@ import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 
 import '../../models/user_model.dart';
 
@@ -470,12 +471,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Indicator.loader(),
               );
             }
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: Indicator.loader(),
             );
           }
         },
