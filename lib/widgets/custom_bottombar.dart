@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+
+import '../constants/user_role.dart';
 
 class CustomBottomBar extends StatefulWidget {
   final Function(int index)? onChanged;
@@ -22,43 +25,49 @@ class CustomBottomBar extends StatefulWidget {
 class CustomBottomBarState extends State<CustomBottomBar> {
   ScreenController screenController = Get.find();
   int selectedIndex = 0;
-
+  DbController dbController = Get.find();
   @override
   void initState() {
     selectedIndex = screenController.bottomNavIndex.value;
     super.initState();
   }
 
-  static List<BottomMenuModel> bottomMenuList = [
-    BottomMenuModel(
-      icon: IconConstant.icHome,
-      activeIcon: IconConstant.icHomeSelected,
-      title: "Home",
-      type: BottomBarEnum.Home,
-    ),
-    BottomMenuModel(
-      icon: IconConstant.icNewsFeed,
-      activeIcon: IconConstant.icNewsFeedSelected,
-      title: "News Feed",
-      type: BottomBarEnum.NewFeed,
-    ),
-    BottomMenuModel(
-      icon: IconConstant.icAbout,
-      activeIcon: IconConstant.icAboutSelected,
-      title: "About",
-      type: BottomBarEnum.About,
-    ),
-    BottomMenuModel(
-      icon: IconConstant.icProfile,
-      activeIcon: IconConstant.icProfileSelected,
-      title: "Profile",
-      type: BottomBarEnum.Profile,
-    )
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      print(
+          'user role when setting bottom bar: ${dbController.userRole.value}');
+      List<BottomMenuModel> bottomMenuList = [
+        BottomMenuModel(
+          icon: IconConstant.icHome,
+          activeIcon: IconConstant.icHomeSelected,
+          title: "Home",
+          type: BottomBarEnum.Home,
+        ),
+        BottomMenuModel(
+          icon: IconConstant.icNewsFeed,
+          activeIcon: IconConstant.icNewsFeedSelected,
+          title: "News Feed",
+          type: BottomBarEnum.NewFeed,
+        ),
+        BottomMenuModel(
+          icon: IconConstant.icAbout,
+          activeIcon: IconConstant.icAboutSelected,
+          title: "About",
+          type: BottomBarEnum.About,
+        ),
+        BottomMenuModel(
+          icon: IconConstant.icProfile,
+          activeIcon: IconConstant.icProfileSelected,
+          title: dbController.userRole.value == UserRole.ADMIN
+              ? "Users"
+              : "Profile",
+          type: dbController.userRole.value == UserRole.ADMIN
+              ? BottomBarEnum.Users
+              : BottomBarEnum.Profile,
+        )
+      ];
+
       return SafeArea(
         child: Container(
           height: 100.h,
@@ -151,7 +160,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   }
 }
 
-enum BottomBarEnum { Home, NewFeed, About, Profile }
+enum BottomBarEnum { Home, NewFeed, About, Profile, Users }
 
 class BottomMenuModel {
   BottomMenuModel({

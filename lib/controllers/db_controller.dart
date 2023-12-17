@@ -72,6 +72,7 @@ class DbController extends GetxController {
   Future<void> loadUserRole() async {
     var roleIdBox = await Hive.openBox(roleBox);
     userRole.value = roleIdBox.get('role', defaultValue: 'user');
+    update();
   }
 
   Future<bool> isLoggedIn() async {

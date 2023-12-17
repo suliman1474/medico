@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   Uint8List? imageBytes = snapshot.data;
-                                  print('imagebytes : $imageBytes');
+
                                   if (imageBytes != null) {
                                     print('image is found in hive');
                                     try {
