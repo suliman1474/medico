@@ -8,6 +8,7 @@ import 'package:medico/core/text_theme.dart';
 
 import '../models/option_model.dart';
 import '../models/poll_model.dart';
+import 'indicator.dart';
 
 class Poll extends StatefulWidget {
   final pollId;
@@ -81,6 +82,7 @@ class _PollState extends State<Poll> {
                 //     'options[index].voterId!.length ${options[index].voterId!.length}');
                 return PollOptionTile(
                   optiontitle: options[index].title,
+                  pollId: poll.id,
                   option: options[index],
                   isSelected: selectedOptionIndex == index,
                   // value: 0.5,
@@ -126,7 +128,7 @@ class PollOptionTile extends StatelessWidget {
   final double value;
   final int? votes;
   final OptionModel option;
-
+  final String pollId;
   PollOptionTile({
     required this.optiontitle,
     required this.isSelected,
@@ -134,6 +136,7 @@ class PollOptionTile extends StatelessWidget {
     required this.value,
     this.votes,
     required this.option,
+    required this.pollId,
   });
 
   @override
@@ -156,10 +159,15 @@ class PollOptionTile extends StatelessWidget {
                     color: textColor,
                   ),
                 ),
-                Text(
-                  votes == null ? '0' : 'Votes: ${votes}',
-                  style: customTexttheme.labelSmall!.copyWith(
-                    color: textColor,
+                GestureDetector(
+                  onTap: () {
+                    Indicator.openbottomSheetVotes(pollId, option);
+                  },
+                  child: Text(
+                    votes == null ? 'Votes: 0' : 'Votes: ${votes}',
+                    style: customTexttheme.labelSmall!.copyWith(
+                      color: textColor,
+                    ),
                   ),
                 ),
               ],

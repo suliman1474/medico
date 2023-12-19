@@ -5,9 +5,12 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:medico/models/option_model.dart';
 import 'package:medico/models/post_model.dart';
 import 'package:medico/models/user_model.dart';
 import 'package:medico/widgets/user_overview.dart';
+
+import '../models/poll_model.dart';
 
 class Indicator {
   static void showLoading() {
@@ -30,7 +33,7 @@ class Indicator {
     );
   }
 
-  static void openbottomSheet(PostModel post) {
+  static void openbottomSheetLike(PostModel post) {
     FeedController feedController = Get.find();
     Get.bottomSheet(
       elevation: 0,
@@ -101,10 +104,108 @@ class Indicator {
                             fontSize: 30.sp,
                           ),
                         ),
-                        for (int i = 0; i < 10; i++)
+                        for (int i = 0; i < likedUsers.length; i++)
                           Column(
                             children: [
-                              UserOverview(user: likedUsers[0]),
+                              UserOverview(user: likedUsers[i]),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                            ],
+                          )
+
+                        // Use the likedUsers list to display information about liked users
+                        // For example, you can create a ListView.builder here
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                // Show a default container if none of the conditions are met
+                return Container();
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  static void openbottomSheetVotes(String pollId, OptionModel option) {
+    FeedController feedController = Get.find();
+    Get.bottomSheet(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      BottomSheet(
+        constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        onClosing: () {},
+        builder: (context) {
+          return FutureBuilder(
+            future: feedController.getVoters(pollId, option),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // Show a loading indicator while fetching data
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                // Show an error message if there's an error
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                // Check if the data is empty
+                List<UserModel>? Voters = snapshot.data as List<UserModel>?;
+
+                if (Voters == null || Voters.isEmpty) {
+                  // Show a message when there are no liked users
+                  return Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.r),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No Votes yet.',
+                          style: customTexttheme.displayLarge!.copyWith(
+                            fontSize: 30.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // Show the list of liked users
+                print(Voters[0].name);
+                return Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20.r),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Voted by',
+                          style: customTexttheme.displayLarge!.copyWith(
+                            fontSize: 30.sp,
+                          ),
+                        ),
+                        for (int i = 0; i < Voters.length; i++)
+                          Column(
+                            children: [
+                              UserOverview(user: Voters[i]),
                               SizedBox(
                                 height: 4.h,
                               ),

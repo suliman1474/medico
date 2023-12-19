@@ -9,6 +9,7 @@ import 'package:medico/models/post_model.dart';
 import 'package:medico/screens/home/main_page.dart';
 import 'package:medico/widgets/indicator.dart';
 
+import '../models/option_model.dart';
 import '../models/poll_model.dart';
 import '../models/user_model.dart';
 import '../services/firebase_services.dart';
@@ -237,5 +238,32 @@ class FeedController extends GetxController {
         update(); // Assuming feedController is an instance of GetxController
       }
     });
+  }
+
+  Future<List<UserModel>> getVoters(String pollId, OptionModel option) async {
+    List<UserModel> Voters = [];
+    print('get voters ==');
+    if (option.voterId != null && option.voterId!.isNotEmpty) {
+      print('condition true');
+      for (int i = 0; i < option.voterId!.length; i++) {
+        DocumentSnapshot votersSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(option.voterId![i])
+            .get();
+        print('votersnapshot :${votersSnapshot.data()}');
+        if (votersSnapshot.exists) {
+          print('snapshot has voters');
+          Voters.add(UserModel.fromJson(
+              votersSnapshot.data() as Map<String, dynamic>));
+        }
+      }
+
+      // Update the PostModel with the list of liked users
+      //  post.like = likedByUsers;
+      return Voters;
+    } else {
+      print('voters empty');
+      return [];
+    }
   }
 }

@@ -181,7 +181,7 @@ class _PostState extends State<Post> {
                       } else {
                         // IF ADMIN CLICKS ON LIKE BUTTON HE SHOULD SEE ALL USERS WHO'VE LIKED THE POST
                         print('admin clicked on it');
-                        Indicator.openbottomSheet(post);
+                        Indicator.openbottomSheetLike(post);
                       }
                     },
                     child: Padding(
