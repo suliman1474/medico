@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medico/core/icons.dart';
-import 'package:medico/widgets/user_overview.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -11,33 +9,7 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
-  List<Widget> users = [
-    UserOverview(
-      image: IconConstant.icTopbarProfile,
-      name: 'javed',
-      email: 'javedkhan',
-    ),
-    UserOverview(
-      image: IconConstant.icTopbarProfile,
-      name: 'javed',
-      email: 'javedkhan',
-    ),
-    UserOverview(
-      image: IconConstant.icTopbarProfile,
-      name: 'javed',
-      email: 'javedkhan',
-    ),
-    UserOverview(
-      image: IconConstant.icTopbarProfile,
-      name: 'javed',
-      email: 'javedkhan',
-    ),
-    UserOverview(
-      image: IconConstant.icTopbarProfile,
-      name: 'javed',
-      email: 'javedkhan',
-    ),
-  ];
+  List<Widget> users = [];
   @override
   Widget build(BuildContext context) {
     return Padding(

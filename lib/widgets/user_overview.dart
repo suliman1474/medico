@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
-import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/models/user_model.dart';
 
 class UserOverview extends StatelessWidget {
-  // final UserModel user;
-  final String image;
-  final String name;
-  final String email;
+  final UserModel user;
+
   const UserOverview({
     super.key,
-    required this.image,
-    required this.name,
-    required this.email,
+    required this.user,
   });
 
   @override
@@ -37,8 +33,8 @@ class UserOverview extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(32.5.r),
-              child: CustomImageView(
-                imagePath: image,
+              child: Image.network(
+                user.image!,
                 fit: BoxFit.cover,
               ),
             ),
@@ -47,13 +43,12 @@ class UserOverview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
-                style: customTexttheme.titleLarge!.copyWith(
-                  color: textColor,
-                ),
+                user.name,
+                style: customTexttheme.titleMedium!
+                    .copyWith(color: textColor, fontSize: 14.sp),
               ),
               Text(
-                email,
+                user.email,
                 style: customTexttheme.bodySmall,
               ),
             ],

@@ -80,9 +80,11 @@ class _PollState extends State<Poll> {
                 // print(
                 //     'options[index].voterId!.length ${options[index].voterId!.length}');
                 return PollOptionTile(
-                  option: options[index].title,
+                  optiontitle: options[index].title,
+                  option: options[index],
                   isSelected: selectedOptionIndex == index,
                   // value: 0.5,
+                  votes: options[index].voterId!.length,
                   value: totalVotes > 0 && options[index].voterId!.length > 0
                       ? options[index].voterId!.length / totalVotes
                       : 0,
@@ -118,16 +120,20 @@ class PollOption {
 }
 
 class PollOptionTile extends StatelessWidget {
-  final String option;
+  final String optiontitle;
   final bool isSelected;
   final VoidCallback onTap;
   final double value;
+  final int? votes;
+  final OptionModel option;
 
   PollOptionTile({
-    required this.option,
+    required this.optiontitle,
     required this.isSelected,
     required this.onTap,
     required this.value,
+    this.votes,
+    required this.option,
   });
 
   @override
@@ -141,11 +147,22 @@ class PollOptionTile extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h),
-            child: Text(
-              option,
-              style: customTexttheme.labelSmall!.copyWith(
-                color: textColor,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  optiontitle,
+                  style: customTexttheme.labelSmall!.copyWith(
+                    color: textColor,
+                  ),
+                ),
+                Text(
+                  votes == null ? '0' : 'Votes: ${votes}',
+                  style: customTexttheme.labelSmall!.copyWith(
+                    color: textColor,
+                  ),
+                ),
+              ],
             ),
           ),
           LinearProgressIndicator(
