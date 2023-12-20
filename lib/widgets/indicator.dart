@@ -10,8 +10,6 @@ import 'package:medico/models/post_model.dart';
 import 'package:medico/models/user_model.dart';
 import 'package:medico/widgets/user_overview.dart';
 
-import '../models/poll_model.dart';
-
 class Indicator {
   static void showLoading() {
     Get.dialog(
@@ -39,9 +37,12 @@ class Indicator {
       elevation: 0,
       backgroundColor: Colors.transparent,
       BottomSheet(
-        constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth),
+        constraints: BoxConstraints(
+          minWidth: ScreenUtil().screenWidth,
+          minHeight: ScreenUtil().screenHeight / 2,
+        ),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         shadowColor: Colors.transparent,
         onClosing: () {},
         builder: (context) {
@@ -50,7 +51,7 @@ class Indicator {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // Show a loading indicator while fetching data
-                return Center(child: CircularProgressIndicator());
+                return Center(child: loader());
               } else if (snapshot.hasError) {
                 // Show an error message if there's an error
                 return Center(child: Text('Error: ${snapshot.error}'));
@@ -101,13 +102,16 @@ class Indicator {
                         Text(
                           'Liked by',
                           style: customTexttheme.displayLarge!.copyWith(
-                            fontSize: 30.sp,
+                            fontSize: 26.sp,
                           ),
                         ),
                         for (int i = 0; i < likedUsers.length; i++)
                           Column(
                             children: [
-                              UserOverview(user: likedUsers[i]),
+                              UserOverview(
+                                user: likedUsers[i],
+                                bottomsheet: true,
+                              ),
                               SizedBox(
                                 height: 4.h,
                               ),
@@ -137,9 +141,12 @@ class Indicator {
       elevation: 0,
       backgroundColor: Colors.transparent,
       BottomSheet(
-        constraints: BoxConstraints(minWidth: ScreenUtil().screenWidth),
+        constraints: BoxConstraints(
+          minWidth: ScreenUtil().screenWidth,
+          minHeight: ScreenUtil().screenHeight / 2,
+        ),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         shadowColor: Colors.transparent,
         onClosing: () {},
         builder: (context) {
@@ -148,7 +155,7 @@ class Indicator {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // Show a loading indicator while fetching data
-                return Center(child: CircularProgressIndicator());
+                return Center(child: loader());
               } else if (snapshot.hasError) {
                 // Show an error message if there's an error
                 return Center(child: Text('Error: ${snapshot.error}'));
@@ -199,13 +206,16 @@ class Indicator {
                         Text(
                           'Voted by',
                           style: customTexttheme.displayLarge!.copyWith(
-                            fontSize: 30.sp,
+                            fontSize: 26.sp,
                           ),
                         ),
                         for (int i = 0; i < Voters.length; i++)
                           Column(
                             children: [
-                              UserOverview(user: Voters[i]),
+                              UserOverview(
+                                user: Voters[i],
+                                bottomsheet: true,
+                              ),
                               SizedBox(
                                 height: 4.h,
                               ),

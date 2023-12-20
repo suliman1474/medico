@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -6,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/routes.dart';
@@ -56,6 +53,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             textTheme: customTexttheme.apply(
               fontSizeFactor: 1.sp,
+            ),
+            navigationBarTheme: NavigationBarThemeData(
+              backgroundColor: color1,
             ),
             colorScheme: ColorScheme.fromSeed(seedColor: white),
             useMaterial3: true,

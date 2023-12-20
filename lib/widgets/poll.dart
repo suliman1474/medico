@@ -73,6 +73,7 @@ class _PollState extends State<Poll> {
                 poll.question,
                 style: customTexttheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.w500,
+                  fontSize: 20.sp,
                 ),
               ),
             ),
@@ -152,12 +153,12 @@ class PollOptionTile extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 5.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   optiontitle,
-                  style: customTexttheme.labelSmall!.copyWith(
-                    color: textColor,
-                  ),
+                  style: customTexttheme.labelSmall!
+                      .copyWith(color: textColor, fontSize: 17.sp),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -165,9 +166,8 @@ class PollOptionTile extends StatelessWidget {
                   },
                   child: Text(
                     votes == null ? 'Votes: 0' : 'Votes: ${votes}',
-                    style: customTexttheme.labelSmall!.copyWith(
-                      color: textColor,
-                    ),
+                    style: customTexttheme.labelSmall!
+                        .copyWith(color: textColor, fontSize: 17.sp),
                   ),
                 ),
               ],
