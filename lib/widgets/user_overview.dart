@@ -6,15 +6,18 @@ import 'package:medico/models/user_model.dart';
 
 class UserOverview extends StatelessWidget {
   final UserModel user;
+  bool bottomsheet;
 
-  const UserOverview({
+  UserOverview({
     super.key,
     required this.user,
+    required this.bottomsheet,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
       height: 83.h,
       width: 392.w,
       decoration: BoxDecoration(
@@ -25,31 +28,55 @@ class UserOverview extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-            height: 65.h,
-            width: 65.w,
+            margin: bottomsheet
+                ? EdgeInsets.zero
+                : EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 20.w,
+                  ),
+            height: bottomsheet ? 50.h : 65.h,
+            width: bottomsheet ? 50.w : 65.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(32.5.r),
-              child: Image.network(
-                user.image!,
-                fit: BoxFit.cover,
-              ),
+              borderRadius: bottomsheet
+                  ? BorderRadius.circular(25.r)
+                  : BorderRadius.circular(33.r),
+              child: user.image!.isNotEmpty
+                  ? Image.network(
+                      user.image!,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      IconConstant.icTopbarProfile,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 user.name,
-                style: customTexttheme.titleMedium!
-                    .copyWith(color: textColor, fontSize: 14.sp),
+                style: bottomsheet
+                    ? customTexttheme.titleMedium!.copyWith(
+                        color: textColor,
+                        fontSize: 17.sp,
+                      )
+                    : customTexttheme.titleMedium!.copyWith(
+                        color: textColor,
+                        fontSize: 30.sp,
+                      ),
               ),
               Text(
                 user.email,
-                style: customTexttheme.bodySmall,
+                style: bottomsheet
+                    ? customTexttheme.bodySmall!.copyWith(
+                        fontSize: 13.sp,
+                      )
+                    : customTexttheme.bodySmall,
               ),
             ],
           )

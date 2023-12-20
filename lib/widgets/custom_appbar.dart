@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/search_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/user_model.dart';
@@ -28,6 +29,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   ScreenController screenController = Get.find<ScreenController>();
   DbController dbController = Get.find();
+  UserSearchController searchController = Get.find<UserSearchController>();
   late Future<UserModel?> user;
   late Future<Uint8List?> profile;
   @override
@@ -82,12 +84,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         )
                       : Container(
                           margin: EdgeInsets.symmetric(
-                            vertical: 15.h,
-                            horizontal: 25.w,
+                            vertical: 10.h,
+                            horizontal: 35.w,
                           ),
                           height: 40.h,
                           width: 352.w,
                           child: TextFormField(
+                            controller: searchController.search.value,
+                            onChanged: (value) {
+                              searchController.update();
+                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -103,7 +109,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 child: Center(
                                   child: CustomImageView(
                                     svgPath: IconConstant.icSearch,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.scaleDown,
                                   ),
                                 ),
                               ),

@@ -7,7 +7,7 @@ class IconConstant {
   static String icAboutSelected = 'assets/icons/about_selected.svg';
   static String icProfile = 'assets/icons/profile.svg';
   static String icProfileSelected = 'assets/icons/profile_selected.svg';
-  static String icTopbarProfile = 'assets/icons/profile_pic.png';
+  static String icTopbarProfile = 'assets/icons/user.png';
   static String icFolder = 'assets/icons/folder.svg';
   static String icFile = 'assets/icons/file.svg';
   static String icPlay = 'assets/icons/play.svg';
