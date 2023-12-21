@@ -92,7 +92,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           child: TextFormField(
                             controller: searchController.search.value,
                             onChanged: (value) {
-                              searchController.update();
+                              searchController.filterUsers(value);
                             },
                             decoration: InputDecoration(
                               filled: true,

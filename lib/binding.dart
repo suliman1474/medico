@@ -13,6 +13,6 @@ class Binding extends Bindings {
     Get.put(ScreenController());
     Get.put(DbController());
     Get.lazyPut(() => FeedController(), fenix: true);
-    Get.lazyPut(() => UserSearchController(), fenix: true);
+    Get.put(UserSearchController());
   }
 }
