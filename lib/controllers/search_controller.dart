@@ -10,11 +10,13 @@ class UserSearchController extends GetxController {
   RxList<UserModel> filteredUsers = <UserModel>[].obs;
 
   @override
-  void onInit() {
+  void onReady() {
     // Observe changes in the 'users' list and update 'filteredUsers'
     // allusers.value = getAllUsers();
-    super.onInit();
+    users.clear();
     getAllUsers();
+
+    super.onReady();
   }
 
   // Function to fetch all users from the 'users' collection

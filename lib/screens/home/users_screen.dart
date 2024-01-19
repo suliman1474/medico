@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/controllers/search_controller.dart';
 import 'package:medico/models/user_model.dart';
 import 'package:medico/widgets/indicator.dart';
@@ -29,6 +30,7 @@ class _UsersScreenState extends State<UsersScreen> {
     });
   }
 
+  ScreenController screenController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -36,16 +38,24 @@ class _UsersScreenState extends State<UsersScreen> {
       // searchController.filteredUsers.value =
       //     snapshot.data as List<UserModel>;
       print('search value: ' + searchController.search.value.text);
+      print(
+          'previous index: ${screenController.previousIndex} currentIndex: ${screenController.bottomNavIndex} ');
 
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        child: ListView.builder(
-          itemCount: searchController.filteredUsers.length,
-          itemBuilder: (context, index) {
-            var user = searchController.filteredUsers[index];
-            print(user.name);
-            return UserOverview(user: user, bottomsheet: false);
-          },
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          screenController.onWillPop();
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          child: ListView.builder(
+            itemCount: searchController.filteredUsers.length,
+            itemBuilder: (context, index) {
+              var user = searchController.filteredUsers[index];
+              print(user.name);
+              return UserOverview(user: user, bottomsheet: false);
+            },
+          ),
         ),
       );
     });

@@ -27,12 +27,12 @@ class FeedController extends GetxController {
       Indicator.showLoading();
       await firebaseService.createPost(description, image);
       Indicator.closeLoading();
-      Get.off(MainPage());
-    } on FirebaseAuthException catch (e) {
+      Get.off(MainPage(), preventDuplicates: false);
+    } catch (e) {
       Get.back();
       Get.snackbar(
         'Error',
-        e.message ?? '',
+        e.toString() ?? '',
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -45,18 +45,16 @@ class FeedController extends GetxController {
       Indicator.showLoading();
       await firebaseService.createPoll(poll);
       Indicator.closeLoading();
-      Get.off(MainPage());
-    } on FirebaseAuthException catch (e) {
+      Get.off(MainPage(), preventDuplicates: false);
+    } catch (e) {
       Indicator.closeLoading();
       Get.snackbar(
         'Error',
-        e.message ?? '',
+        e.toString() ?? '',
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-    } catch (e) {
-      print('error in posting poll data');
     }
   }
 

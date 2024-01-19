@@ -37,6 +37,7 @@ class ScreenController extends GetxController {
   var pages = <Widget>[].obs;
   var stack = <Widget>[].obs;
   RxInt bottomNavIndex = 0.obs;
+  RxInt previousIndex = 0.obs;
   DbController dbController = Get.find();
   @override
   void onInit() async {
@@ -72,6 +73,7 @@ class ScreenController extends GetxController {
     //   }
     //   return false;
     // });
+    print('pushing: $index');
 
     if (index >= 0 && index < pages.length) {
       await pushPage(pages[index]);
@@ -80,14 +82,25 @@ class ScreenController extends GetxController {
   }
 
   Future pushPage(Widget page) async {
+    print('page aded to stack $page');
     stack.add(page);
+    print('STACK AFTER: ${stack.length}');
 
+    print('PUSHED');
     update();
   }
 
   Future popPage() async {
+    print('stack.lastt ${stack.last}');
     stack.removeLast();
+    print('last removed');
     update();
+  }
+
+  Future popWithKey() async {
+    pages[bottomNavIndex.value] = stack.last;
+    update();
+    stack.removeLast();
   }
 
   void popUntil(AppPage atScreen, int remainingStack) {
@@ -105,5 +118,12 @@ class ScreenController extends GetxController {
     } else {
       assignAll();
     }
+  }
+
+  bool onWillPop() {
+    print('on will pop called');
+    bottomNavIndex.value = previousIndex.value;
+    update();
+    return true;
   }
 }

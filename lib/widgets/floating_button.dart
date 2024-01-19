@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_elevated_button.dart';
@@ -8,7 +13,8 @@ import 'package:medico/widgets/custom_image_view.dart';
 import '../core/colors.dart';
 
 class CustomFloatingButton extends StatelessWidget {
-  const CustomFloatingButton({super.key});
+  final String? parentId;
+  CustomFloatingButton({super.key, this.parentId});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,7 @@ class CustomFloatingButton extends StatelessWidget {
   }
 
   addOptions(BuildContext context) {
+    FilesController filesController = Get.find();
     showDialog(
         barrierColor: Colors.transparent,
         context: context,
@@ -46,7 +53,14 @@ class CustomFloatingButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () async {
+                    Get.back();
+                    print('pressed');
+                    print('parentt id in floating button: ${parentId}');
+                    await filesController
+                        .showCreateFolderDialog(parentId ?? '');
+                    // Get.back();
+                  },
                   text: 'Add Folder',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,
@@ -62,7 +76,23 @@ class CustomFloatingButton extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 ),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () async {
+                    Get.back();
+                    FilePickerResult? result = await FilePicker.platform
+                        .pickFiles(
+                            allowMultiple: true,
+                            type: FileType.custom,
+                            allowedExtensions: ['pdf']);
+
+                    if (result != null) {
+                      List<File> files =
+                          result.paths.map((path) => File(path!)).toList();
+
+                      filesController.uploadFiles(files, parentId ?? '');
+                    } else {
+                      // User canceled the picker
+                    }
+                  },
                   text: 'Add PDF',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,
@@ -78,7 +108,23 @@ class CustomFloatingButton extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 ),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () async {
+                    Get.back();
+                    FilePickerResult? result = await FilePicker.platform
+                        .pickFiles(
+                            allowMultiple: true,
+                            type: FileType.custom,
+                            allowedExtensions: ['ppt']);
+
+                    if (result != null) {
+                      List<File> files =
+                          result.paths.map((path) => File(path!)).toList();
+
+                      filesController.uploadFiles(files, parentId ?? '');
+                    } else {
+                      // User canceled the picker
+                    }
+                  },
                   text: 'Add PPT',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,
@@ -94,7 +140,24 @@ class CustomFloatingButton extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 ),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      allowMultiple: true,
+                      type: FileType.custom,
+                      allowedExtensions: ['mp4', 'mov', 'avi', 'mkv'],
+                    );
+
+                    if (result != null) {
+                      List<File> files =
+                          result.paths.map((path) => File(path!)).toList();
+
+                      filesController.uploadFiles(files, parentId ?? '');
+                    } else {
+                      // User canceled the picker
+                    }
+                  },
                   text: 'Add Video',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,
@@ -110,7 +173,23 @@ class CustomFloatingButton extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 ),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () async {
+                    Get.back();
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      allowMultiple: true,
+                      type: FileType.image,
+                    );
+
+                    if (result != null) {
+                      List<File> files =
+                          result.paths.map((path) => File(path!)).toList();
+
+                      filesController.uploadFiles(files, parentId ?? '');
+                    } else {
+                      // User canceled the picker
+                    }
+                  },
                   text: 'Add Image',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,

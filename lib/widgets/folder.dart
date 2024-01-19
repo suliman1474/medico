@@ -9,21 +9,20 @@ import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:medico/screens/home/folders_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 import '../../controllers/screen_controller.dart';
+import '../models/folder_model.dart';
+import '../screens/home/home2.dart';
 
 class Folder extends StatefulWidget {
-  Widget screen;
-  bool update;
-  String name;
-  bool downloaded;
+  FolderModel folder;
+  UniqueKey keyU;
   Folder({
     super.key,
-    required this.screen,
-    required this.update,
-    required this.name,
-    required this.downloaded,
+    required this.folder,
+    required this.keyU,
   });
 
   @override
@@ -48,20 +47,24 @@ class _FolderState extends State<Folder> {
   ];
 
   late Widget newscreen;
-  late bool visibility;
+  bool visibility = true;
   late String foldername;
-  late bool ifdownloaded;
+  bool ifdownloaded = true;
   bool options = false;
   bool sharing = false;
   bool appearance = false;
+  FolderModel? folder;
+  late UniqueKey key;
   @override
   void initState() {
     super.initState();
     loadUser();
-    newscreen = widget.screen;
-    visibility = widget.update;
-    foldername = widget.name;
-    ifdownloaded = widget.downloaded;
+    folder = widget.folder;
+    // newscreen = widget.screen;
+    // visibility = widget.update;
+    key = widget.keyU;
+    foldername = folder!.name;
+    // ifdownloaded = widget.downloaded;
   }
 
   @override
@@ -84,26 +87,19 @@ class _FolderState extends State<Folder> {
                       child: Stack(
                         alignment: Alignment.topLeft,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              print('should go to another page');
-                              screenController.updatePageAt(
-                                  AppPage.HomeScreen, newscreen);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10).w,
-                              width: 55.w,
-                              height: 55.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15).r,
-                                color: color2,
-                              ),
-                              child: CustomImageView(
-                                svgPath: IconConstant.icFolder,
-                                height: 30.h,
-                                width: 30.w,
-                                fit: BoxFit.scaleDown,
-                              ),
+                          Container(
+                            margin: EdgeInsets.all(10).w,
+                            width: 55.w,
+                            height: 55.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15).r,
+                              color: color2,
+                            ),
+                            child: CustomImageView(
+                              svgPath: IconConstant.icFolder,
+                              height: 30.h,
+                              width: 30.w,
+                              fit: BoxFit.scaleDown,
                             ),
                           ),
                           Visibility(
@@ -124,18 +120,11 @@ class _FolderState extends State<Folder> {
                     ),
                     Expanded(
                       flex: 6,
-                      child: GestureDetector(
-                        onTap: () {
-                          print('should go to another page');
-                          screenController.updatePageAt(
-                              AppPage.HomeScreen, newscreen);
-                        },
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            foldername,
-                            style: customTexttheme.displayLarge,
-                          ),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          foldername,
+                          style: customTexttheme.displayLarge,
                         ),
                       ),
                     ),
@@ -160,10 +149,10 @@ class _FolderState extends State<Folder> {
                               width: 9.w,
                               margin: EdgeInsets.only(right: 10.w),
                               onTap: () {
-                                screenController.updatePageAt(
-                                  AppPage.HomeScreen,
-                                  newscreen,
-                                );
+                                // screenController.updatePageAt(
+                                //   AppPage.HomeScreen,
+                                //   newscreen,
+                                // );
                               },
                             )
                           : PopupMenuButton<String>(

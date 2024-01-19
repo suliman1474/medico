@@ -147,6 +147,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                 );
               }),
               onTap: (index) {
+                screenController.previousIndex.value =
+                    screenController.bottomNavIndex.value;
                 screenController.bottomNavIndex.value = index;
                 print('custom_bottombar ontap function index: ${index}');
                 widget.onChanged?.call(index);
