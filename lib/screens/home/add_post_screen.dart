@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/feed_controller.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/option_model.dart';
@@ -36,6 +37,7 @@ class _AddPostScreenState extends State<AddPostScreen>
   bool option3 = false;
   final ImagePicker imagePicker = ImagePicker();
   XFile? imageFile;
+  ScreenController screenController = Get.find();
   void selectImage() async {
     final XFile? selectedImage =
         await imagePicker.pickImage(source: ImageSource.gallery);
@@ -86,6 +88,7 @@ class _AddPostScreenState extends State<AddPostScreen>
             elevation: 0,
             leading: IconButton(
               onPressed: () {
+                screenController.assignAll();
                 Get.back();
               },
               icon: Icon(
