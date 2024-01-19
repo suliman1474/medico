@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/routes.dart';
+import 'package:medico/services/firebase_notifications.dart';
 
 import 'binding.dart';
 import 'core/text_theme.dart';
@@ -22,6 +23,7 @@ void main() async {
 
   DbController db = Get.put(DbController());
   await db.initialize();
+  await FirebaseNotifications().initNotifications();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     SystemChrome.setSystemUIOverlayStyle(

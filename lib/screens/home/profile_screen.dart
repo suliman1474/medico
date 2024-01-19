@@ -101,7 +101,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 } else {
                                   print('image is not found in hive');
-                                  return Container();
+                                  return Expanded(
+                                    flex: 1,
+                                    child: CustomImageView(
+                                      imagePath: IconConstant.icTopbarProfile,
+                                      height: 100.h,
+                                      width: 100.w,
+                                      radius: BorderRadius.circular(50).r,
+                                    ),
+                                  );
                                 }
                               },
                             ),
@@ -144,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Expanded(
                                 flex: 6,
                                 child: Text(
-                                  'Northwest Institute',
+                                  user.college,
                                   style: customTexttheme.bodySmall,
                                 ),
                               ),
@@ -166,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Expanded(
                                 flex: 6,
                                 child: Text(
-                                  'Bs Nursing',
+                                  user.discipline,
                                   style: customTexttheme.bodySmall,
                                 ),
                               ),
@@ -186,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               flex: 6,
                               child: Text(
-                                '0334298382',
+                                user.contact,
                                 style: customTexttheme.bodySmall,
                               ),
                             ),

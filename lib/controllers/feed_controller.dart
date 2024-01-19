@@ -22,6 +22,8 @@ class FeedController extends GetxController {
   RxList<UserModel> votedBy = <UserModel>[].obs;
   RxInt selectedOptionIndex = RxInt(-1.obs);
   RxBool isLiked = false.obs;
+  RxBool loading = false.obs;
+  RxList<dynamic> combinedList = <dynamic>[].obs;
   void createPost(String? description, XFile? image) async {
     try {
       Indicator.showLoading();
@@ -105,7 +107,10 @@ class FeedController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> getPostsAndPolls() async {
+  Future<void> getPostsAndPolls() async {
+    // Indicator.showLoading();
+    loading.value = true;
+    RxStatus.loading();
     QuerySnapshot postsSnapshot = await FirebaseFirestore.instance
         .collection('posts')
         .orderBy('timestamp', descending: true)
@@ -144,7 +149,15 @@ class FeedController extends GetxController {
         pollModels.add(poll);
       }
     }
-    return combinedData;
+    combinedList.value = combinedData;
+    update();
+    loading.value = false;
+    RxStatus.success();
+    // Indicator.closeLoading();
+    print('combineddata: ${combinedData.length}');
+    print('combinedlist: ${combinedList.length}');
+
+    // return combinedData;
   }
 
   Future<void> likePost(String postId, String userId) async {
@@ -264,6 +277,88 @@ class FeedController extends GetxController {
     } else {
       print('voters empty');
       return [];
+    }
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      Indicator.showLoading();
+      await firebaseService.deletePost(postId);
+      // Remove the deleted post from your local state
+      // postModels.removeWhere((post) => post.id == postId);
+      // Update your UI or call rebuild functions
+      // update();
+      Indicator.closeLoading();
+      Get.back();
+      await getPostsAndPolls();
+
+      Get.snackbar(
+        'Success',
+        'Post deleted successfully',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } on FirebaseAuthException catch (e) {
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        e.message ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Error in deleting post: $e');
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        'An error occurred while deleting the post',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> deletePoll(String pollId) async {
+    try {
+      Indicator.showLoading();
+      await firebaseService.deletePoll(pollId);
+      // Remove the deleted post from your local state
+      // postModels.removeWhere((post) => post.id == postId);
+      // Update your UI or call rebuild functions
+      // update();
+      Indicator.closeLoading();
+      Get.back();
+      await getPostsAndPolls();
+
+      Get.snackbar(
+        'Success',
+        'Post deleted successfully',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } on FirebaseAuthException catch (e) {
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        e.message ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Error in deleting post: $e');
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        'An error occurred while deleting the post',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 }

@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/db_controller.dart';
-import 'package:medico/screens/home/profile_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
@@ -20,6 +20,7 @@ import '../widgets/indicator.dart';
 
 class AuthenticationController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmpassword = TextEditingController();
@@ -41,6 +42,15 @@ class AuthenticationController extends GetxController {
     if (_auth.currentUser != null) {
       // user.value = _auth.currentUser;
       // userProfile.value = await firebaseService.getProfile(user.value!.uid);
+      await _firebaseMessaging.requestPermission();
+      // Get FCM token
+      String? fcmToken = await _firebaseMessaging.getToken();
+      print(fcmToken);
+      // Update FCM token in user's document
+      if (_auth.currentUser != null && fcmToken != null) {
+        print('calling update fcm token');
+        await firebaseService.updateFCMToken(_auth.currentUser!.uid, fcmToken);
+      }
       print('IS LOGGED IN');
       Get.to(() => const MainPage());
     } else {
@@ -53,6 +63,11 @@ class AuthenticationController extends GetxController {
     super.onReady();
     isLoggedIn();
   }
+
+  // saveToken() async {
+  //   String? token = await FirebaseMessaging.instance.getToken();
+  //   firebaseService.saveToken(token);
+  // }
 
   toggleObsecure() {
     isObsecure.value = !isObsecure.value;
@@ -106,6 +121,17 @@ class AuthenticationController extends GetxController {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
+      await _firebaseMessaging.requestPermission();
+      // Get FCM token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      print(fcmToken);
+
+      // Update FCM token in user's document
+      if (user.value != null && fcmToken != null) {
+        print('calling update fcm token');
+        await firebaseService.updateFCMToken(user.value!.uid, fcmToken);
+      }
+
       await fetchUserProfile();
       await dbController.storeUser(userProfile.value!);
 
@@ -150,6 +176,14 @@ class AuthenticationController extends GetxController {
       //   email: email.text,
       //   semester: semester.text,
       // );
+      await _firebaseMessaging.requestPermission();
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      // Update FCM token in user's document
+      if (user.value != null && fcmToken != null) {
+        await firebaseService.updateFCMToken(user.value!.uid, fcmToken);
+      }
+
       await fetchUserProfile();
       await dbController.storeUser(userProfile.value!);
       Indicator.closeLoading();

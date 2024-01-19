@@ -24,6 +24,8 @@ class UserModel {
   String contact;
   @HiveField(8)
   String role;
+  @HiveField(9)
+  String? token;
 
   UserModel({
     required this.id,
@@ -35,6 +37,7 @@ class UserModel {
     this.image = '',
     this.role = 'user',
     required this.semester,
+    this.token,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

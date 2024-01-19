@@ -4,10 +4,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/option_model.dart';
 import '../models/poll_model.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
@@ -18,6 +16,17 @@ class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  Future<void> updateFCMToken(String userId, String fcmToken) async {
+    try {
+      print('update fcm token calledd.......');
+      await _userProfile.doc(userId).update({
+        'fcmToken': fcmToken,
+      });
+    } catch (e) {
+      print('Error updating FCM token: $e');
+    }
+  }
 
   Future<void> createPost(String? description, XFile? image) async {
     try {
@@ -158,6 +167,24 @@ class FirebaseService {
       // Handle any errors that might occur during fetching
       print('Error fetching posts: $e');
       throw e; // Rethrow the error to be caught by the FutureBuilder
+    }
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      print('Error deleting post: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deletePoll(String pollId) async {
+    try {
+      await _firestore.collection('polls').doc(pollId).delete();
+    } catch (e) {
+      print('Error deleting post: $e');
+      throw e;
     }
   }
 }

@@ -2,9 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:medico/constants/user_role.dart';
+import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/feed_controller.dart';
 import 'package:medico/core/colors.dart';
+import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:medico/widgets/custom_image_view.dart';
 
 import '../models/option_model.dart';
 import '../models/poll_model.dart';
@@ -24,8 +29,9 @@ class Poll extends StatefulWidget {
 
 class _PollState extends State<Poll> {
   FeedController feedController = Get.find();
-  List<double> votes = [45, 60, 34, 14];
+  DbController dbController = Get.find();
   int selectedOptionIndex = -1;
+  bool isPollExpired = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -54,6 +60,11 @@ class _PollState extends State<Poll> {
           }
         }
       }
+      // Check if the post is older than 24 hours
+      DateTime postCreationTime =
+          DateTime.fromMicrosecondsSinceEpoch(int.parse(poll.timestamp!));
+      DateTime currentTime = DateTime.now();
+      isPollExpired = currentTime.difference(postCreationTime).inHours > 24;
 
       // int selectedOptionIndex = feedController.selectedOptionIndex.value;
       return Container(
@@ -67,8 +78,63 @@ class _PollState extends State<Poll> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: 40.h,
+                  width: 40.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: CustomImageView(
+                    imagePath: IconConstant.icAppLogo,
+                    height: 40.h,
+                    width: 40.w,
+                    fit: BoxFit.cover,
+                    radius: BorderRadius.circular(20).r,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Medico Slides',
+                        style: customTexttheme.displayLarge,
+                      ),
+                      Text(
+                        DateFormat('dd-MM-yyyy hh:mma').format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                                int.parse(poll.timestamp!))),
+                        // DateFormat('dd-MM-yyyy hh:mma').format(DateTime.now()),
+                        style: customTexttheme.bodySmall!.copyWith(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 120.w),
+                dbController.userRole.value == UserRole.ADMIN
+                    ? GestureDetector(
+                        onTap: () {
+                          Indicator.showDeleteDialogPoll(poll.id);
+                        },
+                        child: Icon(
+                          Icons.delete,
+                          size: 25.sp,
+                          color: Colors.red,
+                        ),
+                      )
+                    : SizedBox.shrink(),
+              ],
+            ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.only(top: 10.h, left: 20.w),
               child: Text(
                 poll.question,
                 style: customTexttheme.bodySmall!.copyWith(
@@ -79,8 +145,6 @@ class _PollState extends State<Poll> {
             ),
             Column(
               children: List.generate(options.length, (index) {
-                // print(
-                //     'options[index].voterId!.length ${options[index].voterId!.length}');
                 return PollOptionTile(
                   optiontitle: options[index].title,
                   pollId: poll.id,

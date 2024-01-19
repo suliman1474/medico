@@ -100,7 +100,10 @@ class _PostState extends State<Post> {
                         style: customTexttheme.displayLarge,
                       ),
                       Text(
-                        DateFormat('dd-MM-yyyy hh:mma').format(DateTime.now()),
+                        DateFormat('dd-MM-yyyy hh:mma').format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                                int.parse(post.timestamp!))),
+                        // DateFormat('dd-MM-yyyy hh:mma').format(DateTime.now()),
                         style: customTexttheme.bodySmall!.copyWith(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w300,
@@ -108,7 +111,20 @@ class _PostState extends State<Post> {
                       ),
                     ],
                   ),
-                )
+                ),
+                SizedBox(width: 120.w),
+                dbController.userRole.value == UserRole.ADMIN
+                    ? GestureDetector(
+                        onTap: () {
+                          Indicator.showDeleteDialogPost(post.id);
+                        },
+                        child: Icon(
+                          Icons.delete,
+                          size: 25.sp,
+                          color: Colors.red,
+                        ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
             Container(
@@ -204,12 +220,6 @@ class _PostState extends State<Post> {
                       color: isLiked == true ? Colors.red : textColor,
                     ),
                   ),
-
-                  // CustomImageView(
-                  //   svgPath: IconConstant.icShare,
-                  //   height: 35.h,
-                  //   width: 35.w,
-                  // ),
                 ],
               ),
             )

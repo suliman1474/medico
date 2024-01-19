@@ -22,7 +22,7 @@ class NewsFeedScreen extends StatefulWidget {
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> {
   FeedController feedController = Get.find();
-  late Future<List<dynamic>> getPostsAndPolls;
+  late List<dynamic> getPostsAndPolls;
   AuthenticationController authController = Get.find();
   DbController dbController = Get.find();
 
@@ -32,7 +32,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
 
   Future<void> getdata() async {
     setState(() {
-      getPostsAndPolls = feedController.getPostsAndPolls();
+      feedController.getPostsAndPolls();
     });
     return Future.value();
   }
@@ -45,7 +45,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
   }
 
   Future<void> refreshData() async {
-    getPostsAndPolls = feedController.getPostsAndPolls();
+    feedController.getPostsAndPolls();
     Future.delayed(Duration(seconds: 2));
   }
 
@@ -57,57 +57,47 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
           top: 10.h,
         ),
         child: RefreshIndicator(
-          color: color2,
-          onRefresh: () async {
-            await refreshData();
-            setState(() {});
-            return Future.value();
-          },
-          child: FutureBuilder<List<dynamic>>(
-            future: getPostsAndPolls, //orderBy('timestamp', descending: true)
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: Indicator.loader());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                List<dynamic> combinedData = snapshot.data!;
-                if (combinedData.isEmpty) {
+            color: color2,
+            onRefresh: () async {
+              await refreshData();
+              setState(() {});
+              return Future.value();
+            },
+            child: Obx(
+              () {
+                // List<dynamic> combinedData = feedController.combinedList;
+                if (feedController.loading.value == true) {
+                  return Center(child: Indicator.loader());
+                } else if (feedController.combinedList.isEmpty) {
                   return Center(
-                    child: Text('No posts Avaialble'),
+                    child: Text('No posts Available'),
                   );
                 }
 
                 return ListView.builder(
-                  itemCount: combinedData.length,
+                  itemCount: feedController.combinedList.length,
                   itemBuilder: (context, index) {
-                    if (combinedData[index]['type'] == 'post') {
+                    if (feedController.combinedList[index]['type'] == 'post') {
                       return Post(
-                        postId: combinedData[index]['id'],
+                        postId: feedController.combinedList[index]['id'],
                       );
-                    } else if (combinedData[index]['type'] == 'poll') {
-                      //  PollModel poll = PollModel.fromJson(combinedData[index]);
-
+                    } else if (feedController.combinedList[index]['type'] ==
+                        'poll') {
                       return Poll(
-                        pollId: combinedData[index]['id'],
+                        pollId: feedController.combinedList[index]['id'],
                       );
                     }
 
                     return Container();
                   },
                 );
-              } else {
-                return Center(
-                  child: Text('No posts Avaialble'),
-                );
-              }
-            },
-          ),
-        ),
+              },
+            )),
       ),
       floatingActionButton: dbController.userRole.value == UserRole.ADMIN
           ? Align(
-              alignment: Alignment(1.20.w, 1.17.h),
+              // alignment: Alignment(1.20.w, 1.17.h),
+              alignment: Alignment.bottomRight,
               child: FloatingActionButton(
                 onPressed: () {
                   Get.to(AddPostScreen());
@@ -133,3 +123,46 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
     );
   }
 }
+
+// FutureBuilder<List<dynamic>>(
+//                   future:
+//                       getPostsAndPolls, //orderBy('timestamp', descending: true)
+//                   builder: (context, snapshot) {
+//                     if (snapshot.connectionState == ConnectionState.waiting) {
+//                       return Center(child: Indicator.loader());
+//                     } else if (snapshot.hasError) {
+//                       return Center(child: Text('Error: ${snapshot.error}'));
+//                     } else if (snapshot.connectionState ==
+//                         ConnectionState.done) {
+//                       List<dynamic> combinedData = snapshot.data!;
+//                       if (combinedData.isEmpty) {
+//                         return Center(
+//                           child: Text('No posts Avaialble'),
+//                         );
+//                       }
+
+//                       return ListView.builder(
+//                         itemCount: combinedData.length,
+//                         itemBuilder: (context, index) {
+//                           if (combinedData[index]['type'] == 'post') {
+//                             return Post(
+//                               postId: combinedData[index]['id'],
+//                             );
+//                           } else if (combinedData[index]['type'] == 'poll') {
+//                             //  PollModel poll = PollModel.fromJson(combinedData[index]);
+
+//                             return Poll(
+//                               pollId: combinedData[index]['id'],
+//                             );
+//                           }
+
+//                           return Container();
+//                         },
+//                       );
+//                     } else {
+//                       return Center(
+//                         child: Text('No posts Avaialble'),
+//                       );
+//                     }
+//                   },
+//                 );
