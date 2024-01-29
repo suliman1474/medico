@@ -320,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
                         child: Text(
                           'Sign Up',
-                          style: customTexttheme.labelLarge,
+                          style: customTexttheme.labelSmall,
                         ),
                       ),
                     )

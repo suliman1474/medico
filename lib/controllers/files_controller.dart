@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:archive/archive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/widgets/indicator.dart';
@@ -21,7 +19,7 @@ class FilesController extends GetxController {
   @override
   onInit() async {
     folders.clear();
-    print('onInit called');
+    // print('onInit called');
     // getFolders();
     super.onInit();
   }
@@ -29,13 +27,13 @@ class FilesController extends GetxController {
   @override
   onReady() async {
     folders.clear();
-    print('onReady called');
+    // print('onReady called');
     getFolders();
     super.onReady();
   }
 
   Future<List<FolderModel>> getFolders() async {
-    print('==get all folders');
+    // print('==get all folders');
     Indicator.showLoading();
     QuerySnapshot foldersQuery =
         await FirebaseFirestore.instance.collection('folders').get();
@@ -46,7 +44,7 @@ class FilesController extends GetxController {
 
     for (QueryDocumentSnapshot folderDoc in foldersQuery.docs) {
       FolderModel folder = FolderModel.fromFirestore(folderDoc);
-      print('folder.id: ${folder.id}  folder.parentId: ${folder.parentId}');
+      // print('folder.id: ${folder.id}  folder.parentId: ${folder.parentId}');
       folders.add(folder);
 
       // Store the folder in the subfolderMap for future reference
@@ -65,17 +63,17 @@ class FilesController extends GetxController {
 
       // Fetch files for the current folder
       List<FileModel> files = await fetchFilesForFolder(folder.id);
-      print('folder.name ${folder.name} ');
+      // print('folder.name ${folder.name} ');
       int index = folders.indexWhere((element) => element.id == folder.id);
       FolderModel temp = folders[index];
       temp.files?.addAll(files);
       folders[index] = temp;
       //  folders[index].files?.addAll(files);
-      print('folder added to : ${folder.files?.length}');
+      // print('folder added to : ${folder.files?.length}');
       update();
     }
     update();
-    print('folders length in controller: ${folders.length}');
+    // print('folders length in controller: ${folders.length}');
     Indicator.closeLoading();
     return folders;
   }
@@ -88,14 +86,14 @@ class FilesController extends GetxController {
 
     if (folderDoc.exists) {
       Map<String, dynamic>? data = folderDoc.data() as Map<String, dynamic>?;
-      print('data: $data');
+      // print('data: $data');
       List<FileModel> files = (data?['files'] as List<dynamic>?)
               ?.map((fileData) =>
                   FileModel.fromJson(fileData as Map<String, dynamic>))
               .toList() ??
           [];
 
-      print('files number: ${files.length}');
+      // print('files number: ${files.length}');
       return files;
     } else {
       // Handle the case where the folder document doesn't exist

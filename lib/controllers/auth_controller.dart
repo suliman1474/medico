@@ -45,8 +45,7 @@ class AuthenticationController extends GetxController {
       await _firebaseMessaging.requestPermission();
       // Get FCM token
       String? fcmToken = await _firebaseMessaging.getToken();
-      print(fcmToken);
-      // Update FCM token in user's document
+
       if (_auth.currentUser != null && fcmToken != null) {
         print('calling update fcm token');
         await firebaseService.updateFCMToken(_auth.currentUser!.uid, fcmToken);
@@ -63,11 +62,6 @@ class AuthenticationController extends GetxController {
     super.onReady();
     isLoggedIn();
   }
-
-  // saveToken() async {
-  //   String? token = await FirebaseMessaging.instance.getToken();
-  //   firebaseService.saveToken(token);
-  // }
 
   toggleObsecure() {
     isObsecure.value = !isObsecure.value;
@@ -121,17 +115,6 @@ class AuthenticationController extends GetxController {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      await _firebaseMessaging.requestPermission();
-      // Get FCM token
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
-      print(fcmToken);
-
-      // Update FCM token in user's document
-      if (user.value != null && fcmToken != null) {
-        print('calling update fcm token');
-        await firebaseService.updateFCMToken(user.value!.uid, fcmToken);
-      }
-
       await fetchUserProfile();
       await dbController.storeUser(userProfile.value!);
 
@@ -176,13 +159,13 @@ class AuthenticationController extends GetxController {
       //   email: email.text,
       //   semester: semester.text,
       // );
-      await _firebaseMessaging.requestPermission();
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      // await _firebaseMessaging.requestPermission();
+      // String? fcmToken = await FirebaseMessaging.instance.getToken();
 
       // Update FCM token in user's document
-      if (user.value != null && fcmToken != null) {
-        await firebaseService.updateFCMToken(user.value!.uid, fcmToken);
-      }
+      // if (user.value != null && fcmToken != null) {
+      //   await firebaseService.addFCMToken(user.value!.uid, fcmToken);
+      // }
 
       await fetchUserProfile();
       await dbController.storeUser(userProfile.value!);
@@ -284,13 +267,34 @@ class AuthenticationController extends GetxController {
             .collection('users')
             .doc(userId)
             .get();
+
         if (doc.exists) {
-          userProfile.value =
-              UserModel.fromJson(doc.data() as Map<String, dynamic>);
+          // If the document exists, update the fcmToken field
+          await _firebaseMessaging.requestPermission();
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .update({'fcmToken': fcmToken});
+
+          // Fetch the updated document
+          final updatedDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+
+          if (updatedDoc.exists) {
+            userProfile.value =
+                UserModel.fromJson(updatedDoc.data() as Map<String, dynamic>);
+          }
+        } else {
+          // Handle the case when the document doesn't exist
+          print('Document does not exist.');
         }
       }
     } catch (e) {
-      print('e: $e');
+      // Handle any errors that might occur during the process
+      print('Error fetching/updating user profile: $e');
     }
   }
 

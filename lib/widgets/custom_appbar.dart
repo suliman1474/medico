@@ -9,7 +9,9 @@ import 'package:medico/controllers/search_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/user_model.dart';
+import 'package:medico/screens/home/admin_profile_screen.dart';
 import 'package:medico/screens/home/edit_profile_screen.dart';
+import 'package:medico/screens/home/notifications_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 import 'package:medico/widgets/indicator.dart';
 
@@ -63,6 +65,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           elevation: 0,
           leading: dbController.userRole.value == UserRole.USER
               ? GestureDetector(
+                  onTap: () {
+                    Get.to(NotificationsScreen());
+                  },
                   child: Container(
                     margin: EdgeInsets.only(top: 20.h),
                     height: 30.h,
@@ -201,10 +206,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                   try {
                                     return GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          screenController
-                                              .bottomNavIndex.value = 3;
-                                        });
+                                        dbController.userRole.value ==
+                                                UserRole.USER
+                                            ? setState(() {
+                                                screenController
+                                                    .bottomNavIndex.value = 3;
+                                              })
+                                            : Get.to(AdminProfileScreen());
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(
@@ -257,10 +265,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                         imagePath: IconConstant.icTopbarProfile,
                                         fit: BoxFit.cover,
                                         onTap: () {
-                                          setState(() {
-                                            screenController
-                                                .bottomNavIndex.value = 3;
-                                          });
+                                          dbController.userRole.value ==
+                                                  UserRole.USER
+                                              ? setState(() {
+                                                  screenController
+                                                      .bottomNavIndex.value = 3;
+                                                })
+                                              : Get.to(AdminProfileScreen());
                                         },
                                       ),
                                     ),

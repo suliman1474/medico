@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:medico/models/notification_model.dart';
 
 import '../models/user_model.dart';
 
@@ -13,6 +13,7 @@ class DbController extends GetxController {
   final String isLoggedInBox = 'isLoggedIn';
   final String roleBox = 'role';
   final String profileBox = 'profile_image';
+  final String notificationBox = 'notifications';
   RxString userRole = 'user'.obs;
   // static const String quizAttemptId = 'quiz_attempt_id';
   // static const String quizModelAttempt = 'quiz';
@@ -26,6 +27,33 @@ class DbController extends GetxController {
     // await Hive.openBox<Attempt>(Db.attemptsBoxName);
     await Hive.initFlutter();
     Hive.registerAdapter(UserModelAdapter());
+    Hive.registerAdapter(NotificationModelAdapter());
+  }
+
+  Future<void> saveNotification(NotificationModel notification) async {
+    final box = await Hive.openBox(notificationBox);
+    try {
+      print('saving notification');
+      await box.add(notification);
+    } finally {
+      await box.close();
+    }
+  }
+
+  Future<List<NotificationModel>> getNotifications() async {
+    final box = await Hive.openBox<NotificationModel>(notificationBox);
+    try {
+      // Get notifications and convert them to a list
+      List<NotificationModel> notifications = box.values.toList();
+
+      // Sort the list in descending order based on timestamps
+      notifications.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      print('notifications: ${notifications.length}');
+      return notifications;
+      // return box.values.toList();
+    } finally {
+      await box.close();
+    }
   }
 
   Future<void> storeUser(UserModel user) async {

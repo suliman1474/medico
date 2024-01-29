@@ -53,6 +53,7 @@ dependencies:
   archive: ^3.4.10
   syncfusion_flutter_pdfviewer: ^24.1.45
   open_file: ^3.3.2
+  flutter_local_notifications: ^16.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
