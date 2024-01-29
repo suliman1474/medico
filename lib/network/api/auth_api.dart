@@ -71,7 +71,7 @@ class AuthApi {
     //{Map<String, dynamic>? data}
     try {
       final id = await storage.read(key: 'userId');
-      print('id of user: $id');
+
       Map<String, dynamic> data = {
         'id': id,
       };
@@ -114,7 +114,7 @@ class AuthApi {
     }
     // try {
     //   final id = await storage.read(key: 'userId');
-    //   print('id of user: $id');
+    //
     //   var data = FormData.fromMap({
     //     'id': id,
     //     'email': email,

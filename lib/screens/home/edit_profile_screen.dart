@@ -55,7 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Obx(() {
       final oldPic = authController.userProfile.value?.image ?? '';
-      print('old pic : ${oldPic}');
+
       return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -111,7 +111,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  print('snapshot has data: ${snapshot.data!.name}');
                   final user = snapshot.data!;
                   nameController.text = user.name;
                   collegeController.text = user.college;

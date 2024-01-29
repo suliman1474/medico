@@ -60,9 +60,8 @@ class FeedController extends GetxController {
 
   Future<List<UserModel>> getLikedByUsers(PostModel post) async {
     List<UserModel> likedByUsers = [];
-    print('get likes ==');
+
     if (post.like != null && post.like!.isNotEmpty) {
-      print('condition true');
       for (int i = 0; i < post.like!.length; i++) {
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
@@ -98,7 +97,6 @@ class FeedController extends GetxController {
       );
       return [];
     } catch (e) {
-      print('error in getting posts: $e');
       return [];
     }
   }
@@ -155,14 +153,14 @@ class FeedController extends GetxController {
 
       if (isLiked) {
         // User already liked, so unlike
-        print('disliking');
+
         post.like!.remove(userId);
         transaction.update(postRef, {
           'like': FieldValue.arrayRemove([userId]),
         });
       } else {
         // User not liked, so like
-        print('liking');
+
         post.like!.add(userId);
         transaction.update(postRef, {
           'like': FieldValue.arrayUnion([userId]),
@@ -193,15 +191,13 @@ class FeedController extends GetxController {
       final poll = PollModel.fromJson(pollData);
       // Remove user's vote from all options
       if (unvote == false) {
-        print('removing options from all');
         for (final option in poll.options) {
           option.voterId?.remove(userId);
         }
-        print('removed');
       }
       final optionIndex =
           poll.options.indexWhere((option) => option.id == optionId);
-      print('option index: $optionIndex');
+
       if (optionIndex == -1) {
         throw Exception('Invalid option ID');
       }
@@ -212,17 +208,16 @@ class FeedController extends GetxController {
 
       if (isVoted) {
         // Unvote
-        print('already voted');
+
         option.voterId?.remove(userId);
       } else {
         // Vote
-        print('not voted');
+
         option.voterId?.add(userId);
       }
       poll.options[optionIndex] = option;
       // Update only the voterId list inside the specified option
 
-      print('options$optionIndex');
       await transaction.update(
           pollRef, {'options': poll.options.map((opt) => opt.toJson()).toList()}
           //   {'options$optionIndex}': option.toJson()},
@@ -232,7 +227,7 @@ class FeedController extends GetxController {
       final pollIndex = pollModels.indexWhere((p) => p.id == pollId);
       if (pollIndex != -1) {
         pollModels[pollIndex] = poll;
-        print('now should updatte');
+
         update(); // Assuming feedController is an instance of GetxController
       }
     });
@@ -240,9 +235,8 @@ class FeedController extends GetxController {
 
   Future<List<UserModel>> getVoters(String pollId, OptionModel option) async {
     List<UserModel> Voters = [];
-    print('get voters ==');
+
     if (option.voterId != null && option.voterId!.isNotEmpty) {
-      print('condition true');
       for (int i = 0; i < option.voterId!.length; i++) {
         DocumentSnapshot votersSnapshot = await FirebaseFirestore.instance
             .collection('users')
@@ -250,7 +244,6 @@ class FeedController extends GetxController {
             .get();
         print('votersnapshot :${votersSnapshot.data()}');
         if (votersSnapshot.exists) {
-          print('snapshot has voters');
           Voters.add(UserModel.fromJson(
               votersSnapshot.data() as Map<String, dynamic>));
         }
@@ -260,7 +253,6 @@ class FeedController extends GetxController {
       //  post.like = likedByUsers;
       return Voters;
     } else {
-      print('voters empty');
       return [];
     }
   }

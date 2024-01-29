@@ -22,7 +22,7 @@ class HomeApi {
       final Response response = await _apiService.get(
         '${AppUrl.baseUrl}${AppUrl.getCategories}',
       );
-      print('response in auth api: $response');
+
       return response;
     } catch (e) {
       rethrow;
@@ -38,7 +38,7 @@ class HomeApi {
         '${AppUrl.baseUrl}${AppUrl.getQuizByCategory}',
         queryParameters: data,
       );
-      print('response in auth api: $response');
+
       return response;
     } catch (e) {
       rethrow;
@@ -48,13 +48,13 @@ class HomeApi {
   Future<Response> startQuiz(String id) async {
     try {
       String? userId = await storage.read(key: 'userId');
-      print('userId: ${userId}');
+
       Map<String, dynamic> data = {'quiz_id': id, 'user_id': userId};
       final Response response = await _apiService.get(
         '${AppUrl.baseUrl}${AppUrl.startQuiz}',
         queryParameters: data,
       );
-      //  print('response in auth api: $response');
+      //
       return response;
     } catch (e) {
       rethrow;
@@ -73,7 +73,7 @@ class HomeApi {
         '${AppUrl.baseUrl}${AppUrl.endQuiz}',
         queryParameters: data,
       );
-      //  print('response in auth api: $response');
+      //
       return response;
     } catch (e) {
       rethrow;

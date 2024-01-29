@@ -64,16 +64,15 @@ class ScreenController extends GetxController {
   void updatePageAt(AppPage pageEnum, Widget newPage) async {
     int index = pageEnum.index;
     // int index = pages.indexWhere((page) {
-    //   print('index pageenum name: ${pageEnum}');
-    //   print('index page key : ${page.key}');
-    //   print('index where pageEnum: ${AppPage}');
+    //
+    //
+    //
     //   if (page.key == pageEnum.index) {
-    //     print('where page meeets');
+    //
     //     return true;
     //   }
     //   return false;
     // });
-    print('pushing: $index');
 
     if (index >= 0 && index < pages.length) {
       await pushPage(pages[index]);
@@ -82,18 +81,14 @@ class ScreenController extends GetxController {
   }
 
   Future pushPage(Widget page) async {
-    print('page aded to stack $page');
     stack.add(page);
-    print('STACK AFTER: ${stack.length}');
 
-    print('PUSHED');
     update();
   }
 
   Future popPage() async {
-    print('stack.lastt ${stack.last}');
     stack.removeLast();
-    print('last removed');
+
     update();
   }
 
@@ -121,7 +116,6 @@ class ScreenController extends GetxController {
   }
 
   bool onWillPop() {
-    print('on will pop called');
     bottomNavIndex.value = previousIndex.value;
     update();
     return true;

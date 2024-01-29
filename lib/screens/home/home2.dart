@@ -81,7 +81,7 @@
 //             children: [
 //               GestureDetector(
 //                 onTap: () {
-//                   print('should go back to home 1');
+//
 //                   screenController.goBackAt(AppPage.HomeScreen);
 //                 },
 //                 child: CustomImageView(
@@ -92,7 +92,7 @@
 //               ),
 //               GestureDetector(
 //                 onTap: () {
-//                   print('should go back to home 1');
+//
 //                   screenController.goBackAt(AppPage.HomeScreen);
 //                 },
 //                 child: Text(
@@ -128,7 +128,6 @@ class _Home2State extends State<Home2> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('home 2 init');
   }
 
   @override

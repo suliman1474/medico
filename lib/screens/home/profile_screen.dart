@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
@@ -21,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool contactus = false;
   DbController dbController = Get.find();
+  FilesController filesController = Get.find();
   late Future<UserModel?> user;
   late Future<Uint8List?> profile;
   @override
@@ -56,7 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Uint8List? imageBytes = snapshot.data;
 
                                   if (imageBytes != null) {
-                                    print('image is found in hive');
                                     try {
                                       return Container(
                                         width: 100.w,
@@ -73,10 +74,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, e, stackTrace) {
-                                              print(
-                                                'Error in image displaying: $e',
-                                              );
-                                              print('stack trace: $stackTrace');
                                               return Container(
                                                 color: Colors.grey,
                                               );
@@ -85,7 +82,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       );
                                     } catch (e) {
-                                      print('Error decoding image: $e');
                                       return Container();
                                     }
                                   } else {
@@ -100,7 +96,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                                   }
                                 } else {
-                                  print('image is not found in hive');
                                   return Container();
                                 }
                               },
@@ -204,6 +199,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       children: [
                         GestureDetector(
+                          onTap: () {
+                            print('deletting');
+                            Get.dialog<bool>(
+                              AlertDialog(
+                                title: Text(
+                                  'Reset App',
+                                  style: customTexttheme.displaySmall
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                                backgroundColor: color1,
+                                content: Text(
+                                  'Do you want to reset the app',
+                                  style: customTexttheme.displaySmall
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back();
+                                      filesController
+                                          .deleteAllFoldersInsideRoot();
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: customTexttheme.displaySmall
+                                          ?.copyWith(color: Colors.black),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back(); // No button
+                                    },
+                                    child: Text(
+                                      'No',
+                                      style: customTexttheme.displaySmall
+                                          ?.copyWith(color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
                             child: Row(

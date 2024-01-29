@@ -26,7 +26,6 @@ class _UsersScreenState extends State<UsersScreen> {
       // Your code here will run after the current frame has been drawn
       searchController.getAllUsers();
       searchController.search.value.text = '';
-      print('After frame is drawn');
     });
   }
 
@@ -37,9 +36,6 @@ class _UsersScreenState extends State<UsersScreen> {
       // // Data is ready
       // searchController.filteredUsers.value =
       //     snapshot.data as List<UserModel>;
-      print('search value: ' + searchController.search.value.text);
-      print(
-          'previous index: ${screenController.previousIndex} currentIndex: ${screenController.bottomNavIndex} ');
 
       return PopScope(
         canPop: false,
@@ -52,7 +48,7 @@ class _UsersScreenState extends State<UsersScreen> {
             itemCount: searchController.filteredUsers.length,
             itemBuilder: (context, index) {
               var user = searchController.filteredUsers[index];
-              print(user.name);
+
               return UserOverview(user: user, bottomsheet: false);
             },
           ),
@@ -71,7 +67,7 @@ class _UsersScreenState extends State<UsersScreen> {
     //         // // Data is ready
     //         // searchController.filteredUsers.value =
     //         //     snapshot.data as List<UserModel>;
-    //         print('search value: ' + searchController.search.value.text);
+    //
     //
     //         return Padding(
     //           padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -79,7 +75,7 @@ class _UsersScreenState extends State<UsersScreen> {
     //             itemCount: searchController.filteredUsers.length,
     //             itemBuilder: (context, index) {
     //               var user = searchController.filteredUsers[index];
-    //               print(user.name);
+    //
     //               return UserOverview(user: user, bottomsheet: false);
     //             },
     //           ),

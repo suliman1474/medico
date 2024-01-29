@@ -722,9 +722,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  print('===================sign up clicked =================');
                   if (_formKey.currentState!.validate()) {
-                    print("==================calling user");
                     await authController.createUser();
                   }
                 },

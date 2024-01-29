@@ -537,7 +537,6 @@ class _AddPostScreenState extends State<AddPostScreen>
                             margin: EdgeInsets.symmetric(vertical: 10.h),
                             onTap: () async {
                               if (_formKey.currentState!.validate()) {
-                                print('validated');
                                 PollModel pollModel = await PollModel(
                                   id: DateTime.now()
                                       .toUtc()
@@ -550,19 +549,16 @@ class _AddPostScreenState extends State<AddPostScreen>
                                       .toString(),
                                   options: [],
                                 );
-                                print('before for lloop');
+
                                 late List<OptionModel?> optionModel;
                                 for (int i = 0; i < options.length; i++) {
-                                  print('in for loop');
                                   String optionText = options[i].text.trim();
                                   if (optionText.isNotEmpty) {
-                                    print('options not empty');
                                     OptionModel option = OptionModel(
                                         id: '${DateTime.now().millisecondsSinceEpoch}_$i',
                                         title: optionText,
                                         voterId: <String>[]);
                                     pollModel.options.add(option);
-                                    print('options assigned');
                                   }
                                 }
                                 // Loop through and print all data in the PollModel

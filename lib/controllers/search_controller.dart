@@ -27,19 +27,14 @@ class UserSearchController extends GetxController {
           await FirebaseFirestore.instance.collection('users').get();
       users.clear();
       filteredUsers.clear();
-      print('cleared');
       querySnapshot.docs.forEach((doc) {
         users.add(UserModel.fromJson(doc.data() as Map<String, dynamic>));
       });
-      print('assigned to users');
       filteredUsers.addAll(users);
-      print('assigned to filter length: ${filteredUsers.length}');
       update();
-      print('filtered length:  ${filteredUsers.length}');
       Indicator.closeLoading();
       //return filteredUsers;
     } catch (error) {
-      print('Error fetching users: $error');
       throw error;
     }
   }
@@ -61,7 +56,6 @@ class UserSearchController extends GetxController {
       );
       // allusers.value = Future.value(users.toList());
     } catch (error) {
-      print('Error searching users: $error');
       throw error;
     }
   }
@@ -72,16 +66,14 @@ class UserSearchController extends GetxController {
       filteredUsers.value = users;
     } else {
       // Filter users based on the search query
-      print('updatiing the obx');
-      print('users length in filtering functin: ${users.length}');
+
       search.value.text = username;
-      print('filtered user length before filter: ${filteredUsers.length}');
 
       filteredUsers.value = users
           .where((user) =>
               user.name.toLowerCase().contains(username.toLowerCase()))
           .toList();
-      print('filtered user length after filter: ${filteredUsers.length}');
+
       update();
     }
   }

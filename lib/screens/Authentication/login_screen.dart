@@ -249,9 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  print('===================login clicked =================');
                   if (_formKey.currentState!.validate()) {
-                    print("==================calling user");
                     await controller.signInWithEmailandPassword(
                         email.text, password.text);
                   }

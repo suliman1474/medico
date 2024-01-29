@@ -3,12 +3,24 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/widgets/indicator.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/file_model.dart';
 import '../models/folder_model.dart';
@@ -18,66 +30,90 @@ class FilesController extends GetxController {
   RxString folderPath = ''.obs;
   RxBool uploading = false.obs;
   RxDouble uploadProgress = 0.0.obs;
+  RxDouble downloadProgress = 0.0.obs;
+  DbController dbController = Get.find();
+  RxInt totalFiles = 0.obs;
+  RxInt filesDownloaded = 0.obs;
+  ScreenController screenController = Get.find();
   @override
   onInit() async {
     folders.clear();
-    print('onInit called');
-    // getFolders();
+    //  getFolders();
     super.onInit();
   }
 
   @override
   onReady() async {
     folders.clear();
-    print('onReady called');
-    getFolders();
+
     super.onReady();
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == true) {
+      print('YAY! Free cute dog pics!');
+      getFolders();
+    } else {
+      print('No internet :( Reason:');
+
+      //  print(InternetConnectionChecker().lastTryResults);
+    }
   }
 
   Future<List<FolderModel>> getFolders() async {
-    print('==get all folders');
-    Indicator.showLoading();
-    QuerySnapshot foldersQuery =
-        await FirebaseFirestore.instance.collection('folders').get();
+    try {
+      print('==== get folders');
+      Indicator.showLoading();
+      QuerySnapshot foldersQuery =
+          await FirebaseFirestore.instance.collection('folders').get();
 
-    // Fetch all subfolders
-    Map<String, FolderModel> subfolderMap = {};
-    folders.clear();
+      // Fetch all subfolders
+      Map<String, FolderModel> subfolderMap = {};
+      folders.clear();
 
-    for (QueryDocumentSnapshot folderDoc in foldersQuery.docs) {
-      FolderModel folder = FolderModel.fromFirestore(folderDoc);
-      print('folder.id: ${folder.id}  folder.parentId: ${folder.parentId}');
-      folders.add(folder);
+      for (QueryDocumentSnapshot folderDoc in foldersQuery.docs) {
+        FolderModel folder = FolderModel.fromFirestore(folderDoc);
 
-      // Store the folder in the subfolderMap for future reference
-      subfolderMap[folder.id] = folder;
-    }
+        folders.add(folder);
 
-    // Update actualSubfolders in each folder
-    for (FolderModel folder in folders) {
-      folder.actualSubfolders = [
-        for (String subfolderId in folder.subFolders ?? [])
-          subfolderMap[subfolderId] ??
-              await fetchFolderFromFirebase(subfolderId) ??
-              FolderModel(
-                  id: subfolderId, name: '', path: '', parentId: folder.id)
-      ];
+        // Store the folder in the subfolderMap for future reference
+        subfolderMap[folder.id] = folder;
+      }
 
-      // Fetch files for the current folder
-      List<FileModel> files = await fetchFilesForFolder(folder.id);
-      print('folder.name ${folder.name} ');
-      int index = folders.indexWhere((element) => element.id == folder.id);
-      FolderModel temp = folders[index];
-      temp.files?.addAll(files);
-      folders[index] = temp;
-      //  folders[index].files?.addAll(files);
-      print('folder added to : ${folder.files?.length}');
+      // Update actualSubfolders in each folder
+      for (FolderModel folder in folders) {
+        folder.actualSubfolders = [
+          for (String subfolderId in folder.subFolders ?? [])
+            subfolderMap[subfolderId] ??
+                await fetchFolderFromFirebase(subfolderId) ??
+                FolderModel(
+                    id: subfolderId, name: '', path: '', parentId: folder.id)
+        ];
+
+        // Fetch files for the current folder
+        List<FileModel> files = await fetchFilesForFolder(folder.id);
+
+        int index = folders.indexWhere((element) => element.id == folder.id);
+        FolderModel temp = folders[index];
+        temp.files?.addAll(files);
+        folders[index] = temp;
+        //  folders[index].files?.addAll(files);
+
+        update();
+      }
       update();
+
+      Indicator.closeLoading();
+      return folders;
+    } on FirebaseException catch (error) {
+      Get.back();
+      Get.snackbar(
+        'Error',
+        error.message ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return [];
     }
-    update();
-    print('folders length in controller: ${folders.length}');
-    Indicator.closeLoading();
-    return folders;
   }
 
   Future<List<FileModel>> fetchFilesForFolder(String folderId) async {
@@ -88,14 +124,13 @@ class FilesController extends GetxController {
 
     if (folderDoc.exists) {
       Map<String, dynamic>? data = folderDoc.data() as Map<String, dynamic>?;
-      print('data: $data');
+
       List<FileModel> files = (data?['files'] as List<dynamic>?)
               ?.map((fileData) =>
                   FileModel.fromJson(fileData as Map<String, dynamic>))
               .toList() ??
           [];
 
-      print('files number: ${files.length}');
       return files;
     } else {
       // Handle the case where the folder document doesn't exist
@@ -154,12 +189,7 @@ class FilesController extends GetxController {
       // await foldersCollection.doc(folderId).update({
       //   'downloadUrl': downloadUrl,
       // });
-
-      print('Root folder created successfully!');
-    } else {
-      print(
-          'Folders collection is not empty. No need to create a root folder.');
-    }
+    } else {}
   }
 
   Future<void> createFolder(String folderName, String parId) async {
@@ -185,8 +215,6 @@ class FilesController extends GetxController {
             .get();
       }
 
-      print('folder path in fucntion:  ${folderPath.value} ');
-      print('parent id in create folder: $parId');
       if (query.docs.isEmpty) {
         // The folder name is available
         // Generate a unique ID for the folder
@@ -204,7 +232,7 @@ class FilesController extends GetxController {
             subFolders: [],
             parentId: parId != '' ? parId : '9876543210',
             files: []);
-        print('new folderr createing witth parernttid: ${newFolder.parentId}');
+
         // Save the new folder to Firebase
         await foldersCollection.doc(folderId).set(newFolder.toJson());
 
@@ -244,7 +272,6 @@ class FilesController extends GetxController {
         int folderIndex = folders.indexWhere((element) => element.id == parId);
 
         if (folder != null) {
-          print('added to folders');
           folders.add(folder);
         }
         folders[folderIndex].actualSubfolders?.add(folder!);
@@ -325,7 +352,6 @@ class FilesController extends GetxController {
         int folderIndex = folders.indexWhere((element) => element.id == parId);
 
         if (folder != null) {
-          print('added to folders');
           folders.add(folder);
         }
         folders[folderIndex].actualSubfolders?.add(folder!);
@@ -378,7 +404,6 @@ class FilesController extends GetxController {
         ),
         ElevatedButton(
           onPressed: () async {
-            print('parentt id in create folder call: $parentId');
             await createFolder(folderNameController.text.trim(), parentId);
             Get.back(); // Close the dialog
           },
@@ -423,8 +448,7 @@ class FilesController extends GetxController {
         String fileName = filex.path!.split('/').last;
         String ext = fileName.split('.').last;
         fileName = fileName.split('.').first;
-        print('fileName: $fileName$ext}');
-        print('folderId: $folderId');
+
         // Check if the file already exists in the folder
         bool fileExists = false;
         int copyNumber = 1;
@@ -437,13 +461,12 @@ class FilesController extends GetxController {
           List<dynamic> existingFiles = folderDoc['files'] ?? [];
 
           // Check if the file name already exists in the folder
-          print('compared with' + fileName + ext);
+
           fileExists =
               existingFiles.any((file) => file['name'] == fileName + '.' + ext);
 
           // If the file name exists, append a copy number
           if (fileExists) {
-            print('file exist');
             copyNumber++;
             fileName = '${baseFileName}_Copy($copyNumber)';
           }
@@ -470,17 +493,16 @@ class FilesController extends GetxController {
           (TaskSnapshot snapshot) {
             // Update the progress bar
             double progress = snapshot.bytesTransferred / snapshot.totalBytes;
-            print('progress: $progress');
+
             uploadProgress.value = progress * 100;
           },
           onDone: () {
             // Reset progress when
-            print('progress: 0');
+
             uploadProgress.value = 0.0;
             Get.back();
           },
           onError: (error) {
-            print('onError: $error');
             Get.snackbar(
               'Error',
               error.message ?? '',
@@ -514,11 +536,7 @@ class FilesController extends GetxController {
         folders[i].files?.addAll([file]);
         update();
         // getFolders();
-        print(
-            "File uploaded and Firestore updated. Download URL: $downloadURL");
       } catch (e) {
-        print('on catch: $e');
-
         Get.snackbar(
           'Error',
           e.toString() ?? '',
@@ -534,7 +552,240 @@ class FilesController extends GetxController {
     }
   }
 
-  // Future<Uint8List> compressFile(File file) async {
+// folders downlading
+  void showDownloadingProgressDialog() {
+    Get.dialog(
+        AlertDialog(
+          title: Text('Downlaoding'),
+          content: Obx(
+            () => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(
+                  value: downloadProgress.value / 100,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '${downloadProgress.value.toInt()}%',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false);
+  }
+
+  Future<void> downloadFilesFromFolder(String folderId, folderPath) async {
+    try {
+      showDownloadingProgressDialog();
+      print('folderPath: $folderPath');
+      Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
+      ListResult items = await storageRef.listAll();
+
+      var appDocDir = await getApplicationDocumentsDirectory();
+      totalFiles.value = items.items.length;
+      await Future.wait(
+        items.items.map((item) async {
+          if (item is Reference) {
+            File file = File('${appDocDir.path}${folderPath}/${item.name}');
+            print('file: $file');
+            Directory parentDirectory = file.parent;
+
+// Check if the parent directory exists
+            if (!parentDirectory.existsSync()) {
+              // If it doesn't exist, create it
+              print('parent directory does not exist, creating...');
+              try {
+                parentDirectory.createSync(recursive: true);
+                print('parent directory created successfully');
+              } catch (e) {
+                print('Error creating parent directory: $e');
+                // Handle the error (print, log, or throw)
+                return;
+              }
+            } else {
+              print('parent directory already exists');
+            }
+            // File file = File('${appDocDir.path}/${item.name}');
+
+            TaskSnapshot taskSnapshot = await item.writeToFile(file);
+
+            // Handle the downloaded file
+            filesDownloaded++;
+            downloadProgress.value = (filesDownloaded / totalFiles.value) * 100;
+          }
+        }),
+      );
+
+      DocumentSnapshot folderDoc = await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(folderId)
+          .get();
+
+      // FolderModel folder = filesController.folders.firstWhere(
+      //   (folder) => folder.id == folderId,
+      // );
+      if (folderDoc.exists) {
+        FolderModel folder = FolderModel.fromFirestore(folderDoc);
+        List<FileModel> files = await fetchFilesForFolder(folder.id);
+        FolderModel updatedFolder = FolderModel(
+            id: folder.id,
+            name: folder.name,
+            actualSubfolders: [],
+            path: folder.path,
+            subFolders: folder.subFolders,
+            files: files,
+            downloadUrl: folder.downloadUrl,
+            parentId: folder.parentId,
+            appearance: folder.appearance // Set to an empty list
+            // Copy other properties as needed
+            );
+
+        dbController.storeFolder(updatedFolder);
+      }
+    } on FirebaseException catch (e) {
+    } finally {
+      downloadProgress.value = 0.0;
+      filesDownloaded.value = 0;
+      // uploading.value = false;
+      Get.back();
+    }
+  }
+
+  Future<void> downloadRootFolder() async {
+    try {
+      String folderId = '9876543210';
+      String folderPath = '/folders';
+      Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
+      ListResult items = await storageRef.listAll();
+
+      var appDocDir = await getApplicationDocumentsDirectory();
+      //  totalFiles.value = items.items.length;
+      await Future.wait(
+        items.items.map((item) async {
+          if (item is Reference) {
+            File file = File('${appDocDir.path}/${folderPath}/${item.name}');
+            file.parent.createSync(recursive: true);
+            // File file = File('${appDocDir.path}/${item.name}');
+
+            TaskSnapshot taskSnapshot = await item.writeToFile(file);
+
+            // Handle the downloaded file
+            //  filesDownloaded++;
+            //  downloadProgress.value = (filesDownloaded / totalFiles.value) * 100;
+          }
+        }),
+      );
+
+      FolderModel folder = folders.firstWhere(
+        (folder) => folder.id == folderId,
+      );
+      if (folder != null) {
+        // FolderModel folder = FolderModel.fromFirestore(folderDoc);
+        //  folder.actualSubfolders = [];
+        FolderModel updatedFolder = FolderModel(
+            id: folder.id,
+            name: folder.name,
+            actualSubfolders: [],
+            path: folder.path,
+            subFolders: folder.subFolders,
+            files: folder.files,
+            downloadUrl: folder.downloadUrl,
+            parentId: folder.parentId,
+            appearance: folder.appearance // Set to an empty list
+            // Copy other properties as needed
+            );
+        print(
+            'downloading root folder sub files: ${updatedFolder.files?.length}');
+        dbController.storeFolder(updatedFolder);
+      }
+    } on FirebaseException catch (error) {
+      Get.snackbar(
+        'Error',
+        error.message ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> deleteAllFoldersInsideRoot() async {
+    try {
+      Indicator.showLoading();
+      String rootFolderPath = '/folders';
+      // Get the application documents directory
+      var appDocDir = await getApplicationDocumentsDirectory();
+
+      // Construct the full path of the root folder
+      String rootFolderFullPath = '${appDocDir.path}$rootFolderPath';
+
+      // Get a list of all subdirectories in the root folder
+      Directory rootFolder = Directory(rootFolderFullPath);
+      List<FileSystemEntity> subdirectories = await rootFolder.list().toList();
+
+      // Delete each subdirectory along with its contents
+      await Future.wait(subdirectories.map((subdirectory) async {
+        if (subdirectory is Directory) {
+          await subdirectory.delete(recursive: true);
+        }
+      }));
+
+      print('All folders inside $rootFolderPath deleted successfully.');
+      await dbController.deleteAllHiveFolders();
+      await dbController.assignHiveFolders();
+      await screenController.assignAll();
+      screenController.bottomNavIndex.value = 0;
+      Indicator.closeLoading();
+    } catch (e) {
+      Indicator.closeLoading();
+      print('Error deleting folders: $e');
+    }
+  }
+
+  Future<void> deleteFile(
+      String filename, String parentId, String fileId) async {
+    try {
+      Indicator.showLoading();
+      print('deleting');
+      // Get the application documents directory
+      var appDocDir = await getApplicationDocumentsDirectory();
+
+      // Construct the full path of the file to be deleted
+      String filePath =
+          '${appDocDir.path}${folderPath.value}/$filename'; // Replace with the actual file name
+
+      // Delete the file
+      File fileToDelete = File(filePath);
+      if (await fileToDelete.exists()) {
+        await fileToDelete.delete();
+        print('File $filePath deleted successfully.');
+      } else {
+        print('File $filePath not found.');
+      }
+      int index = dbController.hiveFolders
+          .indexWhere((element) => element.id == parentId);
+      FolderModel temp = dbController.hiveFolders[index];
+      temp.files?.removeWhere((element) => element.id == fileId);
+      dbController.hiveFolders[index] = temp;
+      dbController.updateHiveFolders(dbController.hiveFolders);
+      // screenController.bottomNavIndex.value = 0;
+      // screenController.assignAll();
+      // // Additional operations after deleting the file
+      // await dbController.deleteAllHiveFolders();
+      // await dbController.assignHiveFolders();
+      // await screenController.assignAll();
+      // screenController.bottomNavIndex.value = 0;
+
+      Indicator.closeLoading();
+    } catch (e) {
+      Indicator.closeLoading();
+      print('Error deleting file: $e');
+    }
+  }
+
+// Future<Uint8List> compressFile(File file) async {
   //   try {
   //     final encoder = ZipEncoder();
   //     final inputBytes = await file.readAsBytes();
@@ -543,7 +794,7 @@ class FilesController extends GetxController {
   //     final compressedData = encoder.encode(archive);
   //     return Uint8List.fromList(compressedData!);
   //   } catch (e) {
-  //     print('Error compressing file: $e');
+  //
   //     return Uint8List(0);
   //   }
   // }
