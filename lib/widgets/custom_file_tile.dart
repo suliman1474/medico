@@ -29,7 +29,13 @@ class CustomFileTile extends StatelessWidget {
         leading: Icon(Icons.description), // Replace with your desired icon
         title: Row(
           children: [
-            Text(itemName),
+            Flexible(
+              child: Text(
+                itemName,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
             Spacer(),
           ],
         ),
