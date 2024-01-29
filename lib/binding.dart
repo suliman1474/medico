@@ -10,10 +10,11 @@ import 'controllers/screen_controller.dart';
 class Binding extends Bindings {
   @override
   void dependencies() {
+    // Get.put(DbController());
+
     Get.put(AuthenticationController());
-    Get.put(FilesController());
+    // Get.put(FilesController());
     Get.put(ScreenController());
-    Get.put(DbController());
     Get.lazyPut(() => FeedController(), fenix: true);
     Get.put(UserSearchController());
   }

@@ -55,8 +55,7 @@ class CustomFloatingButton extends StatelessWidget {
                 CustomElevatedButton(
                   onTap: () async {
                     Get.back();
-                    print('pressed');
-                    print('parentt id in floating button: ${parentId}');
+
                     await filesController
                         .showCreateFolderDialog(parentId ?? '');
                     // Get.back();

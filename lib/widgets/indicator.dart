@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medico/controllers/feed_controller.dart';
@@ -136,6 +137,17 @@ class Indicator {
     );
   }
 
+  static showToast(String text, Color color) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: color,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
   static Widget loader() {
     return LoadingAnimationWidget.flickr(
       leftDotColor: color1,
@@ -198,7 +210,7 @@ class Indicator {
                 }
 
                 // Show the list of liked users
-                print(likedUsers[0].name);
+
                 return Container(
                   padding:
                       EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
@@ -302,7 +314,7 @@ class Indicator {
                 }
 
                 // Show the list of liked users
-                print(Voters[0].name);
+
                 return Container(
                   padding:
                       EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),

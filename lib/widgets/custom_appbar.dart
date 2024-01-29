@@ -202,16 +202,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 Uint8List? imageBytes = snapshot.data;
 
                                 if (imageBytes != null) {
-                                  print('image is found in hive');
                                   try {
                                     return GestureDetector(
                                       onTap: () {
                                         dbController.userRole.value ==
                                                 UserRole.USER
-                                            ? setState(() {
-                                                screenController
-                                                    .bottomNavIndex.value = 3;
-                                              })
+                                            ? screenController
+                                                .bottomNavIndex.value = 3
                                             : Get.to(AdminProfileScreen());
                                       },
                                       child: Container(
@@ -233,10 +230,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, e, stackTrace) {
-                                              print(
-                                                'Error in image displaying: $e',
-                                              );
-                                              print('stack trace: $stackTrace');
                                               return Container(
                                                 color: Colors.grey,
                                               );
@@ -246,7 +239,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                       ),
                                     );
                                   } catch (e) {
-                                    print('Error decoding image: $e');
                                     return Container();
                                   }
                                 } else {
@@ -267,10 +259,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                         onTap: () {
                                           dbController.userRole.value ==
                                                   UserRole.USER
-                                              ? setState(() {
-                                                  screenController
-                                                      .bottomNavIndex.value = 3;
-                                                })
+                                              ? screenController
+                                                  .bottomNavIndex.value = 3
                                               : Get.to(AdminProfileScreen());
                                         },
                                       ),
@@ -278,7 +268,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                   );
                                 }
                               } else {
-                                print('image is not found in hive');
                                 return Container();
                               }
                             },

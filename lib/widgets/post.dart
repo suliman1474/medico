@@ -56,10 +56,9 @@ class _PostState extends State<Post> {
           .firstWhere((post) => post.id == widget.postId);
       String userId = FirebaseAuth.instance.currentUser!.uid;
       // feedController.isLiked.value = post.like?.contains(userId) ?? false;
-      print('isliked value: ${feedController.isLiked.value}');
+
       bool isLiked = post.like?.contains(userId) ?? false;
 
-      print('user id: $userId');
       return Container(
         margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
         padding:
@@ -196,7 +195,7 @@ class _PostState extends State<Post> {
                         feedController.likePost(post.id, userId);
                       } else {
                         // IF ADMIN CLICKS ON LIKE BUTTON HE SHOULD SEE ALL USERS WHO'VE LIKED THE POST
-                        print('admin clicked on it');
+
                         Indicator.openbottomSheetLike(post);
                       }
                     },

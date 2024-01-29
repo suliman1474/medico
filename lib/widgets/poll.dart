@@ -42,7 +42,6 @@ class _PollState extends State<Poll> {
   Widget build(BuildContext context) {
     //  double totalVotes = votes.reduce((value, element) => value + element);
     return Obx(() {
-      print('updated');
       PollModel poll = feedController.pollModels
           .firstWhere((poll) => poll.id == widget.pollId);
       List<OptionModel> options = poll.options;
@@ -158,14 +157,12 @@ class _PollState extends State<Poll> {
                   //value: totalVotes > 0 ? votes[index] / totalVotes : 0,
                   onTap: () {
                     if (selectedOptionIndex == index) {
-                      print('clicked same option');
                       selectedOptionIndex = 5;
                       feedController.vote(
                           poll.id, options[index].id, userId, true);
                     } else {
-                      print('else vote');
                       selectedOptionIndex = index;
-                      print('index clicked: $index');
+
                       feedController.vote(
                           poll.id, options[index].id, userId, false);
                     }

@@ -59,11 +59,7 @@ class FirebaseService {
             .doc(id)
             .update({'image': imageUrl});
       }
-
-      print('Post created successfully!');
-    } catch (e) {
-      print('Error creating post: $e');
-    }
+    } catch (e) {}
   }
 
   Future<void> createPoll(PollModel poll) async {
@@ -72,11 +68,7 @@ class FirebaseService {
       Map<String, dynamic> pollData = poll.toJson();
 
       await _firestore.collection('polls').doc(poll.id).set(poll.toJson());
-
-      print('Poll created successfully!');
-    } catch (e) {
-      print('Error creating poll: $e');
-    }
+    } catch (e) {}
   }
 
   Future<UserModel?> getProfile(String id) async {
@@ -148,24 +140,22 @@ class FirebaseService {
 
       CollectionReference postsCollection =
           FirebaseFirestore.instance.collection('posts');
-      print('geting postscollection');
 
       // Query the posts collection
       QuerySnapshot querySnapshot = await postsCollection.get();
 
       // Map the query results to a list of PostModel objects
-      print('converting to model');
+
       List<PostModel> postModels = querySnapshot.docs.map((doc) {
         print('doc: ${doc.data()}');
         // Use the generated fromJson method to create a PostModel
         return PostModel.fromJson(doc.data() as Map<String, dynamic>);
       }).toList();
-      print('after list generated');
-      print('post model :${postModels.length}');
+
       return postModels;
     } catch (e) {
       // Handle any errors that might occur during fetching
-      print('Error fetching posts: $e');
+
       throw e; // Rethrow the error to be caught by the FutureBuilder
     }
   }

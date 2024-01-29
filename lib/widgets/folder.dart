@@ -5,12 +5,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/screens/home/folders_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+import 'package:medico/widgets/indicator.dart';
 
 import '../../controllers/screen_controller.dart';
 import '../models/folder_model.dart';
@@ -19,11 +22,12 @@ import '../screens/home/home2.dart';
 class Folder extends StatefulWidget {
   FolderModel folder;
   UniqueKey keyU;
-  Folder({
-    super.key,
-    required this.folder,
-    required this.keyU,
-  });
+  bool ifdownloaded;
+  Folder(
+      {super.key,
+      required this.folder,
+      required this.keyU,
+      required this.ifdownloaded});
 
   @override
   State<Folder> createState() => _FolderState();
@@ -47,9 +51,9 @@ class _FolderState extends State<Folder> {
   ];
 
   late Widget newscreen;
-  bool visibility = true;
+  bool visibility = false;
   late String foldername;
-  bool ifdownloaded = true;
+  late bool ifdownloaded;
   bool options = false;
   bool sharing = false;
   bool appearance = false;
@@ -63,18 +67,20 @@ class _FolderState extends State<Folder> {
     // newscreen = widget.screen;
     // visibility = widget.update;
     key = widget.keyU;
+    ifdownloaded = widget.ifdownloaded;
     foldername = folder!.name;
     // ifdownloaded = widget.downloaded;
   }
 
   @override
   Widget build(BuildContext context) {
+    FilesController filesController = Get.find();
     return dbController.userRole.value == UserRole.ADMIN || ifdownloaded
         ? Stack(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-                width: 379.w,
+                margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 15.w),
+                //  width: 379.w,
                 height: 76.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20).r,
@@ -133,10 +139,16 @@ class _FolderState extends State<Folder> {
                       child: Visibility(
                         visible: visibility &&
                             dbController.userRole.value == UserRole.USER,
-                        child: CustomImageView(
-                          svgPath: IconConstant.icDownload,
-                          height: 38.h,
-                          width: 38.w,
+                        child: GestureDetector(
+                          onTap: () {
+                            filesController.downloadFilesFromFolder(
+                                folder!.id, folder?.path);
+                          },
+                          child: CustomImageView(
+                            svgPath: IconConstant.icDownload,
+                            height: 38.h,
+                            width: 38.w,
+                          ),
                         ),
                       ),
                     ),
@@ -299,13 +311,11 @@ class _FolderState extends State<Folder> {
                   tileMode: TileMode.decal,
                 ),
                 child: GestureDetector(
-                  onTap: () {
-                    print('downloading folder');
-                  },
+                  onTap: () {},
                   child: Container(
                     margin:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-                    width: 379.w,
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 15.w),
+                    // width: 379.w,
                     height: 76.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20).r,
@@ -346,14 +356,78 @@ class _FolderState extends State<Folder> {
                   ),
                 ),
               ),
-              GestureDetector(
-                child: CustomImageView(
-                  svgPath: IconConstant.icDownload,
-                  height: 38.h,
-                  width: 38.w,
-                  margin: EdgeInsets.only(right: 40.w),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 25.w),
+                child: MaterialButton(
+                  color: color1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0).r,
+                  ),
+                  onPressed: () async {
+                    print('clicked');
+                    bool result =
+                        await InternetConnectionChecker().hasConnection;
+                    if (result == true) {
+                      print('YAY! Free cute dog pics!');
+                      Get.dialog<bool>(
+                        AlertDialog(
+                          title: Text(
+                            'Download Confirmation',
+                            style: customTexttheme.displaySmall
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          backgroundColor: color1,
+                          content: Text(
+                            'Do you want to download files from this folder?',
+                            style: customTexttheme.displaySmall
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Get.back();
+                                filesController.downloadFilesFromFolder(
+                                    folder!.id, folder?.path); // Yes button
+                              },
+                              child: Text(
+                                'Yes',
+                                style: customTexttheme.displaySmall
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Get.back(); // No button
+                              },
+                              child: Text(
+                                'No',
+                                style: customTexttheme.displaySmall
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      Indicator.showToast('No Internet Connection', Colors.red);
+
+                      //  print(InternetConnectionChecker().lastTryResults);
+                    }
+                  },
+                  child: Text(
+                    'Download',
+                    style: TextStyle(color: Colors.white, fontSize: 18.sp),
+                  ),
                 ),
-              ),
+              )
+              // GestureDetector(
+              //   child: CustomImageView(
+              //     svgPath: IconConstant.icDownload,
+              //     height: 38.h,
+              //     width: 38.w,
+              //     margin: EdgeInsets.only(right: 40.w),
+              //   ),
+              // ),
             ],
           );
   }

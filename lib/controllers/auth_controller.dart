@@ -60,7 +60,7 @@ class AuthenticationController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    isLoggedIn();
+    // isLoggedIn();
   }
 
   toggleObsecure() {
@@ -81,11 +81,7 @@ class AuthenticationController extends GetxController {
   ) async {
     try {
       Indicator.showLoading();
-      print('name: ' + name);
-      print('college: ' + college);
-      print(' discipline: ' + discipline);
-      print(' semester: ' + semester);
-      print(' contact: ' + contact);
+
       userProfile.value = await firebaseService.updateUser(
         name,
         college,
@@ -136,10 +132,8 @@ class AuthenticationController extends GetxController {
 
   createUser() async {
     try {
-      print('create user function');
       Indicator.showLoading();
-      print('email.text = ${email.text}');
-      print('password.text = ${password.text}');
+
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
         email: email.text.trimRight(),
@@ -147,7 +141,7 @@ class AuthenticationController extends GetxController {
       )
           .whenComplete(() async {
         user.value = _auth.currentUser;
-        print('creatting defaultt user');
+
         await createDefaultUserProfile();
       });
       // UserModel userToStore = UserModel(
@@ -181,9 +175,7 @@ class AuthenticationController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<UserCredential> signInWithGoogle() async {
@@ -247,14 +239,13 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> logout() async {
-    print('logoutt function');
     Indicator.showLoading();
     await FirebaseAuth.instance.signOut().whenComplete(() async {
       await GoogleSignIn().signOut();
 
       await dbController.signOut();
       Indicator.closeLoading();
-      print('goinng tto sign up screen');
+
       Get.off(() => const LoginScreen());
     });
   }

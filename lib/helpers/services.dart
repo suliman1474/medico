@@ -16,7 +16,7 @@ class Service {
 
     if (response.statusCode == 200) {
       String jsonString = await response.stream.bytesToString();
-      print('logged in');
+
       return jsonString;
     } else {
       return '0';

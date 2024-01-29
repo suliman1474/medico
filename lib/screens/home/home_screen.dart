@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // List<FolderModel> rootFolders = folders
       //     .where((fol) => fol.parentId == null || fol.parentId!.isEmpty)
       //     .toList();
-      // print('root folder length: ${rootFolders.length}');
+      //
       // Get.to(
       //     () => FoldersScreen(
       //           number: 1,
@@ -65,11 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
       //     arguments: 1,
       //     preventDuplicates: false);
       // Get.toNamed('/folder-screen', arguments: 1);
+
       screenController.updatePageAt(
           AppPage.HomeScreen,
           FoldersScreen(
             // folders: rootFolders,
             back: false,
+
             path: '/folders',
           ));
     });

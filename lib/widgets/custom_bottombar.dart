@@ -34,8 +34,6 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      print(
-          'user role when setting bottom bar: ${dbController.userRole.value}');
       List<BottomMenuModel> bottomMenuList = [
         BottomMenuModel(
           icon: IconConstant.icHome,
@@ -82,6 +80,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
             ),
             child: BottomNavigationBar(
               backgroundColor: Colors.transparent,
+              fixedColor: Colors.transparent,
               showSelectedLabels: false,
               showUnselectedLabels: false,
               elevation: 0,
@@ -154,9 +153,12 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                 screenController.previousIndex.value =
                     screenController.bottomNavIndex.value;
                 screenController.bottomNavIndex.value = index;
-                print('custom_bottombar ontap function index: ${index}');
+
                 widget.onChanged?.call(index);
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
+                ;
               },
             ),
           ),
