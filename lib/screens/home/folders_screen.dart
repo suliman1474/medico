@@ -145,6 +145,46 @@ class _FoldersScreenState extends State<FoldersScreen> {
     await dbController.loadUserRole();
   }
 
+  void downloadFolder(int index) async {
+    print('clicked');
+    Get.dialog<bool>(
+      AlertDialog(
+        title: Text('Download Confirmation'),
+        backgroundColor: color1,
+        content: Text('Do you want to download files from this folder?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              filesController.downloadFilesFromFolder(
+                  folders![index].id, folders?[index].path); // Yes button
+            },
+            child: Text('Yes'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back(); // No button
+            },
+            child: Text('No'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void navigate(int index) {
+    filesController.folderPath.value = path! + '/' + folders![index].name;
+
+    screenController.updatePageAt(
+        AppPage.HomeScreen,
+        FoldersScreen(
+          folders: folders![index].actualSubfolders,
+          id: folders![index].id,
+          key: key,
+          parentId: folders![index].id,
+          path: path! + '/' + folders![index].name,
+        ));
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -246,7 +286,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
         }
 
         // for hive
-        if (dbController.hiveFolders.length > 0) {
+        if (dbController.hiveFolders.length > 0 &&
+            dbController.userRole.value == UserRole.USER) {
           FolderModel temp2 =
               dbController.hiveFolders.firstWhere((fol) => fol.id == id);
           print('tem2.actual folders: ${temp2.actualSubfolders?.length}');
@@ -361,30 +402,37 @@ class _FoldersScreenState extends State<FoldersScreen> {
                           FileModel? filez = hiveRootFolder!.files?[index];
                           return GestureDetector(
                             onTap: () async {
-                              // Use http package to download the file
-                              print('files clicked');
-                              print('files clicked');
-                              // Get the temporary directory
-                              var appDocDir =
-                                  await getApplicationDocumentsDirectory();
+                              if (dbController.userRole.value ==
+                                  UserRole.ADMIN) {
+                                var response = await http.get(Uri.parse(
+                                    rootFolder!.files![index].downloadUrl));
 
-                              // Save the file to the temporary directory
-                              File file = File(
-                                  '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
-                              //    await file.writeAsBytes(response.bodyBytes);
+                                // Get the temporary directory
+                                var tempDir = await getTemporaryDirectory();
 
-                              // Open the downloaded file using OpenFile plugin
-                              OpenFile.open(file.path);
-                              // List<String> name = hiveRootFolder!
-                              //     .files![index].name
-                              //     .split('.');
-                              // String? ext = name.last;
-                              // if (ext == 'pdf') {
-                              //   Get.to(PdfViewer(
-                              //     downloadUrl: hiveRootFolder!
-                              //         .files![index].downloadUrl,
-                              //   ));
-                              // }
+                                // Save the file to the temporary directory
+                                File file =
+                                    File('${tempDir.path}/downloaded_file');
+                                await file.writeAsBytes(response.bodyBytes);
+
+                                // Open the downloaded file using OpenFile plugin
+                                OpenFile.open(file.path);
+                              } else {
+                                // Use http package to download the file
+                                print('files clicked');
+                                print('files clicked');
+                                // Get the temporary directory
+                                var appDocDir =
+                                    await getApplicationDocumentsDirectory();
+
+                                // Save the file to the temporary directory
+                                File file = File(
+                                    '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
+                                //    await file.writeAsBytes(response.bodyBytes);
+
+                                // Open the downloaded file using OpenFile plugin
+                                OpenFile.open(file.path);
+                              }
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -438,7 +486,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                           );
                         },
                       ),
-
+                      //=======admin folders
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -449,32 +497,12 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                   false
                               ? GestureDetector(
                                   onTap: () {
-                                    print('clicked');
-                                    Get.dialog<bool>(
-                                      AlertDialog(
-                                        title: Text('Download Confirmation'),
-                                        content: Text(
-                                            'Do you want to download files from this folder?'),
-                                        actions: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              filesController
-                                                  .downloadFilesFromFolder(
-                                                      folders![index].id,
-                                                      folders?[index]
-                                                          .path); // Yes button
-                                            },
-                                            child: Text('Yes'),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Get.back(); // No button
-                                            },
-                                            child: Text('No'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    if (dbController.userRole ==
+                                        UserRole.USER) {
+                                      downloadFolder(index);
+                                    } else {
+                                      navigate(index);
+                                    }
                                   },
                                   // onTap: () {
                                   //   filesController.folderPath.value =
@@ -503,6 +531,54 @@ class _FoldersScreenState extends State<FoldersScreen> {
                               : Container();
                         },
                       ),
+// admin files
+                      if (dbController.userRole.value == UserRole.ADMIN)
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: rootFolder?.files?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                // Use http package to download the file
+                                var response = await http.get(Uri.parse(
+                                    rootFolder!.files![index].downloadUrl));
+
+                                // Get the temporary directory
+                                var tempDir = await getTemporaryDirectory();
+
+                                // Save the file to the temporary directory
+                                File file =
+                                    File('${tempDir.path}/downloaded_file');
+                                await file.writeAsBytes(response.bodyBytes);
+
+                                // Open the downloaded file using OpenFile plugin
+                                OpenFile.open(file.path);
+                                // List<String> name =
+                                //     rootFolder!.files![index].name.split('.');
+                                // String? ext = name.last;
+                                // if (ext == 'pdf') {
+                                //   Get.to(PdfViewer(
+                                //     downloadUrl:
+                                //         rootFolder!.files![index].downloadUrl,
+                                //   ));
+                                // }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                // child: Container(
+                                //   height:
+                                //       300, // Set a fixed height or adjust it according to your layout
+                                //   child: ,
+                                // ),
+
+                                child: CustomFileTile(
+                                  itemName: rootFolder!.files![index].name,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     ],
                   ),
                 )
