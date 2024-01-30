@@ -4,19 +4,16 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/widgets/custom_file_tile.dart';
 import 'package:medico/widgets/floating_button.dart';
 import 'package:medico/widgets/folder.dart';
-import 'package:medico/widgets/pdfViewer.dart';
 import 'package:open_file_plus/open_file_plus.dart';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../constants/user_role.dart';
 import '../../controllers/auth_controller.dart';
@@ -25,10 +22,7 @@ import '../../core/colors.dart';
 import '../../core/text_theme.dart';
 import '../../models/file_model.dart';
 import '../../models/folder_model.dart';
-import '../../widgets/custom_appbar.dart';
-import '../../widgets/custom_bottombar.dart';
 import '../../widgets/indicator.dart';
-import 'home2.dart';
 
 // class FoldersScreen extends StatefulWidget {
 //   final int? number;

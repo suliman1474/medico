@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/pop_scope.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/controllers/search_controller.dart';
-import 'package:medico/models/user_model.dart';
-import 'package:medico/widgets/indicator.dart';
 import 'package:medico/widgets/user_overview.dart';
 
 class UsersScreen extends StatefulWidget {

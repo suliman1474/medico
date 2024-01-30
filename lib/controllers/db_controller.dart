@@ -5,25 +5,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/models/folder_model.dart';
+import 'package:medico/models/notification_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/file_model.dart';
 import '../models/user_model.dart';
-import '../widgets/indicator.dart';
 
 class DbController extends GetxController {
   final String userBox = 'user';
   final String isLoggedInBox = 'isLoggedIn';
   final String roleBox = 'role';
   final String profileBox = 'profile_image';
+  final String notificationBox = 'notifications';
   final String foldersBox = 'myfolders';
   RxString userRole = 'user'.obs;
   RxList<FolderModel> hiveFolders = <FolderModel>[].obs;
@@ -156,8 +152,35 @@ class DbController extends GetxController {
     // await Hive.openBox<Attempt>(Db.attemptsBoxName);
     await Hive.initFlutter();
     Hive.registerAdapter(UserModelAdapter());
+    Hive.registerAdapter(NotificationModelAdapter());
     Hive.registerAdapter(FolderModelAdapter());
     Hive.registerAdapter(FileModelAdapter());
+  }
+
+  Future<void> saveNotification(NotificationModel notification) async {
+    final box = await Hive.openBox(notificationBox);
+    try {
+      print('saving notification');
+      await box.add(notification);
+    } finally {
+      await box.close();
+    }
+  }
+
+  Future<List<NotificationModel>> getNotifications() async {
+    final box = await Hive.openBox<NotificationModel>(notificationBox);
+    try {
+      // Get notifications and convert them to a list
+      List<NotificationModel> notifications = box.values.toList();
+
+      // Sort the list in descending order based on timestamps
+      notifications.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      print('notifications: ${notifications.length}');
+      return notifications;
+      // return box.values.toList();
+    } finally {
+      await box.close();
+    }
   }
 
 // Recursive function to find a folder by its id in the hierarchy

@@ -8,7 +8,7 @@ part of 'file_model.dart';
 
 class FileModelAdapter extends TypeAdapter<FileModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 5;
 
   @override
   FileModel read(BinaryReader reader) {

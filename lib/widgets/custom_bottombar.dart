@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
@@ -81,6 +80,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
             ),
             child: BottomNavigationBar(
               backgroundColor: Colors.transparent,
+              fixedColor: Colors.transparent,
               showSelectedLabels: false,
               showUnselectedLabels: false,
               elevation: 0,
@@ -103,7 +103,10 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                           bottomMenuList[index].title ?? "",
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
-                          style: customTexttheme.labelSmall,
+                          style: customTexttheme.labelSmall!.copyWith(
+                            color: offwhite,
+                            fontSize: 12.sp,
+                          ),
                         ),
                       ),
                     ],
@@ -126,8 +129,10 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                           bottomMenuList[index].title ?? "",
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
-                          style: customTexttheme.labelSmall!
-                              .copyWith(color: white, fontSize: 12.sp),
+                          style: customTexttheme.labelSmall!.copyWith(
+                            color: white,
+                            fontSize: 12.sp,
+                          ),
                         ),
                       ),
                       Container(

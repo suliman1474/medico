@@ -11,6 +11,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/routes.dart';
+import 'package:medico/services/firebase_notifications.dart';
 
 import 'binding.dart';
 import 'core/text_theme.dart';
@@ -68,6 +69,7 @@ void main() async {
 
   DbController db = Get.put(DbController());
   await db.initialize();
+  await FirebaseNotifications().initNotifications();
   // Check internet connection with singleton (no custom values allowed)
   //await execute(InternetConnectionChecker());
 

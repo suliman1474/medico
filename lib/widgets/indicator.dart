@@ -9,6 +9,7 @@ import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/option_model.dart';
 import 'package:medico/models/post_model.dart';
 import 'package:medico/models/user_model.dart';
+import 'package:medico/widgets/custom_elevated_button.dart';
 import 'package:medico/widgets/user_overview.dart';
 
 class Indicator {
@@ -20,6 +21,118 @@ class Indicator {
           rightDotColor: color2,
           size: 40,
         ),
+      ),
+    );
+  }
+
+  static showDeleteDialogPoll(String pollId) {
+    FeedController feedController = Get.find();
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+        content: Text(
+          'Are you sure you want to delete this Poll?',
+          style: customTexttheme.bodyLarge!.copyWith(fontSize: 22.sp),
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomElevatedButton(
+                onTap: () {
+                  Get.back();
+                },
+                text: 'Cancel',
+                buttonTextStyle: customTexttheme.bodyLarge,
+                buttonStyle: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                ),
+                height: 40.h,
+                width: 100.w,
+                margin: EdgeInsets.only(left: 20.w),
+              ),
+              CustomElevatedButton(
+                onTap: () {
+                  feedController.deletePoll(pollId);
+                },
+                text: 'Delete',
+                buttonTextStyle: customTexttheme.bodyLarge!.copyWith(
+                  color: Colors.white,
+                ),
+                buttonStyle: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                ),
+                height: 40.h,
+                width: 100.w,
+                margin: EdgeInsets.only(right: 20.w),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  static showDeleteDialogPost(String postId) {
+    FeedController feedController = Get.find();
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+        content: Text(
+          'Are you sure you want to delete this Post?',
+          style: customTexttheme.bodyLarge!.copyWith(fontSize: 22.sp),
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomElevatedButton(
+                onTap: () {
+                  Get.back();
+                },
+                text: 'Cancel',
+                buttonTextStyle: customTexttheme.bodyLarge,
+                buttonStyle: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                ),
+                height: 40.h,
+                width: 100.w,
+                margin: EdgeInsets.only(left: 20.w),
+              ),
+              CustomElevatedButton(
+                onTap: () {
+                  feedController.deletePost(postId);
+                },
+                text: 'Delete',
+                buttonTextStyle: customTexttheme.bodyLarge!.copyWith(
+                  color: Colors.white,
+                ),
+                buttonStyle: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                ),
+                height: 40.h,
+                width: 100.w,
+                margin: EdgeInsets.only(right: 20.w),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

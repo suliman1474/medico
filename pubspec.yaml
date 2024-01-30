@@ -48,6 +48,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
   internet_connection_checker: ^1.0.0+1
+  firebase_messaging: ^14.7.9
   file_picker: ^6.1.1
   archive: ^3.4.10
   syncfusion_flutter_pdfviewer: ^24.1.45

@@ -178,6 +178,7 @@ class _FolderState extends State<Folder> {
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               padding: EdgeInsets.zero,
+                              position: PopupMenuPosition.under,
                               icon: CustomImageView(
                                 svgPath: IconConstant.icOption,
                                 height: 20.h,

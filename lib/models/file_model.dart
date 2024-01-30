@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'file_model.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: 6)
+@HiveType(typeId: 5)
 class FileModel {
   @HiveField(0)
   String id;
