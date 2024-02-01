@@ -11,13 +11,11 @@ import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
-import 'package:medico/screens/home/folders_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 import 'package:medico/widgets/indicator.dart';
 
 import '../../controllers/screen_controller.dart';
 import '../models/folder_model.dart';
-import '../screens/home/home2.dart';
 
 class Folder extends StatefulWidget {
   FolderModel folder;
@@ -364,7 +362,7 @@ class _FolderState extends State<Folder> {
                 child: MaterialButton(
                   color: color1,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0).r,
+                    borderRadius: BorderRadius.circular(10).r,
                   ),
                   onPressed: () async {
                     print('clicked');
@@ -419,7 +417,9 @@ class _FolderState extends State<Folder> {
                   },
                   child: Text(
                     'Download',
-                    style: TextStyle(color: Colors.white, fontSize: 18.sp),
+                    style: customTexttheme.bodyLarge!.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               )
