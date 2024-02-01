@@ -11,6 +11,7 @@ import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/widgets/indicator.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../models/file_model.dart';
 import '../models/folder_model.dart';
@@ -566,79 +567,209 @@ class FilesController extends GetxController {
         barrierDismissible: false);
   }
 
+  Future<bool> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (status.isGranted) {
+      // Permission already granted, proceed with folder creation
+      return true; // Replace with your folder creation logic
+    } else {
+      var result = await Permission.storage.request();
+      if (result.isGranted) {
+        // Permission granted after request, proceed with folder creation
+        return true; // Replace with your folder creation logic
+      } else {
+        // Permission denied, handle the denial gracefully
+        print('Storage permission denied');
+        // You can show a snackbar or dialog to explain why the permission is needed
+        return false;
+      }
+    }
+  }
+
   Future<void> downloadFilesFromFolder(String folderId, folderPath) async {
     try {
-      showDownloadingProgressDialog();
-      print('folderPath: $folderPath');
-      Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
-      ListResult items = await storageRef.listAll();
+      if (await requestStoragePermission()) {
+        showDownloadingProgressDialog();
+        print('folderPath: $folderPath');
+        Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
+        ListResult items = await storageRef.listAll();
+        Directory appDocDir = await getApplicationDocumentsDirectory();
+        //  Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
-      var appDocDir = await getApplicationDocumentsDirectory();
-      totalFiles.value = items.items.length;
-      await Future.wait(
-        items.items.map((item) async {
-          if (item is Reference) {
-            File file = File('${appDocDir.path}${folderPath}/${item.name}');
-            print('file: $file');
-            Directory parentDirectory = file.parent;
+        // // Create a folder in the documents directory
+        // Directory folderDirectory =
+        //     Directory('${documentsDirectory.path}$folderPath');
+        // await folderDirectory.create(recursive: false);
+        //  var appDocDir = await getApplicationDocumentsDirectory();
+        totalFiles.value = items.items.length;
+        await Future.wait(
+          items.items.map((item) async {
+            if (item is Reference) {
+              if (item.name.contains('.')) {
+                //  File file = File('${folderDirectory.path}/${item.name}');
+                File file = File('${appDocDir.path}${folderPath}/${item.name}');
+                print('file: ${file.parent}');
+
+                Directory parentDirectory = file.parent;
 
 // Check if the parent directory exists
-            if (!parentDirectory.existsSync()) {
-              // If it doesn't exist, create it
-              print('parent directory does not exist, creating...');
-              try {
-                parentDirectory.createSync(recursive: true);
-                print('parent directory created successfully');
-              } catch (e) {
-                print('Error creating parent directory: $e');
-                // Handle the error (print, log, or throw)
-                return;
+                if (!parentDirectory.existsSync()) {
+                  // If it doesn't exist, create it
+                  print('parent directory does not exist, creating...');
+                  try {
+                    parentDirectory.createSync(recursive: true);
+                    print('parent directory created successfully');
+                  } catch (e) {
+                    print('Error creating parent directory: $e');
+                    // Handle the error (print, log, or throw)
+                    return;
+                  }
+                } else {
+                  print('parent directory already exists');
+                }
+                // File file = File('${appDocDir.path}/${item.name}');
+
+                TaskSnapshot taskSnapshot = await item.writeToFile(file);
+                print('File created successfully: ${file.path}');
+                // Handle the downloaded file
+                filesDownloaded++;
+                downloadProgress.value =
+                    (filesDownloaded / totalFiles.value) * 100;
               }
-            } else {
-              print('parent directory already exists');
             }
-            // File file = File('${appDocDir.path}/${item.name}');
+          }),
+        );
 
-            TaskSnapshot taskSnapshot = await item.writeToFile(file);
+        DocumentSnapshot folderDoc = await FirebaseFirestore.instance
+            .collection('folders')
+            .doc(folderId)
+            .get();
 
-            // Handle the downloaded file
-            filesDownloaded++;
-            downloadProgress.value = (filesDownloaded / totalFiles.value) * 100;
-          }
-        }),
-      );
+        // FolderModel folder = filesController.folders.firstWhere(
+        //   (folder) => folder.id == folderId,
+        // );
+        if (folderDoc.exists) {
+          FolderModel folder = FolderModel.fromFirestore(folderDoc);
+          List<FileModel> files = await fetchFilesForFolder(folder.id);
+          FolderModel updatedFolder = FolderModel(
+              id: folder.id,
+              name: folder.name,
+              actualSubfolders: [],
+              path: folder.path,
+              subFolders: folder.subFolders,
+              files: files,
+              downloadUrl: folder.downloadUrl,
+              parentId: folder.parentId,
+              appearance: folder.appearance // Set to an empty list
+              // Copy other properties as needed
+              );
 
-      DocumentSnapshot folderDoc = await FirebaseFirestore.instance
-          .collection('folders')
-          .doc(folderId)
-          .get();
-
-      // FolderModel folder = filesController.folders.firstWhere(
-      //   (folder) => folder.id == folderId,
-      // );
-      if (folderDoc.exists) {
-        FolderModel folder = FolderModel.fromFirestore(folderDoc);
-        List<FileModel> files = await fetchFilesForFolder(folder.id);
-        FolderModel updatedFolder = FolderModel(
-            id: folder.id,
-            name: folder.name,
-            actualSubfolders: [],
-            path: folder.path,
-            subFolders: folder.subFolders,
-            files: files,
-            downloadUrl: folder.downloadUrl,
-            parentId: folder.parentId,
-            appearance: folder.appearance // Set to an empty list
-            // Copy other properties as needed
-            );
-
-        dbController.storeFolder(updatedFolder);
+          dbController.storeFolder(updatedFolder);
+        }
       }
     } on FirebaseException catch (e) {
     } finally {
       downloadProgress.value = 0.0;
       filesDownloaded.value = 0;
       // uploading.value = false;
+      Get.back();
+    }
+  }
+
+  Future<void> downloadSingleFile(String folderId, String folderPath,
+      String fileName, String fileId) async {
+    try {
+      showDownloadingProgressDialog();
+      print('folderPath: $folderPath');
+
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('$folderPath/$fileName');
+
+      var appDocDir = await getApplicationDocumentsDirectory();
+
+      // Create a file for the downloaded file
+      File file = File('${appDocDir.path}$folderPath/$fileName');
+      print('file: ${file.parent}');
+      Directory parentDirectory = file.parent;
+
+      // Check if the parent directory exists
+      if (!parentDirectory.existsSync()) {
+        // If it doesn't exist, create it
+        print('parent directory does not exist, creating...');
+        try {
+          parentDirectory.createSync(recursive: true);
+          print('parent directory created successfully');
+        } catch (e) {
+          print('Error creating parent directory: $e');
+          // Handle the error (print, log, or throw)
+          return;
+        }
+      } else {
+        print('parent directory already exists');
+      }
+      final downloadTask = storageRef.writeToFile(file);
+
+      // Listen for progress
+      await downloadTask.snapshotEvents.listen((snapshot) {
+        switch (snapshot.state) {
+          case TaskState.running:
+            double progress = snapshot.bytesTransferred / snapshot.totalBytes;
+
+            uploadProgress.value = progress * 100;
+            break;
+          case TaskState.paused:
+            print("Download paused.");
+            break;
+          case TaskState.success:
+            uploadProgress.value = 0.0;
+            break;
+          case TaskState.canceled:
+            print("Download canceled.");
+            break;
+          case TaskState.error:
+            snapshot.printError();
+            // print("Download failed with error: ${taskSnapshot.printError()}");
+            break;
+        }
+      });
+      FolderModel onlinefolder = folders.value.firstWhere(
+        (folder) => folder.id == folderId,
+      );
+      FolderModel folder = dbController.hiveFolders.value
+          .firstWhere((folder) => folder.id == folderId);
+      int index = dbController.hiveFolders.value
+          .indexWhere((element) => element.id == folderId);
+      FileModel? fileUpdated =
+          onlinefolder.files?.firstWhere((element) => element.id == fileId);
+
+      if (fileUpdated != null) {
+        // //  List<FileModel> files = await fetchFilesForFolder(folder.id);
+        // folder.files?.add(fileUpdated);
+        // FolderModel updatedFolder = FolderModel(
+        //     id: folder.id,
+        //     name: folder.name,
+        //     actualSubfolders: folder.actualSubfolders,
+        //     path: folder.path,
+        //     subFolders: folder.subFolders,
+        //     files: folder.files,
+        //     downloadUrl: folder.downloadUrl,
+        //     parentId: folder.parentId,
+        //     appearance: folder.appearance // Set to an empty list
+        //     // Copy other properties as needed
+        //     );
+        // print('updated folder file length: ${updatedFolder.files?.length}');
+        // print(
+        //     'check hive folder files length so to know it is not updated yet:${dbController.hiveFolders[index].files?.length} }');
+        print('fileUpdated');
+        await dbController.updateFileInFolder(folderId, fileUpdated);
+        Get.back();
+      }
+    } on FirebaseException catch (e) {
+      // Handle Firebase exceptions
+      print('FirebaseException: $e');
+    } finally {
+      downloadProgress.value = 0.0;
+
       Get.back();
     }
   }
