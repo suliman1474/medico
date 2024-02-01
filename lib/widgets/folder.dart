@@ -21,11 +21,14 @@ class Folder extends StatefulWidget {
   FolderModel folder;
   UniqueKey keyU;
   bool ifdownloaded;
+  bool updatable;
+
   Folder(
       {super.key,
       required this.folder,
       required this.keyU,
-      required this.ifdownloaded});
+      required this.ifdownloaded,
+      this.updatable = false});
 
   @override
   State<Folder> createState() => _FolderState();
@@ -49,7 +52,7 @@ class _FolderState extends State<Folder> {
   ];
 
   late Widget newscreen;
-  bool visibility = false;
+  // bool visibility = widget.updatable;
   late String foldername;
   late bool ifdownloaded;
   bool options = false;
@@ -107,7 +110,7 @@ class _FolderState extends State<Folder> {
                             ),
                           ),
                           Visibility(
-                            visible: visibility &&
+                            visible: widget.updatable &&
                                 dbController.userRole.value == UserRole.USER,
                             child: Container(
                               margin: EdgeInsets.only(left: 5.w, top: 5.h),
@@ -135,7 +138,7 @@ class _FolderState extends State<Folder> {
                     Expanded(
                       flex: 1,
                       child: Visibility(
-                        visible: visibility &&
+                        visible: widget.updatable &&
                             dbController.userRole.value == UserRole.USER,
                         child: GestureDetector(
                           onTap: () {

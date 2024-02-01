@@ -5,6 +5,7 @@ import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/widgets/custom_appbar.dart';
 import 'package:medico/widgets/custom_bottombar.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../controllers/screen_controller.dart';
 
@@ -22,6 +23,31 @@ class _MainPageState extends State<MainPage> {
   ScreenController screenController = Get.find<ScreenController>();
   FilesController filesController = Get.put(FilesController());
   //DbController dbController = Get.put(DbController());
+  Future<void> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (status.isGranted) {
+      // Permission already granted, proceed with folder creation
+      // Replace with your folder creation logic
+    } else {
+      var result = await Permission.storage.request();
+      if (result.isGranted) {
+        // Permission granted after request, proceed with folder creation
+        // Replace with your folder creation logic
+      } else {
+        // Permission denied, handle the denial gracefully
+        print('Storage permission denied');
+        // You can show a snackbar or dialog to explain why the permission is needed
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    requestStoragePermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final appLifecycleState = WidgetsBinding.instance.lifecycleState;
