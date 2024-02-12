@@ -19,12 +19,12 @@ class FirebaseService {
 
   Future<void> updateFCMToken(String userId, String fcmToken) async {
     try {
-      print('update fcm token calledd.......');
+      ;
       await _userProfile.doc(userId).update({
         'fcmToken': fcmToken,
       });
     } catch (e) {
-      print('Error updating FCM token: $e');
+      ;
     }
   }
 
@@ -147,7 +147,7 @@ class FirebaseService {
       // Map the query results to a list of PostModel objects
 
       List<PostModel> postModels = querySnapshot.docs.map((doc) {
-        print('doc: ${doc.data()}');
+        ;
         // Use the generated fromJson method to create a PostModel
         return PostModel.fromJson(doc.data() as Map<String, dynamic>);
       }).toList();
@@ -164,7 +164,7 @@ class FirebaseService {
     try {
       await _firestore.collection('posts').doc(postId).delete();
     } catch (e) {
-      print('Error deleting post: $e');
+      ;
       throw e;
     }
   }
@@ -173,7 +173,7 @@ class FirebaseService {
     try {
       await _firestore.collection('polls').doc(pollId).delete();
     } catch (e) {
-      print('Error deleting post: $e');
+      ;
       throw e;
     }
   }

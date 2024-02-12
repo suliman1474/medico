@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/feed_controller.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/screens/home/add_post_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
@@ -25,7 +26,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
   late List<dynamic> getPostsAndPolls;
   AuthenticationController authController = Get.find();
   DbController dbController = Get.find();
-
+  ScreenController screenController = Get.find();
   void loadUser() async {
     await dbController.loadUserRole();
   }
@@ -41,7 +42,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
   void initState() {
     super.initState();
     loadUser();
-    refreshData();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      refreshData();
+    });
   }
 
   Future<void> refreshData() async {
@@ -51,75 +54,82 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: 10.h,
-        ),
-        child: RefreshIndicator(
-            color: color2,
-            onRefresh: () async {
-              await refreshData();
-              setState(() {});
-              return Future.value();
-            },
-            child: Obx(
-              () {
-                // List<dynamic> combinedData = feedController.combinedList;
-                if (feedController.loading.value == true) {
-                  return Center(child: Indicator.loader());
-                } else if (feedController.combinedList.isEmpty) {
-                  return Center(
-                    child: Text('No posts Available'),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: feedController.combinedList.length,
-                  itemBuilder: (context, index) {
-                    if (feedController.combinedList[index]['type'] == 'post') {
-                      return Post(
-                        postId: feedController.combinedList[index]['id'],
-                      );
-                    } else if (feedController.combinedList[index]['type'] ==
-                        'poll') {
-                      return Poll(
-                        pollId: feedController.combinedList[index]['id'],
-                      );
-                    }
-
-                    return Container();
-                  },
-                );
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        screenController.onWillPop();
+      },
+      child: Scaffold(
+        body: Padding(
+          padding: EdgeInsets.only(
+            top: 10.h,
+          ),
+          child: RefreshIndicator(
+              color: color2,
+              onRefresh: () async {
+                await refreshData();
+                setState(() {});
+                return Future.value();
               },
-            )),
-      ),
-      floatingActionButton: dbController.userRole.value == UserRole.ADMIN
-          ? Align(
-              // alignment: Alignment(1.20.w, 1.17.h),
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Get.to(AddPostScreen());
+              child: Obx(
+                () {
+                  // List<dynamic> combinedData = feedController.combinedList;
+                  if (feedController.loading.value == true) {
+                    return Center(child: Indicator.loader());
+                  } else if (feedController.combinedList.isEmpty) {
+                    return Center(
+                      child: Text('No posts Available'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: feedController.combinedList.length,
+                    itemBuilder: (context, index) {
+                      if (feedController.combinedList[index]['type'] ==
+                          'post') {
+                        return Post(
+                          postId: feedController.combinedList[index]['id'],
+                        );
+                      } else if (feedController.combinedList[index]['type'] ==
+                          'poll') {
+                        return Poll(
+                          pollId: feedController.combinedList[index]['id'],
+                        );
+                      }
+
+                      return Container();
+                    },
+                  );
                 },
-                backgroundColor: Colors.transparent,
-                shape: CircleBorder(),
-                elevation: 0,
-                splashColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                focusElevation: 0,
-                hoverElevation: 0,
-                highlightElevation: 0,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                child: CustomImageView(
-                  svgPath: IconConstant.icAdd,
-                  height: 40.h,
-                  width: 40.w,
+              )),
+        ),
+        floatingActionButton: dbController.userRole.value == UserRole.ADMIN
+            ? Align(
+                // alignment: Alignment(1.20.w, 1.17.h),
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Get.to(AddPostScreen());
+                  },
+                  backgroundColor: Colors.transparent,
+                  shape: CircleBorder(),
+                  elevation: 0,
+                  splashColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  focusElevation: 0,
+                  hoverElevation: 0,
+                  highlightElevation: 0,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  child: CustomImageView(
+                    svgPath: IconConstant.icAdd,
+                    height: 40.h,
+                    width: 40.w,
+                  ),
                 ),
-              ),
-            )
-          : null,
+              )
+            : null,
+      ),
     );
   }
 }

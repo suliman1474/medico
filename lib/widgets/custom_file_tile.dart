@@ -2,10 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:medico/constants/user_role.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
+
+import '../controllers/db_controller.dart';
 
 class CustomFileTile extends StatelessWidget {
   final String itemName;
@@ -18,9 +23,9 @@ class CustomFileTile extends StatelessWidget {
     required this.itemName,
     // this.onRename,
     this.onDelete,
-    this.downloadable = true,
+    this.downloadable = false,
   });
-
+  DbController dbController = Get.find();
   @override
   Widget build(BuildContext context) {
     return downloadable!

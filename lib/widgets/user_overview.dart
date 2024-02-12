@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -51,9 +52,21 @@ class UserOverview extends StatelessWidget {
                     ? BorderRadius.circular(25.r)
                     : BorderRadius.circular(33.r),
                 child: user.image!.isNotEmpty
-                    ? Image.network(
-                        user.image!,
+                    ? CachedNetworkImage(
                         fit: BoxFit.cover,
+                        imageUrl: user.image!,
+                        placeholder: (context, url) => Container(
+                          height: 30,
+                          width: 30,
+                          child: LinearProgressIndicator(
+                            color: Colors.grey.shade200,
+                            backgroundColor: Colors.grey.shade100,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          IconConstant.icTopbarProfile,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : Image.asset(
                         IconConstant.icTopbarProfile,

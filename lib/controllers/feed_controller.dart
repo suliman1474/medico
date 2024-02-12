@@ -150,8 +150,8 @@ class FeedController extends GetxController {
     loading.value = false;
     RxStatus.success();
     // Indicator.closeLoading();
-    print('combineddata: ${combinedData.length}');
-    print('combinedlist: ${combinedList.length}');
+    ;
+    ;
 
     // return combinedData;
   }
@@ -216,7 +216,7 @@ class FeedController extends GetxController {
       }
 
       final option = poll.options[optionIndex];
-      print('already voted or not: ${option.voterId?.contains(userId)}');
+      ;
       final isVoted = option.voterId?.contains(userId) ?? false;
 
       if (isVoted) {
@@ -255,7 +255,7 @@ class FeedController extends GetxController {
             .collection('users')
             .doc(option.voterId![i])
             .get();
-        print('votersnapshot :${votersSnapshot.data()}');
+        ;
         if (votersSnapshot.exists) {
           Voters.add(UserModel.fromJson(
               votersSnapshot.data() as Map<String, dynamic>));
@@ -299,7 +299,7 @@ class FeedController extends GetxController {
         colorText: Colors.white,
       );
     } catch (e) {
-      print('Error in deleting post: $e');
+      ;
       Indicator.closeLoading();
       Get.snackbar(
         'Error',
@@ -340,7 +340,7 @@ class FeedController extends GetxController {
         colorText: Colors.white,
       );
     } catch (e) {
-      print('Error in deleting post: $e');
+      ;
       Indicator.closeLoading();
       Get.snackbar(
         'Error',

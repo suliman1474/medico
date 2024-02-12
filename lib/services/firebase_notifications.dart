@@ -28,10 +28,10 @@ class FirebaseNotifications {
   }
 
   void saveMessage(RemoteMessage message) {
-    print('title: ${message.notification!.title}');
-    print('body: ${message.notification!.body}');
+    ;
+    ;
 
-    print('....on handle message opened app');
+    ;
 
     // Extract relevant information from the message
     String title = message.notification?.title ?? "No Title";
@@ -52,10 +52,10 @@ class FirebaseNotifications {
   }
 
   Future<void> onHandleMessage(RemoteMessage message) async {
-    print('title: ${message.notification!.title}');
-    print('body: ${message.notification!.body}');
+    ;
+    ;
 
-    print('....on handle message');
+    ;
 
     String title = message.notification?.title ?? "No Title";
     String body = message.notification?.body ?? "No Body";
@@ -86,6 +86,6 @@ class FirebaseNotifications {
   Future<void> onHandleBackgroundMessage(RemoteMessage message) async {
     print(message.data);
     print(message.messageId);
-    print('...notification received');
+    ;
   }
 }

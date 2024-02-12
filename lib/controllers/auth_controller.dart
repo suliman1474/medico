@@ -47,10 +47,10 @@ class AuthenticationController extends GetxController {
       String? fcmToken = await _firebaseMessaging.getToken();
 
       if (_auth.currentUser != null && fcmToken != null) {
-        print('calling update fcm token');
+        ;
         await firebaseService.updateFCMToken(_auth.currentUser!.uid, fcmToken);
       }
-      print('IS LOGGED IN');
+      ;
       Get.to(() => const MainPage());
     } else {
       Get.toNamed('/login-screen');
@@ -272,7 +272,7 @@ class AuthenticationController extends GetxController {
                 .doc(userId)
                 .update({'fcmToken': fcmToken});
           } else {
-            print('User is an admin.');
+            ;
           }
 
           // Fetch the updated document
@@ -287,12 +287,12 @@ class AuthenticationController extends GetxController {
           }
         } else {
           // Handle the case when the document doesn't exist
-          print('Document does not exist.');
+          ;
         }
       }
     } catch (e) {
       // Handle any errors that might occur during the process
-      print('Error fetching/updating user profile: $e');
+      ;
     }
   }
 
