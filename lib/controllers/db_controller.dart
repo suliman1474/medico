@@ -55,7 +55,7 @@ class DbController extends GetxController {
     var hiveBox = await Hive.openBox(foldersBox);
 
     if (!hiveBox.containsKey('root')) {
-      print('download root folder');
+      ;
       downloadRootFolder();
       // var rootFolder = FolderModel(
       //   id: '9876543210',
@@ -121,8 +121,7 @@ class DbController extends GetxController {
         temp.subFolders?.add(newFolder.id);
         hiveFolders[folderIndex] = temp;
         hiveFolders.add(newFolder);
-        print(
-            'check hive folder after updating  :${hiveFolders[folderIndex].files?.length} }');
+        ;
         update();
         // hiveFolders.value = rootFolder;
         hiveBox.put('root', hiveFolders);
@@ -137,7 +136,7 @@ class DbController extends GetxController {
         //   actualSubfolders: [newFolder],
         //   parentId: '',
         // );
-        print('added to hive');
+        ;
         // Save the root folder in Hive
         hiveFolders.add(newFolder);
         hiveBox.put('root', hiveFolders);
@@ -163,22 +162,21 @@ class DbController extends GetxController {
         FolderModel folder = hiveFolders[folderIndex];
         folder.files?.add(updatedFile);
         hiveFolders[folderIndex] = folder;
-        print(
-            'hiveFolder folder index: $folderIndex and file length after adding file: ${hiveFolders[folderIndex].files?.length}');
+        ;
         // hiveFolders[folderIndex].files?.add(updatedFile);
-        print('update hive:');
+        ;
         update();
 
         // Update the root folder in Hive
         hiveBox.put('root', hiveFolders);
       } else {
-        print('Root folder not found in Hive.');
+        ;
       }
 
       // Close Hive box
       await hiveBox.close();
     } catch (e) {
-      print('Error updating file: $e');
+      ;
     }
   }
 
@@ -194,7 +192,7 @@ class DbController extends GetxController {
   Future<void> saveNotification(NotificationModel notification) async {
     final box = await Hive.openBox(notificationBox);
     try {
-      print('saving notification');
+      ;
       await box.add(notification);
     } finally {
       await box.close();
@@ -209,7 +207,7 @@ class DbController extends GetxController {
 
       // Sort the list in descending order based on timestamps
       notifications.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-      print('notifications: ${notifications.length}');
+      ;
       return notifications;
       // return box.values.toList();
     } finally {
@@ -358,7 +356,7 @@ class DbController extends GetxController {
         return true; // Replace with your folder creation logic
       } else {
         // Permission denied, handle the denial gracefully
-        print('Storage permission denied');
+        ;
         // You can show a snackbar or dialog to explain why the permission is needed
         return false;
       }
@@ -386,29 +384,29 @@ class DbController extends GetxController {
         List<Reference> files = items.items.whereType<Reference>().toList();
         await Future.wait(
           files.map((item) async {
-            print('item name: ${item.name}');
+            ;
 
             if (item.name.contains('.')) {
-              print('is a file');
+              ;
               //  File file = File('${folderDirectory.path}/${item.name}');
               File file = File('${appDocDir.path}${folderPath}/${item.name}');
-              print('file.path: ${file.path}');
+              ;
               Directory parentDirectory = file.parent;
 
 // Check if the parent directory exists
               if (!parentDirectory.existsSync()) {
                 // If it doesn't exist, create it
-                print('parent directory does not exist, creating...');
+                ;
                 try {
                   parentDirectory.createSync(recursive: true);
-                  print('parent directory created successfully');
+                  ;
                 } catch (e) {
-                  print('Error creating parent directory: $e');
+                  ;
                   // Handle the error (print, log, or throw)
                   return;
                 }
               } else {
-                print('parent directory already exists');
+                ;
               }
               // File file = File('${appDocDir.path}/${item.name}');
 
@@ -445,7 +443,7 @@ class DbController extends GetxController {
               appearance: folder.appearance // Set to an empty list
               // Copy other properties as needed
               );
-          print('updated folder files length: ${updatedFolder.files?.length}');
+          ;
           storeFolder(updatedFolder);
         }
       }

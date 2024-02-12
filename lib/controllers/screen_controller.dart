@@ -116,7 +116,9 @@ class ScreenController extends GetxController {
   }
 
   bool onWillPop() {
-    bottomNavIndex.value = previousIndex.value;
+    // bottomNavIndex.value = previousIndex.value;
+
+    bottomNavIndex.value = 0;
     update();
     return true;
   }

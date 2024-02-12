@@ -35,7 +35,7 @@ class _MainPageState extends State<MainPage> {
         // Replace with your folder creation logic
       } else {
         // Permission denied, handle the denial gracefully
-        print('Storage permission denied');
+        ;
         // You can show a snackbar or dialog to explain why the permission is needed
       }
     }

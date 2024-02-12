@@ -79,7 +79,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                               Uint8List? imageBytes = snapshot.data;
 
                               if (imageBytes != null) {
-                                print('image is found in hive');
+                                ;
                                 try {
                                   return Container(
                                     width: 100.w,
@@ -98,7 +98,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                           print(
                                             'Error in image displaying: $e',
                                           );
-                                          print('stack trace: $stackTrace');
+                                          ;
                                           return Container(
                                             color: Colors.grey,
                                           );
@@ -107,7 +107,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                     ),
                                   );
                                 } catch (e) {
-                                  print('Error decoding image: $e');
+                                  ;
                                   return Container();
                                 }
                               } else {
@@ -122,7 +122,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                 );
                               }
                             } else {
-                              print('image is not found in hive');
+                              ;
                               return Expanded(
                                 flex: 1,
                                 child: CustomImageView(

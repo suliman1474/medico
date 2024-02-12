@@ -84,16 +84,16 @@ class UserSearchController extends GetxController {
       filteredUsers.value = users;
     } else {
       // Filter users based on the search query
-      print('updatiing the obx');
-      print('users length in filtering functin: ${users.length}');
+      ;
+      ;
       search.value.text = college;
-      print('filtered user length before filter: ${filteredUsers.length}');
+      ;
 
       filteredUsers.value = users
           .where((user) =>
               user.college.toLowerCase().contains(college.toLowerCase()))
           .toList();
-      print('filtered user length after filter: ${filteredUsers.length}');
+      ;
       update();
     }
   }
@@ -104,16 +104,16 @@ class UserSearchController extends GetxController {
       filteredUsers.value = users;
     } else {
       // Filter users based on the search query
-      print('updatiing the obx');
-      print('users length in filtering functin: ${users.length}');
+      ;
+      ;
       search.value.text = discipline;
-      print('filtered user length before filter: ${filteredUsers.length}');
+      ;
 
       filteredUsers.value = users
           .where((user) =>
               user.discipline.toLowerCase().contains(discipline.toLowerCase()))
           .toList();
-      print('filtered user length after filter: ${filteredUsers.length}');
+      ;
       update();
     }
   }
@@ -124,16 +124,16 @@ class UserSearchController extends GetxController {
       filteredUsers.value = users;
     } else {
       // Filter users based on the search query
-      print('updatiing the obx');
-      print('users length in filtering functin: ${users.length}');
+      ;
+      ;
       search.value.text = semester;
-      print('filtered user length before filter: ${filteredUsers.length}');
+      ;
 
       filteredUsers.value = users
           .where((user) =>
               user.semester.toLowerCase().contains(semester.toLowerCase()))
           .toList();
-      print('filtered user length after filter: ${filteredUsers.length}');
+      ;
       update();
     }
   }

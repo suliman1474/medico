@@ -75,11 +75,6 @@ class FirebaseNotifications {
   // }
 
   Future<void> onHandleMessage(RemoteMessage message) async {
-    print('title: ${message.notification!.title}');
-    print('body: ${message.notification!.body}');
-
-    print('....on handle message');
-
     String title = message.notification?.title ?? "No Title";
     String body = message.notification?.body ?? "No Body";
     String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
