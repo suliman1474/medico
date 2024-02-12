@@ -161,160 +161,144 @@ class _FolderState extends State<Folder> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: dbController.userRole.value == UserRole.USER
-                            ? CustomImageView(
-                                svgPath: IconConstant.icForward,
-                                height: 14.h,
-                                width: 9.w,
-                                margin: EdgeInsets.only(right: 10.w),
-                                onTap: () {
-                                  // screenController.updatePageAt(
-                                  //   AppPage.HomeScreen,
-                                  //   newscreen,
-                                  // );
-                                },
-                              )
-                            : PopupMenuButton<String>(
-                                constraints: BoxConstraints(
-                                  maxHeight: 400.h,
-                                  maxWidth: 205.w,
-                                ),
-                                color: Colors.white,
-                                surfaceTintColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                padding: EdgeInsets.zero,
-                                position: PopupMenuPosition.under,
-                                icon: CustomImageView(
-                                  svgPath: IconConstant.icOption,
-                                  height: 20.h,
-                                  width: 10.w,
-                                  margin: EdgeInsets.only(right: 10.w),
-                                ),
-                                onSelected: (value) async {
-                                  // Handle the selected option
-                                  switch (value) {
-                                    //  case 'Rename':
-                                    // Handle rename action
-                                    // break;
-                                    // case 'Copy':
-                                    // // Handle copy action
-                                    // // break;
-                                    // case 'Move':
-                                    // Handle move actions
-                                    // break;
-                                    case 'Delete':
-                                      //if addmin then delete folder from database
-                                      if (dbController.userRole.value ==
-                                          UserRole.ADMIN) {
-                                        await filesController.deleteAdminFolder(
-                                            folder!.id, folder!.path);
-                                        break;
-                                      }
-                                      // if user then delette folder from hive database
-                                      else {
-                                        break;
-                                      }
+                        child: PopupMenuButton<String>(
+                          constraints: BoxConstraints(
+                            maxHeight: 400.h,
+                            maxWidth: 205.w,
+                          ),
+                          color: Colors.white,
+                          surfaceTintColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          padding: EdgeInsets.zero,
+                          position: PopupMenuPosition.under,
+                          icon: CustomImageView(
+                            svgPath: IconConstant.icOption,
+                            height: 20.h,
+                            width: 10.w,
+                            margin: EdgeInsets.only(right: 10.w),
+                          ),
+                          onSelected: (value) async {
+                            // Handle the selected option
+                            switch (value) {
+                              //  case 'Rename':
+                              // Handle rename action
+                              // break;
+                              // case 'Copy':
+                              // // Handle copy action
+                              // // break;
+                              // case 'Move':
+                              // Handle move actions
+                              // break;
+                              case 'Delete':
+                                //if addmin then delete folder from database
+                                if (dbController.userRole.value ==
+                                    UserRole.ADMIN) {
+                                  await filesController.deleteAdminFolder(
+                                      folder!.id, folder!.path);
+                                  break;
+                                }
+                                // if user then delette folder from hive database
+                                else {
+                                  print('is user clicked deleted');
+                                  dbController.deleteFolderUser(folder!.id);
+                                  break;
+                                }
 
-                                    // Handle delete action
-                                    // break;
-                                    // case 'Sharing':
-                                    //   // Handle delete action
-                                    //   setState(() {
-                                    //     sharing = !sharing;
-                                    //   });
-                                    // // break;
-                                    // case 'Appearance':
-                                    // Handle delete action
-                                    // setState(() {
-                                    //   appearance = !appearance;
-                                    // });
-                                    // break;
-                                  }
-                                },
-                                itemBuilder: (BuildContext context) {
-                                  return {
-                                    // 'Rename',
-                                    // 'Copy',
-                                    // 'Move',
-                                    'Delete',
-                                    // 'Sharing',
-                                    // 'Appearance',
-                                  }.map((String choice) {
-                                    return PopupMenuItem<String>(
-                                      height: 40.h,
-                                      textStyle: customTexttheme.displaySmall,
-                                      value: choice,
-                                      child: choice == 'Sharing'
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  choice,
-                                                  style: customTexttheme
-                                                      .displaySmall,
+                              // Handle delete action
+                              // break;
+                              // case 'Sharing':
+                              //   // Handle delete action
+                              //   setState(() {
+                              //     sharing = !sharing;
+                              //   });
+                              // // break;
+                              // case 'Appearance':
+                              // Handle delete action
+                              // setState(() {
+                              //   appearance = !appearance;
+                              // });
+                              // break;
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return {
+                              // 'Rename',
+                              // 'Copy',
+                              // 'Move',
+                              'Delete',
+                              // 'Sharing',
+                              // 'Appearance',
+                            }.map((String choice) {
+                              return PopupMenuItem<String>(
+                                height: 40.h,
+                                textStyle: customTexttheme.displaySmall,
+                                value: choice,
+                                child: choice == 'Sharing'
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            choice,
+                                            style: customTexttheme.displaySmall,
+                                          ),
+                                          Transform.scale(
+                                            scale: 0.6,
+                                            child: Switch(
+                                              value: sharing,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  sharing = value;
+                                                });
+                                              },
+                                              activeColor: color1,
+                                              inactiveTrackColor: Colors.grey,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : choice == 'Appearance'
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                choice,
+                                                style: customTexttheme
+                                                    .displaySmall,
+                                              ),
+                                              Transform.scale(
+                                                scale: 0.6,
+                                                child: Switch(
+                                                  value: appearance,
+                                                  onChanged: (value) {
+                                                    // setState(() {
+                                                    //   appearance = value;
+                                                    // });
+                                                  },
+                                                  activeColor: color1,
+                                                  inactiveTrackColor:
+                                                      Colors.grey,
+                                                  materialTapTargetSize:
+                                                      MaterialTapTargetSize
+                                                          .shrinkWrap,
                                                 ),
-                                                Transform.scale(
-                                                  scale: 0.6,
-                                                  child: Switch(
-                                                    value: sharing,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        sharing = value;
-                                                      });
-                                                    },
-                                                    activeColor: color1,
-                                                    inactiveTrackColor:
-                                                        Colors.grey,
-                                                    materialTapTargetSize:
-                                                        MaterialTapTargetSize
-                                                            .shrinkWrap,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : choice == 'Appearance'
-                                              ? Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      choice,
-                                                      style: customTexttheme
-                                                          .displaySmall,
-                                                    ),
-                                                    Transform.scale(
-                                                      scale: 0.6,
-                                                      child: Switch(
-                                                        value: appearance,
-                                                        onChanged: (value) {
-                                                          // setState(() {
-                                                          //   appearance = value;
-                                                          // });
-                                                        },
-                                                        activeColor: color1,
-                                                        inactiveTrackColor:
-                                                            Colors.grey,
-                                                        materialTapTargetSize:
-                                                            MaterialTapTargetSize
-                                                                .shrinkWrap,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Text(
-                                                  choice,
-                                                  style: customTexttheme
-                                                      .displaySmall,
-                                                ),
-                                    );
-                                  }).toList();
-                                },
-                              ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            choice,
+                                            style: customTexttheme.displaySmall,
+                                          ),
+                              );
+                            }).toList();
+                          },
+                        ),
                       ),
                     ],
                   ),
