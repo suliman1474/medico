@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/notification_model.dart';
@@ -16,6 +17,7 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   DbController dbController = Get.find();
+  ScreenController screenController = Get.find();
   late Future<List<NotificationModel>> notifications;
 
   @override
@@ -82,9 +84,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final notification = snapshot.data![index];
-                  return NotificationWidget(
-                    title: notification.title,
-                    body: notification.body,
+                  return GestureDetector(
+                    onTap: () {
+                      screenController.bottomNavIndex.value = 1;
+                      Get.back();
+                    },
+                    child: NotificationWidget(
+                      title: notification.title,
+                      body: notification.body,
+                    ),
                   );
                 },
               );

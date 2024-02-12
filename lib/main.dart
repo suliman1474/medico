@@ -66,10 +66,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseNotifications().initNotifications();
 
   DbController db = Get.put(DbController());
   await db.initialize();
-  await FirebaseNotifications().initNotifications();
+
   // Check internet connection with singleton (no custom values allowed)
   //await execute(InternetConnectionChecker());
 
