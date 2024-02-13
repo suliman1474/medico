@@ -14,6 +14,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../models/file_model.dart';
 import '../models/user_model.dart';
+import '../widgets/indicator.dart';
+import 'files_controller.dart';
 
 class DbController extends GetxController {
   final String userBox = 'user';
@@ -477,6 +479,66 @@ class DbController extends GetxController {
     } else {
       // Handle the case where the folder document doesn't exist
       return [];
+    }
+  }
+
+  Future<void> deleteFolderUser(String id) async {
+    // Open the Hive box named 'folders'
+    Indicator.showLoading();
+    var hiveBox = await Hive.openBox(foldersBox);
+    // Find the folder with the specified ID
+    FolderModel folderToDelete =
+        hiveFolders.firstWhere((element) => element.id == id);
+    print('hive length before: ${hiveFolders.length}');
+    // Get the list of folders from the box
+    hiveFolders.removeWhere((element) => element.id == id);
+
+    print('hive length aftter: ${hiveFolders.length}');
+    if (folderToDelete != null) {
+      // Delete associated files from the application storage
+      print('folder to delete not null');
+      if (folderToDelete.files != null && folderToDelete.files!.isNotEmpty) {
+        print('files not emtpy');
+        await deleteFilesFromAppStorage(folderToDelete.files!);
+      }
+
+      // Remove the folder from the list
+      hiveFolders.remove(folderToDelete);
+
+      // Update the Hive box with the modified list
+      await hiveBox.put('root', hiveFolders);
+
+      print('Folder with ID $id deleted and list updated successfully.');
+    } else {
+      print('Folder with ID $id not found.');
+    }
+
+    //   hiveBox.put('root', hiveFolders);
+
+    Indicator.closeLoading();
+    print('Folder with ID $id deleted and list updated successfully.');
+  }
+
+  FilesController filesController = Get.find();
+  Future<void> deleteFilesFromAppStorage(List<FileModel> files) async {
+    for (var file in files) {
+      // Get the application documents directory
+      var appDocDir = await getApplicationDocumentsDirectory();
+
+      // Construct the file path
+      String filePath = '${appDocDir.path}${file.path}';
+      print('filePath: $filePath');
+      // /data/user/0/com.example.medico/app_flutter/folders/folder1//sample.pdf
+      // Check if the file exists and delete it
+      File fileToDelete = File(filePath);
+      if (await fileToDelete.exists()) {
+        print('file exist');
+
+        await fileToDelete.delete();
+        print('File ${file.name} deleted from app storage.');
+      } else {
+        print('file not exist');
+      }
     }
   }
 // static Future<String?> getQuizId() async {
