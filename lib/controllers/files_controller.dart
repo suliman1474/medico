@@ -654,9 +654,8 @@ class FilesController extends GetxController {
               if (item.name.contains('.')) {
                 //  File file = File('${folderDirectory.path}/${item.name}');
                 File file = File('${appDocDir.path}${folderPath}/${item.name}');
+                ;
 
-                print(
-                    'stored to path: ${appDocDir.path}${folderPath}/${item.name}');
                 Directory parentDirectory = file.parent;
 
 // Check if the parent directory exists

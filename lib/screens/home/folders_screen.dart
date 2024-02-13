@@ -498,7 +498,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       OpenFile.open(file.path);
                                     } else {
                                       // Use http package to download the file
-
+                                      ;
+                                      ;
                                       // Get the temporary directory
                                       var appDocDir =
                                           await getApplicationDocumentsDirectory();
