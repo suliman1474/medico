@@ -41,11 +41,8 @@ class FilesController extends GetxController {
     super.onReady();
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == true) {
-      ;
       getFolders();
     } else {
-      ;
-
       //  print(InternetConnectionChecker().lastTryResults);
     }
   }
@@ -1105,12 +1102,10 @@ class FilesController extends GetxController {
         //  parentFolder.subFolders?.remove(folderId);
         FolderModel temp = folders[indexP];
         temp.subFolders?.remove(folderId);
-        ;
+
         temp.actualSubfolders?.removeWhere((element) => element.id == folderId);
-        ;
 
         folders[indexP] = temp;
-        ;
 
         folders.refresh();
         // Update the parent folder's subfolders list in Firebase Firestore
@@ -1144,12 +1139,11 @@ class FilesController extends GetxController {
       int index = folders.value.indexWhere((element) => element.id == folderId);
       FolderModel temp = folders[index];
       folders.removeWhere((folder) {
-        ;
         return folder.id == folderId;
       });
 
       // folders.remove(folderToDelete);
-      ;
+
       folders.refresh();
       update();
       Indicator.closeLoading();
