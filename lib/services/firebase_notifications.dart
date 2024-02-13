@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/colors.dart';
@@ -17,46 +18,63 @@ class FirebaseNotifications {
     );
 
     FirebaseMessaging.onBackgroundMessage(
-      (message) => onHandleBackgroundMessage(message),
+      (message) async {
+        print('on background message received');
+        print('title: ${message.notification!.title}');
+        print('body: ${message.notification!.body}');
+        print('....saving notification');
+
+        // Extract relevant information from the message
+        String title = message.notification?.title ?? "No Title";
+        String body = message.notification?.body ?? "No Body";
+        String timestamp =
+            DateTime.now().toUtc().microsecondsSinceEpoch.toString();
+
+        // Create a NotificationModel instance
+        NotificationModel notification = NotificationModel(
+          title: title,
+          body: body,
+          timestamp: timestamp,
+        );
+
+        // Store the notification locally using Hive
+        await dbController.saveNotification(notification);
+      },
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       onHandleMessage(message);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      saveMessage(message);
+      // saveMessage(message);
+      Get.to(NotificationsScreen());
     });
   }
 
-  void saveMessage(RemoteMessage message) {
-    ;
-    ;
+  // void saveMessage(RemoteMessage message) async {
+  // print('title: ${message.notification!.title}');
+  // print('body: ${message.notification!.body}');
 
-    ;
+  // print('....on handle message opened app');
 
-    // Extract relevant information from the message
-    String title = message.notification?.title ?? "No Title";
-    String body = message.notification?.body ?? "No Body";
-    String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
+  // // Extract relevant information from the message
+  // String title = message.notification?.title ?? "No Title";
+  // String body = message.notification?.body ?? "No Body";
+  // String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
 
-    // Create a NotificationModel instance
-    NotificationModel notification = NotificationModel(
-      title: title,
-      body: body,
-      timestamp: timestamp,
-    );
+  // // Create a NotificationModel instance
+  // NotificationModel notification = NotificationModel(
+  //   title: title,
+  //   body: body,
+  //   timestamp: timestamp,
+  // );
 
-    // Store the notification locally using Hive
-    dbController.saveNotification(notification);
+  // // Store the notification locally using Hive
+  // await dbController.saveNotification(notification);
 
-    // Get.to(NotificationsScreen());
-  }
+  // Get.to(NotificationsScreen());
+  // }
 
   Future<void> onHandleMessage(RemoteMessage message) async {
-    ;
-    ;
-
-    ;
-
     String title = message.notification?.title ?? "No Title";
     String body = message.notification?.body ?? "No Body";
     String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
@@ -77,15 +95,17 @@ class FirebaseNotifications {
       onTap: (snack) {
         Get.to(NotificationsScreen());
       },
-      colorText: textColor,
+      duration: Duration(seconds: 10),
+      colorText: Colors.black,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: secondryColor,
+      backgroundColor: Colors.white,
+      overlayColor: secondryColor,
     );
   }
 
-  Future<void> onHandleBackgroundMessage(RemoteMessage message) async {
-    print(message.data);
-    print(message.messageId);
-    ;
-  }
+  // Future<void> onHandleBackgroundMessage(RemoteMessage message) async {
+  //   print(message.data);
+  //   print(message.messageId);
+  //   print('...notification received');
+  // }
 }

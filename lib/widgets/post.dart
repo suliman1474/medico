@@ -140,12 +140,12 @@ class _PostState extends State<Post> {
                     )
                   : const SizedBox.shrink(),
             ),
-            Container(
-              height: 200.h,
-              width: 293.w,
-              margin: EdgeInsets.symmetric(horizontal: 35.w),
-              child: post.image != null && post.image!.isNotEmpty
-                  ? GestureDetector(
+            post.image != null && post.image!.isNotEmpty
+                ? Container(
+                    height: 200.h,
+                    width: 293.w,
+                    margin: EdgeInsets.symmetric(horizontal: 35.w),
+                    child: GestureDetector(
                       onTap: () {
                         Get.to(
                           ImageViewScreen(
@@ -169,9 +169,8 @@ class _PostState extends State<Post> {
                         // width: 293.w,
                         fit: BoxFit.cover,
                       ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+                    ))
+                : const SizedBox.shrink(),
             Divider(
               indent: 20.w,
               endIndent: 20.w,
