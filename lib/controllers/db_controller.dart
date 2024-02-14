@@ -519,8 +519,8 @@ class DbController extends GetxController {
     print('Folder with ID $id deleted and list updated successfully.');
   }
 
-  FilesController filesController = Get.find();
   Future<void> deleteFilesFromAppStorage(List<FileModel> files) async {
+    FilesController filesController = Get.find();
     for (var file in files) {
       // Get the application documents directory
       var appDocDir = await getApplicationDocumentsDirectory();
