@@ -27,6 +27,14 @@ class FilesController extends GetxController {
   RxInt totalFiles = 0.obs;
   RxInt filesDownloaded = 0.obs;
   ScreenController screenController = Get.find();
+  late StreamSubscription<InternetConnectionStatus> listener;
+
+  RxBool isInternet = false.obs;
+  void checkNet() async {
+    isInternet.value = await InternetConnectionChecker().hasConnection;
+    ;
+  }
+
   @override
   onInit() async {
     folders.clear();
@@ -37,7 +45,27 @@ class FilesController extends GetxController {
   @override
   onReady() async {
     folders.clear();
-
+    // checkNet();
+    // listener = InternetConnectionChecker().onStatusChange.listen(
+    //       (InternetConnectionStatus status) {
+    //     switch (status) {
+    //       case InternetConnectionStatus.connected:
+    //       // ignore: avoid_print
+    //         Indicator.showToast('Internet Available', Colors.green);
+    //         ;
+    //         isInternet.value = true;
+    //         if (dbController.isInternet.value == false) {getFolders();
+    //         }
+    //         break;
+    //       case InternetConnectionStatus.disconnected:
+    //       // ignore: avoid_print
+    //         Indicator.showToast('No Internet Connection', Colors.red);
+    //         isInternet.value = false;
+    //         ;
+    //         break;
+    //     }
+    //   },
+    // );
     super.onReady();
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == true) {
@@ -49,7 +77,6 @@ class FilesController extends GetxController {
 
   Future<List<FolderModel>> getFolders() async {
     try {
-      ;
       Indicator.showLoading();
       QuerySnapshot foldersQuery =
           await FirebaseFirestore.instance.collection('folders').get();
