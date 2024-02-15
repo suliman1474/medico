@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:medico/constants/user_role.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
@@ -169,7 +167,12 @@ class CustomFileTile extends StatelessWidget {
                 ),
                 PopupMenuButton<String>(
                   position: PopupMenuPosition.under,
+                  constraints: BoxConstraints(
+                    maxHeight: 400.h,
+                    maxWidth: 205.w,
+                  ),
                   color: Colors.white,
+                  surfaceTintColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                   ),
