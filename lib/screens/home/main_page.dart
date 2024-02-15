@@ -61,26 +61,24 @@ class _MainPageState extends State<MainPage> {
     //   // App started fresh or in a different state
     // }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: white,
-        appBar: CustomAppBar(),
-        body: Obx(() {
-          return screenController.pages[screenController.bottomNavIndex.value];
-        }),
-        bottomNavigationBar: CustomBottomBar(onChanged: (index) {
-          if (index == screenController.bottomNavIndex.value) {
-            screenController.assignAll();
-          } else {
-            setState(() {
-              screenController.previousIndex.value =
-                  screenController.bottomNavIndex.value;
-              screenController.bottomNavIndex.value = index;
-            });
-          }
-        }),
-        // floatingActionButton: CustomFloatingButton(),
-      ),
+    return Scaffold(
+      backgroundColor: white,
+      appBar: CustomAppBar(),
+      body: Obx(() {
+        return screenController.pages[screenController.bottomNavIndex.value];
+      }),
+      bottomNavigationBar: CustomBottomBar(onChanged: (index) {
+        if (index == screenController.bottomNavIndex.value) {
+          screenController.assignAll();
+        } else {
+          setState(() {
+            screenController.previousIndex.value =
+                screenController.bottomNavIndex.value;
+            screenController.bottomNavIndex.value = index;
+          });
+        }
+      }),
+      // floatingActionButton: CustomFloatingButton(),
     );
   }
 }

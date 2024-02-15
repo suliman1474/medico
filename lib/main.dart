@@ -88,10 +88,8 @@ void main() async {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: color1));
 
-    runApp(DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(), // Wrap your app
-    ));
+    runApp(MyApp() // Wrap your app
+        );
   });
 }
 
