@@ -220,15 +220,13 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
   @override
   void dispose() {
-    ;
-    listener.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      print('refreshed');
+      ;
       void navigate(int index) {
         filesController.folderPath.value = path! + '/' + folders![index].name;
 
@@ -253,7 +251,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
               .where((fol) => fol.parentId == '9876543210')
               .toList();
           for (FolderModel folder in folders!) {
-            print('folder name: ${folder.name}');
+            ;
           }
           rootFolder = filesController.folders.firstWhere(
             (fol) => fol.id == '9876543210',
@@ -382,469 +380,485 @@ class _FoldersScreenState extends State<FoldersScreen> {
             body: Stack(
               children: [
                 RefreshIndicator(
-                  onRefresh: () async {
-                    print('indicator');
-                    if (await InternetConnectionChecker().hasConnection) {
-                      filesController.getFolders();
-                    } else {
-                      Indicator.showToast('No Internet Connection', Colors.red);
-                    }
-                    // return filesController.getFolders();
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        if (dbController.userRole.value == UserRole.USER)
-                          hiveFolders!.length > 0
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: hiveFolders?.length,
-                                  itemBuilder: (context, index) {
-                                    int indexH =
-                                        dbController.hiveFolders!.indexWhere(
-                                      (element) =>
-                                          element.id == hiveFolders?[index].id,
-                                    );
-                                    int? indexInFolders = filesController
-                                        .folders
-                                        .indexWhere((folder) =>
-                                            folder.id ==
-                                            dbController
-                                                .hiveFolders?[indexH].id);
-                                    bool? updatable;
-                                    if (indexInFolders != -1) {
-                                      ;
+                    onRefresh: () async {
+                      ;
+                      if (await InternetConnectionChecker().hasConnection) {
+                        filesController.getFolders();
+                      } else {
+                        Indicator.showToast(
+                            'No Internet Connection', Colors.red);
+                      }
+                      // return filesController.getFolders();
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          if (dbController.userRole.value == UserRole.USER)
+                            hiveFolders!.length > 0
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: hiveFolders?.length,
+                                    itemBuilder: (context, index) {
+                                      int indexH =
+                                          dbController.hiveFolders!.indexWhere(
+                                        (element) =>
+                                            element.id ==
+                                            hiveFolders?[index].id,
+                                      );
+                                      int? indexInFolders = filesController
+                                          .folders
+                                          .indexWhere((folder) =>
+                                              folder.id ==
+                                              dbController
+                                                  .hiveFolders?[indexH].id);
+                                      bool? updatable;
+                                      if (indexInFolders != -1) {
+                                        ;
 
+                                        ;
+                                        updatable = dbController
+                                                .hiveFolders?[indexH]
+                                                .files
+                                                ?.length !=
+                                            filesController
+                                                .folders?[indexInFolders!]
+                                                .files
+                                                ?.length;
+                                        ;
+                                      }
                                       ;
-                                      updatable = dbController
-                                              .hiveFolders?[indexH]
-                                              .files
-                                              ?.length !=
-                                          filesController
-                                              .folders?[indexInFolders!]
-                                              .files
-                                              ?.length;
+                                      return GestureDetector(
+                                        onTap: () {
+                                          filesController.folderPath.value =
+                                              path! +
+                                                  '/' +
+                                                  hiveFolders![index].name;
+
+                                          screenController.updatePageAt(
+                                              AppPage.HomeScreen,
+                                              FoldersScreen(
+                                                folders: hiveFolders![index]
+                                                    .actualSubfolders,
+                                                hiveFolders: hiveFolders![index]
+                                                    .actualSubfolders,
+                                                id: hiveFolders![index].id,
+                                                key: key,
+                                                parentId:
+                                                    hiveFolders![index].id,
+                                                path: path! +
+                                                    '/' +
+                                                    hiveFolders![index].name,
+                                              ));
+                                        },
+                                        child: Folder(
+                                          folder: hiveFolders![index],
+                                          keyU: key,
+                                          ifdownloaded: true,
+                                          updatable: updatable ?? false,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Container(),
+                          // offline files
+
+                          if (dbController.userRole.value == UserRole.USER)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: hiveRootFolder?.files?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                FileModel? filez =
+                                    hiveRootFolder!.files?[index];
+                                return GestureDetector(
+                                  onTap: () async {
+                                    if (dbController.userRole.value ==
+                                        UserRole.ADMIN) {
+                                      var response = await http.get(Uri.parse(
+                                          rootFolder!
+                                              .files![index].downloadUrl));
+
+                                      // Get the temporary directory
+                                      var tempDir =
+                                          await getTemporaryDirectory();
+
+                                      // Save the file to the temporary directory
+                                      File file = File(
+                                          '${tempDir.path}/downloaded_file');
+                                      await file
+                                          .writeAsBytes(response.bodyBytes);
+
+                                      // Open the downloaded file using OpenFile plugin
+                                      OpenFile.open(file.path);
+                                    } else {
+                                      // Use http package to download the file
+                                      ;
+                                      ;
+                                      // Get the temporary directory
+                                      var appDocDir =
+                                          await getApplicationDocumentsDirectory();
+
+                                      // Save the file to the temporary directory
+                                      File file = File(
+                                          '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
+                                      //    await file.writeAsBytes(response.bodyBytes);
+
+                                      // Open the downloaded file using OpenFile plugin
+                                      OpenFile.open(file.path);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 5.h, bottom: 5.h),
+                                    child: CustomFileTile(
+                                      itemName:
+                                          hiveRootFolder!.files![index].name,
+                                      downloadable: false,
+                                      onDelete: () {
+                                        Get.dialog<bool>(
+                                          AlertDialog(
+                                            title: Text(
+                                              'Delete File',
+                                              style: customTexttheme
+                                                  .displaySmall
+                                                  ?.copyWith(
+                                                      color: Colors.white),
+                                            ),
+                                            backgroundColor: color1,
+                                            content: Text(
+                                              'Do you want to delete this file',
+                                              style: customTexttheme
+                                                  .displaySmall
+                                                  ?.copyWith(
+                                                      color: Colors.white),
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back();
+                                                  filesController.deleteFile(
+                                                      filez!.name,
+                                                      hiveRootFolder!.id,
+                                                      filez.id);
+                                                },
+                                                child: Text(
+                                                  'Yes',
+                                                  style: customTexttheme
+                                                      .displaySmall
+                                                      ?.copyWith(
+                                                          color: Colors.black),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back(); // No button
+                                                },
+                                                child: Text(
+                                                  'No',
+                                                  style: customTexttheme
+                                                      .displaySmall
+                                                      ?.copyWith(
+                                                          color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          //=======online folders for user
+
+                          if (dbController.userRole.value == UserRole.USER)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: folders?.length,
+                              itemBuilder: (context, index) {
+                                return hiveFolders!.any((hiveFolder) =>
+                                            hiveFolder.id ==
+                                            folders?[index].id) ==
+                                        false
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          if (dbController.userRole ==
+                                              UserRole.USER) {
+                                            downloadFolder(index);
+                                          } else {
+                                            navigate(index);
+                                          }
+                                        },
+                                        // onTap: () {
+                                        //   filesController.folderPath.value =
+                                        //       path! + '/' + folders![index].name;
+                                        //
+                                        //   screenController.updatePageAt(
+                                        //       AppPage.HomeScreen,
+                                        //       FoldersScreen(
+                                        //         folders: folders![index]
+                                        //             .actualSubfolders,
+                                        //         id: folders![index].id,
+                                        //         key: key,
+                                        //         parentId: folders![index].id,
+                                        //         path: path! +
+                                        //             '/' +
+                                        //             folders![index].name,
+                                        //       ));
+                                        // },
+
+                                        child: Folder(
+                                          folder: folders![index],
+                                          keyU: key,
+                                          ifdownloaded: false,
+                                        ),
+                                      )
+                                    : Container();
+                              },
+                            ),
+                          //online folders for admin
+                          if (dbController.userRole.value == UserRole.ADMIN)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: folders == null ? 0 : folders?.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (dbController.userRole ==
+                                        UserRole.USER) {
+                                      downloadFolder(index);
+                                    } else {
+                                      navigate(index);
+                                    }
+                                  },
+                                  // onTap: () {
+                                  //   filesController.folderPath.value =
+                                  //       path! + '/' + folders![index].name;
+                                  //
+                                  //   screenController.updatePageAt(
+                                  //       AppPage.HomeScreen,
+                                  //       FoldersScreen(
+                                  //         folders: folders![index]
+                                  //             .actualSubfolders,
+                                  //         id: folders![index].id,
+                                  //         key: key,
+                                  //         parentId: folders![index].id,
+                                  //         path: path! +
+                                  //             '/' +
+                                  //             folders![index].name,
+                                  //       ));
+                                  // },
+                                  child: Folder(
+                                    key: UniqueKey(),
+                                    folder: folders![index],
+                                    keyU: UniqueKey(),
+                                    ifdownloaded: false,
+                                  ),
+                                );
+                              },
+                            ),
+                          //=======updatable files
+
+                          if (dbController.userRole.value == UserRole.USER)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: rootFolder?.files?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                ;
+                                return hiveRootFolder?.files!.any((hiveFile) =>
+                                            hiveFile.id ==
+                                            rootFolder?.files?[index].id) ==
+                                        false
+                                    ? GestureDetector(
+                                        onTap: () async {
+                                          if (dbController.userRole.value ==
+                                              UserRole.ADMIN) {
+                                            // Use http package to download the file
+                                            var response = await http.get(
+                                                Uri.parse(rootFolder!
+                                                    .files![index]
+                                                    .downloadUrl));
+
+                                            // Get the temporary directory
+                                            var tempDir =
+                                                await getTemporaryDirectory();
+
+                                            // Save the file to the temporary directory
+                                            File file = File(
+                                                '${tempDir.path}/downloaded_file');
+                                            await file.writeAsBytes(
+                                                response.bodyBytes);
+
+                                            // Open the downloaded file using OpenFile plugin
+                                            OpenFile.open(file.path);
+                                          } else {
+                                            //download file
+                                            Get.dialog<bool>(
+                                              AlertDialog(
+                                                title: Text(
+                                                    'Download Confirmation'),
+                                                backgroundColor: color1,
+                                                content: Text(
+                                                    'Do you want to download this file?'),
+                                                actions: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      filesController
+                                                          .downloadSingleFile(
+                                                              rootFolder!.id,
+                                                              rootFolder!.path,
+                                                              rootFolder!
+                                                                  .files![index]
+                                                                  .name,
+                                                              rootFolder!
+                                                                  .files![index]
+                                                                  .id);
+                                                      // Yes button
+                                                    },
+                                                    child: Text('Yes'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.back(); // No button
+                                                    },
+                                                    child: Text('No'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          // child: Container(
+                                          //   height:
+                                          //       300, // Set a fixed height or adjust it according to your layout
+                                          //   child: ,
+                                          // ),
+
+                                          child: CustomFileTile(
+                                            itemName:
+                                                rootFolder!.files![index].name,
+                                          ),
+                                        ),
+                                      )
+                                    : Container();
+                              },
+                            ),
+                          // admin files
+
+                          if (dbController.userRole.value == UserRole.ADMIN)
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: rootFolder?.files?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                ;
+                                return GestureDetector(
+                                  onTap: () async {
+                                    if (dbController.userRole.value ==
+                                        UserRole.ADMIN) {
+                                      // Use http package to download the file
+                                      var response = await http.get(Uri.parse(
+                                          rootFolder!
+                                              .files![index].downloadUrl));
+
+                                      // Get the temporary directory
+                                      var tempDir =
+                                          await getTemporaryDirectory();
+
+                                      // Save the file to the temporary directory
+                                      File file = File(
+                                          '${tempDir.path}/downloaded_file');
+                                      await file
+                                          .writeAsBytes(response.bodyBytes);
+
+                                      // Open the downloaded file using OpenFile plugin
+                                      OpenFile.open(file.path);
+                                    } else {
+                                      //download file
                                       ;
                                     }
-                                    ;
-                                    return GestureDetector(
-                                      onTap: () {
-                                        filesController.folderPath.value =
-                                            path! +
-                                                '/' +
-                                                hiveFolders![index].name;
-
-                                        screenController.updatePageAt(
-                                            AppPage.HomeScreen,
-                                            FoldersScreen(
-                                              folders: hiveFolders![index]
-                                                  .actualSubfolders,
-                                              hiveFolders: hiveFolders![index]
-                                                  .actualSubfolders,
-                                              id: hiveFolders![index].id,
-                                              key: key,
-                                              parentId: hiveFolders![index].id,
-                                              path: path! +
-                                                  '/' +
-                                                  hiveFolders![index].name,
-                                            ));
-                                      },
-                                      child: Folder(
-                                        folder: hiveFolders![index],
-                                        keyU: key,
-                                        ifdownloaded: true,
-                                        updatable: updatable ?? false,
-                                      ),
-                                    );
                                   },
-                                )
-                              : Container(),
-                        // offline files
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    // child: Container(
+                                    //   height:
+                                    //       300, // Set a fixed height or adjust it according to your layout
+                                    //   child: ,
+                                    // ),
 
-                        Text('offline files'),
-                        if (dbController.userRole.value == UserRole.USER)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: hiveRootFolder?.files?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              FileModel? filez = hiveRootFolder!.files?[index];
-                              return GestureDetector(
-                                onTap: () async {
-                                  if (dbController.userRole.value ==
-                                      UserRole.ADMIN) {
-                                    var response = await http.get(Uri.parse(
-                                        rootFolder!.files![index].downloadUrl));
-
-                                    // Get the temporary directory
-                                    var tempDir = await getTemporaryDirectory();
-
-                                    // Save the file to the temporary directory
-                                    File file =
-                                        File('${tempDir.path}/downloaded_file');
-                                    await file.writeAsBytes(response.bodyBytes);
-
-                                    // Open the downloaded file using OpenFile plugin
-                                    OpenFile.open(file.path);
-                                  } else {
-                                    // Use http package to download the file
-                                    ;
-                                    ;
-                                    // Get the temporary directory
-                                    var appDocDir =
-                                        await getApplicationDocumentsDirectory();
-
-                                    // Save the file to the temporary directory
-                                    File file = File(
-                                        '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
-                                    //    await file.writeAsBytes(response.bodyBytes);
-
-                                    // Open the downloaded file using OpenFile plugin
-                                    OpenFile.open(file.path);
-                                  }
-                                },
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 5.h, bottom: 5.h),
-                                  child: CustomFileTile(
-                                    itemName:
-                                        hiveRootFolder!.files![index].name,
-                                    downloadable: false,
-                                    onDelete: () {
-                                      Get.dialog<bool>(
-                                        AlertDialog(
-                                          title: Text(
-                                            'Delete File',
-                                            style: customTexttheme.displaySmall
-                                                ?.copyWith(color: Colors.white),
-                                          ),
-                                          backgroundColor: color1,
-                                          content: Text(
-                                            'Do you want to delete this file',
-                                            style: customTexttheme.displaySmall
-                                                ?.copyWith(color: Colors.white),
-                                          ),
-                                          actions: [
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Get.back();
-                                                filesController.deleteFile(
-                                                    filez!.name,
-                                                    hiveRootFolder!.id,
-                                                    filez.id);
-                                              },
-                                              child: Text(
-                                                'Yes',
-                                                style: customTexttheme
-                                                    .displaySmall
-                                                    ?.copyWith(
-                                                        color: Colors.black),
-                                              ),
+                                    child: CustomFileTile(
+                                      itemName: rootFolder!.files![index].name,
+                                      onDelete: () {
+                                        ;
+                                        Get.dialog<bool>(
+                                          AlertDialog(
+                                            title: Text(
+                                              'Delete File',
+                                              style: customTexttheme
+                                                  .displaySmall
+                                                  ?.copyWith(
+                                                      color: Colors.white),
                                             ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Get.back(); // No button
-                                              },
-                                              child: Text(
-                                                'No',
-                                                style: customTexttheme
-                                                    .displaySmall
-                                                    ?.copyWith(
-                                                        color: Colors.black),
-                                              ),
+                                            backgroundColor: color1,
+                                            content: Text(
+                                              'Do you want to delete this file',
+                                              style: customTexttheme
+                                                  .displaySmall
+                                                  ?.copyWith(
+                                                      color: Colors.white),
                                             ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        //=======online folders for user
-                        Text('online folders'),
-                        if (dbController.userRole.value == UserRole.USER)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: folders?.length,
-                            itemBuilder: (context, index) {
-                              return hiveFolders!.any((hiveFolder) =>
-                                          hiveFolder.id ==
-                                          folders?[index].id) ==
-                                      false
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        if (dbController.userRole ==
-                                            UserRole.USER) {
-                                          downloadFolder(index);
-                                        } else {
-                                          navigate(index);
-                                        }
-                                      },
-                                      // onTap: () {
-                                      //   filesController.folderPath.value =
-                                      //       path! + '/' + folders![index].name;
-                                      //
-                                      //   screenController.updatePageAt(
-                                      //       AppPage.HomeScreen,
-                                      //       FoldersScreen(
-                                      //         folders: folders![index]
-                                      //             .actualSubfolders,
-                                      //         id: folders![index].id,
-                                      //         key: key,
-                                      //         parentId: folders![index].id,
-                                      //         path: path! +
-                                      //             '/' +
-                                      //             folders![index].name,
-                                      //       ));
-                                      // },
-
-                                      child: Folder(
-                                        folder: folders![index],
-                                        keyU: key,
-                                        ifdownloaded: false,
-                                      ),
-                                    )
-                                  : Container();
-                            },
-                          ),
-                        //online folders for admin
-                        if (dbController.userRole.value == UserRole.ADMIN)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: folders == null ? 0 : folders?.length,
-                            itemBuilder: (context, index) {
-                              print(
-                                  'folder name: in listview ${folders![index].name}');
-
-                              return GestureDetector(
-                                onTap: () {
-                                  if (dbController.userRole == UserRole.USER) {
-                                    downloadFolder(index);
-                                  } else {
-                                    navigate(index);
-                                  }
-                                },
-                                // onTap: () {
-                                //   filesController.folderPath.value =
-                                //       path! + '/' + folders![index].name;
-                                //
-                                //   screenController.updatePageAt(
-                                //       AppPage.HomeScreen,
-                                //       FoldersScreen(
-                                //         folders: folders![index]
-                                //             .actualSubfolders,
-                                //         id: folders![index].id,
-                                //         key: key,
-                                //         parentId: folders![index].id,
-                                //         path: path! +
-                                //             '/' +
-                                //             folders![index].name,
-                                //       ));
-                                // },
-                                child: Folder(
-                                  key: UniqueKey(),
-                                  folder: folders![index],
-                                  keyU: UniqueKey(),
-                                  ifdownloaded: false,
-                                ),
-                              );
-                            },
-                          ),
-                        //=======updatable files
-                        Text('updatabble files'),
-                        if (dbController.userRole.value == UserRole.USER)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: rootFolder?.files?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              ;
-                              return hiveRootFolder?.files!.any((hiveFile) =>
-                                          hiveFile.id ==
-                                          rootFolder?.files?[index].id) ==
-                                      false
-                                  ? GestureDetector(
-                                      onTap: () async {
-                                        if (dbController.userRole.value ==
-                                            UserRole.ADMIN) {
-                                          // Use http package to download the file
-                                          var response = await http.get(
-                                              Uri.parse(rootFolder!
-                                                  .files![index].downloadUrl));
-
-                                          // Get the temporary directory
-                                          var tempDir =
-                                              await getTemporaryDirectory();
-
-                                          // Save the file to the temporary directory
-                                          File file = File(
-                                              '${tempDir.path}/downloaded_file');
-                                          await file
-                                              .writeAsBytes(response.bodyBytes);
-
-                                          // Open the downloaded file using OpenFile plugin
-                                          OpenFile.open(file.path);
-                                        } else {
-                                          //download file
-                                          Get.dialog<bool>(
-                                            AlertDialog(
-                                              title:
-                                                  Text('Download Confirmation'),
-                                              backgroundColor: color1,
-                                              content: Text(
-                                                  'Do you want to download this file?'),
-                                              actions: [
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    filesController
-                                                        .downloadSingleFile(
-                                                            rootFolder!.id,
-                                                            rootFolder!.path,
-                                                            rootFolder!
-                                                                .files![index]
-                                                                .name,
-                                                            rootFolder!
-                                                                .files![index]
-                                                                .id);
-                                                    // Yes button
-                                                  },
-                                                  child: Text('Yes'),
+                                            actions: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back();
+                                                  filesController
+                                                      .deleteFileAdmin(
+                                                          rootFolder!.id,
+                                                          rootFolder!
+                                                              .files![index].id,
+                                                          rootFolder!
+                                                              .files![index]
+                                                              .path);
+                                                },
+                                                child: Text(
+                                                  'Yes',
+                                                  style: customTexttheme
+                                                      .displaySmall
+                                                      ?.copyWith(
+                                                          color: Colors.black),
                                                 ),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    Get.back(); // No button
-                                                  },
-                                                  child: Text('No'),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back(); // No button
+                                                },
+                                                child: Text(
+                                                  'No',
+                                                  style: customTexttheme
+                                                      .displaySmall
+                                                      ?.copyWith(
+                                                          color: Colors.black),
                                                 ),
-                                              ],
-                                            ),
-                                          );
-                                        }
+                                              ),
+                                            ],
+                                          ),
+                                        );
                                       },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        // child: Container(
-                                        //   height:
-                                        //       300, // Set a fixed height or adjust it according to your layout
-                                        //   child: ,
-                                        // ),
-
-                                        child: CustomFileTile(
-                                          itemName:
-                                              rootFolder!.files![index].name,
-                                        ),
-                                      ),
-                                    )
-                                  : Container();
-                            },
-                          ),
-                        // admin files
-                        Text('online files'),
-
-                        if (dbController.userRole.value == UserRole.ADMIN)
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: rootFolder?.files?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              ;
-                              return GestureDetector(
-                                onTap: () async {
-                                  if (dbController.userRole.value ==
-                                      UserRole.ADMIN) {
-                                    // Use http package to download the file
-                                    var response = await http.get(Uri.parse(
-                                        rootFolder!.files![index].downloadUrl));
-
-                                    // Get the temporary directory
-                                    var tempDir = await getTemporaryDirectory();
-
-                                    // Save the file to the temporary directory
-                                    File file =
-                                        File('${tempDir.path}/downloaded_file');
-                                    await file.writeAsBytes(response.bodyBytes);
-
-                                    // Open the downloaded file using OpenFile plugin
-                                    OpenFile.open(file.path);
-                                  } else {
-                                    //download file
-                                    ;
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  // child: Container(
-                                  //   height:
-                                  //       300, // Set a fixed height or adjust it according to your layout
-                                  //   child: ,
-                                  // ),
-
-                                  child: CustomFileTile(
-                                    itemName: rootFolder!.files![index].name,
-                                    onDelete: () {
-                                      print('delete is pressed');
-                                      Get.dialog<bool>(
-                                        AlertDialog(
-                                          title: Text(
-                                            'Delete File',
-                                            style: customTexttheme.displaySmall
-                                                ?.copyWith(color: Colors.white),
-                                          ),
-                                          backgroundColor: color1,
-                                          content: Text(
-                                            'Do you want to delete this file',
-                                            style: customTexttheme.displaySmall
-                                                ?.copyWith(color: Colors.white),
-                                          ),
-                                          actions: [
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Get.back();
-                                                filesController.deleteFileAdmin(
-                                                    rootFolder!.id,
-                                                    rootFolder!
-                                                        .files![index].id,
-                                                    rootFolder!
-                                                        .files![index].path);
-                                              },
-                                              child: Text(
-                                                'Yes',
-                                                style: customTexttheme
-                                                    .displaySmall
-                                                    ?.copyWith(
-                                                        color: Colors.black),
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Get.back(); // No button
-                                              },
-                                              child: Text(
-                                                'No',
-                                                style: customTexttheme
-                                                    .displaySmall
-                                                    ?.copyWith(
-                                                        color: Colors.black),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-                )
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                    ))
               ],
             ),
             floatingActionButton: dbController.userRole.value == UserRole.ADMIN

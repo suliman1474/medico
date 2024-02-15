@@ -553,7 +553,7 @@ class FilesController extends GetxController {
         folders[i].files?.addAll([file]);
         update();
         folders.refresh();
-        print('refresh');
+         ;
         // getFolders();
       } catch (e) {
         Get.snackbar(
@@ -579,17 +579,17 @@ class FilesController extends GetxController {
       CollectionReference<Map<String, dynamic>> foldersCollection =
           FirebaseFirestore.instance.collection('folders');
       FirebaseStorage storage = FirebaseStorage.instance;
-      print('path: $path');
+       ;
       await storage.ref().child(path).delete();
 
       try {
         // Remove file from the array in the document
-        print('in trt folderId: ${folderId}');
-        print('in trt folderId: ${fileId}');
+         ;
+         ;
         List<FileModel> files = await fetchFilesForFolder(folderId);
-        print('files length: ${files.length}');
+         ;
         files.removeWhere((element) => element.id == fileId);
-        print('files length after: ${files.length}');
+         ;
         List<Map<String, dynamic>> filesJson =
             files.map((file) => file.toJson()).toList();
 
@@ -598,15 +598,15 @@ class FilesController extends GetxController {
             .doc(folderId)
             .update({'files': filesJson});
 
-        print('deleted');
+         ;
       } catch (e) {
         print('error: ' + e.toString());
       }
 
       await getFolders();
-      print('File deleted and removed from folder successfully.');
+       ;
     } catch (error) {
-      print('Error deleting file or removing from folder: $error');
+       ;
       Indicator.closeLoading();
     } finally {
       Indicator.closeLoading();

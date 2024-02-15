@@ -489,16 +489,16 @@ class DbController extends GetxController {
     // Find the folder with the specified ID
     FolderModel folderToDelete =
         hiveFolders.firstWhere((element) => element.id == id);
-    print('hive length before: ${hiveFolders.length}');
+    ;
     // Get the list of folders from the box
     hiveFolders.removeWhere((element) => element.id == id);
 
-    print('hive length aftter: ${hiveFolders.length}');
+    ;
     if (folderToDelete != null) {
       // Delete associated files from the application storage
-      print('folder to delete not null');
+      ;
       if (folderToDelete.files != null && folderToDelete.files!.isNotEmpty) {
-        print('files not emtpy');
+        ;
         await deleteFilesFromAppStorage(folderToDelete.files!);
       }
 
@@ -508,15 +508,15 @@ class DbController extends GetxController {
       // Update the Hive box with the modified list
       await hiveBox.put('root', hiveFolders);
 
-      print('Folder with ID $id deleted and list updated successfully.');
+      ;
     } else {
-      print('Folder with ID $id not found.');
+      ;
     }
 
     //   hiveBox.put('root', hiveFolders);
 
     Indicator.closeLoading();
-    print('Folder with ID $id deleted and list updated successfully.');
+    ;
   }
 
   Future<void> deleteFilesFromAppStorage(List<FileModel> files) async {
@@ -527,17 +527,17 @@ class DbController extends GetxController {
 
       // Construct the file path
       String filePath = '${appDocDir.path}${file.path}';
-      print('filePath: $filePath');
+      ;
       // /data/user/0/com.example.medico/app_flutter/folders/folder1//sample.pdf
       // Check if the file exists and delete it
       File fileToDelete = File(filePath);
       if (await fileToDelete.exists()) {
-        print('file exist');
+        ;
 
         await fileToDelete.delete();
-        print('File ${file.name} deleted from app storage.');
+        ;
       } else {
-        print('file not exist');
+        ;
       }
     }
   }

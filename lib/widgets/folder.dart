@@ -77,7 +77,7 @@ class _FolderState extends State<Folder> {
   Widget build(BuildContext context) {
     FilesController filesController = Get.find();
     return Obx(() {
-      print('folder name: in folder ${folder?.name}');
+      ;
 
       return dbController.userRole.value == UserRole.ADMIN || ifdownloaded
           ? Stack(
@@ -201,7 +201,7 @@ class _FolderState extends State<Folder> {
                                 }
                                 // if user then delette folder from hive database
                                 else {
-                                  print('is user clicked deleted');
+                                  ;
                                   dbController.deleteFolderUser(folder!.id);
                                   break;
                                 }
