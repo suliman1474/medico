@@ -10,6 +10,8 @@ class FirebaseNotifications {
   final DbController dbController = DbController();
 
   Future<void> initNotifications() async {
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    print('fcmtoken: $fcmToken');
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -18,56 +20,34 @@ class FirebaseNotifications {
     );
 
     FirebaseMessaging.onBackgroundMessage(
-      (message) async {
-        // Extract relevant information from the message
-        String title = message.notification?.title ?? "No Title";
-        String body = message.notification?.body ?? "No Body";
-        String timestamp =
-            DateTime.now().toUtc().microsecondsSinceEpoch.toString();
-
-        // Create a NotificationModel instance
-        NotificationModel notification = NotificationModel(
-          title: title,
-          body: body,
-          timestamp: timestamp,
-        );
-
-        // Store the notification locally using Hive
-        await dbController.saveNotification(notification);
-      },
+      (message) async {},
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       onHandleMessage(message);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // saveMessage(message);
-      Get.to(NotificationsScreen());
+      saveMessage(message);
     });
   }
 
-  // void saveMessage(RemoteMessage message) async {
-  //  ;
-  //  ;
+  void saveMessage(RemoteMessage message) async {
+    // Extract relevant information from the message
+    String title = message.notification?.title ?? "No Title";
+    String body = message.notification?.body ?? "No Body";
+    String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
 
-  //  ;
+    // Create a NotificationModel instance
+    NotificationModel notification = NotificationModel(
+      title: title,
+      body: body,
+      timestamp: timestamp,
+    );
 
-  // // Extract relevant information from the message
-  // String title = message.notification?.title ?? "No Title";
-  // String body = message.notification?.body ?? "No Body";
-  // String timestamp = DateTime.now().toUtc().microsecondsSinceEpoch.toString();
-
-  // // Create a NotificationModel instance
-  // NotificationModel notification = NotificationModel(
-  //   title: title,
-  //   body: body,
-  //   timestamp: timestamp,
-  // );
-
-  // // Store the notification locally using Hive
-  // await dbController.saveNotification(notification);
-
-  // Get.to(NotificationsScreen());
-  // }
+    // Store the notification locally using Hive
+    await dbController.saveNotification(notification).then((_) {
+      Get.to(NotificationsScreen());
+    });
+  }
 
   Future<void> onHandleMessage(RemoteMessage message) async {
     String title = message.notification?.title ?? "No Title";

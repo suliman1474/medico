@@ -36,6 +36,7 @@ class AuthenticationController extends GetxController {
 
   DbController dbController = Get.find();
   Rx<UserModel?> userProfile = Rx<UserModel?>(null);
+
   FirebaseService firebaseService = FirebaseService();
 
   void isLoggedIn() async {

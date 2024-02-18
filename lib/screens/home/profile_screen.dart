@@ -110,7 +110,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         );
                                       }
                                     } else {
-                                      return Container();
+                                      return Expanded(
+                                        flex: 1,
+                                        child: CustomImageView(
+                                          imagePath:
+                                              IconConstant.icTopbarProfile,
+                                          height: 100.h,
+                                          width: 100.w,
+                                          radius: BorderRadius.circular(50).r,
+                                        ),
+                                      );
                                     }
                                   },
                                 ),
@@ -424,61 +433,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       )
                                     : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.w),
-                                            height: 50.h,
-                                            width: 50.w,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                            ),
-                                            child: Center(
-                                              child: CustomImageView(
-                                                imagePath: IconConstant.icGmail,
-                                                height: 30.h,
-                                                width: 30.w,
-                                                fit: BoxFit.scaleDown,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                  horizontal: 20.w,
+                                                ),
+                                                child: Text(
+                                                  dbController.admin?.email ??
+                                                      'null',
+                                                  style: customTexttheme
+                                                      .bodyLarge!
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.w),
-                                            height: 50.h,
-                                            width: 50.w,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                            ),
-                                            child: Center(
-                                              child: CustomImageView(
-                                                imagePath: IconConstant.icInsta,
-                                                height: 30.h,
-                                                width: 30.w,
-                                                fit: BoxFit.scaleDown,
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                  horizontal: 20.w,
+                                                ),
+                                                child: Text(
+                                                  dbController.admin?.contact ??
+                                                      'null',
+                                                  style: customTexttheme
+                                                      .bodyLarge!
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.w),
-                                            height: 50.h,
-                                            width: 50.w,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white,
-                                            ),
-                                            child: Center(
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    IconConstant.icWhatsapp,
-                                                height: 30.h,
-                                                width: 30.w,
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            ),
+                                            ],
                                           ),
                                         ],
                                       ),

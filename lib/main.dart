@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/db_controller.dart';
@@ -93,8 +93,28 @@ void main() async {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  changeStat() async {
+    await FlutterStatusbarcolor.setStatusBarColor(color1);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+
+    await FlutterStatusbarcolor.setNavigationBarColor(color1);
+
+    FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    changeStat();
+  }
 
   // This widget is the root of your application.
   @override

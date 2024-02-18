@@ -57,6 +57,7 @@ dependencies:
   path_provider: ^2.1.2
   connectivity_plus: ^5.0.2
   fluttertoast: ^8.2.4
+  flutter_statusbarcolor_ns: ^0.5.0
 
 dev_dependencies:
   flutter_test:
