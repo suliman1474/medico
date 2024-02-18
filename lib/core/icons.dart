@@ -45,4 +45,5 @@ class IconConstant {
   static String icAddPicture = 'assets/icons/add_pic.svg';
   static String icPost = 'assets/icons/post.svg';
   static String icSearch = 'assets/icons/search.svg';
+  static String placeHolderImage = 'assets/images/Image-not-found.png';
 }

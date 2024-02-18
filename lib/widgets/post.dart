@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -138,7 +139,7 @@ class _PostState extends State<Post> {
                         style: customTexttheme.bodyLarge,
                       ),
                     )
-                  : const SizedBox.shrink(),
+                  : SizedBox(height: 10.h),
             ),
             post.image != null && post.image!.isNotEmpty
                 ? Container(
@@ -163,13 +164,24 @@ class _PostState extends State<Post> {
                         feedController.isLiked.value = !isLiked;
                         feedController.likePost(post.id, userId);
                       },
-                      child: Image.network(
-                        post.image!,
-                        // height: 172.h,
-                        // width: 293.w,
+                      child: CachedNetworkImage(
                         fit: BoxFit.cover,
+                        imageUrl: post.image!,
+                        placeholder: (context, url) => Image(
+                          image: AssetImage(IconConstant.placeHolderImage),
+                          fit: BoxFit.cover,
+                        ),
+                        errorWidget: (context, url, error) => Image(
+                          image: AssetImage(IconConstant.placeHolderImage),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ))
+                      // Image.network(
+                      //   post.image!,
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ),
+                  )
                 : const SizedBox.shrink(),
             Divider(
               indent: 20.w,
