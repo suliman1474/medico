@@ -377,17 +377,17 @@ class _FoldersScreenState extends State<FoldersScreen> {
                         : null,
                   )
                 : null,
-            body: SingleChildScrollView(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  ;
-                  if (await InternetConnectionChecker().hasConnection) {
-                    filesController.getFolders();
-                  } else {
-                    Indicator.showToast('No Internet Connection', Colors.red);
-                  }
-                  // return filesController.getFolders();
-                },
+            body: RefreshIndicator(
+              onRefresh: () async {
+                ;
+                if (await InternetConnectionChecker().hasConnection) {
+                  filesController.getFolders();
+                } else {
+                  Indicator.showToast('No Internet Connection', Colors.red);
+                }
+                // return filesController.getFolders();
+              },
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
                     if (dbController.userRole.value == UserRole.USER)
