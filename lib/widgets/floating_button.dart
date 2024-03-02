@@ -40,6 +40,35 @@ class CustomFloatingButton extends StatelessWidget {
     );
   }
 
+  Future<String?> _showRenameDialog(String oldFileName) async {
+    TextEditingController controller = TextEditingController();
+    String fileNameWithoutExtension =
+        oldFileName.split('/').last.split('.').first;
+    controller.text = fileNameWithoutExtension;
+    // controller.text = oldFileName.split('/').last; // Default value in dialog
+
+    return Get.defaultDialog<String>(
+      title: 'Rename File',
+      content: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: 'New File Name',
+          suffixText: '.' + oldFileName.split('.').last,
+        ),
+      ),
+      textConfirm: 'OK',
+      textCancel: 'Cancel',
+      confirmTextColor: Colors.white,
+      buttonColor: color1,
+      onConfirm: () {
+        print('Controller.text: ${controller.text}');
+        Get.back(
+          result: controller.text + '.' + oldFileName.split('.').last,
+        );
+      },
+    );
+  }
+
   addOptions(BuildContext context) {
     FilesController filesController = Get.find();
     showDialog(
@@ -86,8 +115,13 @@ class CustomFloatingButton extends StatelessWidget {
                     if (result != null) {
                       List<File> files =
                           result.paths.map((path) => File(path!)).toList();
+                      List<String> names = [];
+                      for (File file in files) {
+                        String? newName = await _showRenameDialog(file.path);
+                        names.add(newName!);
+                      }
 
-                      filesController.uploadFiles(files, parentId ?? '');
+                      filesController.uploadFiles(files, parentId ?? '', names);
                     } else {
                       // User canceled the picker
                     }
@@ -113,13 +147,18 @@ class CustomFloatingButton extends StatelessWidget {
                         .pickFiles(
                             allowMultiple: true,
                             type: FileType.custom,
-                            allowedExtensions: ['ppt']);
+                            allowedExtensions: ['ppt', 'pptx']);
 
                     if (result != null) {
                       List<File> files =
                           result.paths.map((path) => File(path!)).toList();
+                      List<String> names = [];
+                      for (File file in files) {
+                        String? newName = await _showRenameDialog(file.path);
+                        names.add(newName!);
+                      }
 
-                      filesController.uploadFiles(files, parentId ?? '');
+                      filesController.uploadFiles(files, parentId ?? '', names);
                     } else {
                       // User canceled the picker
                     }
@@ -151,8 +190,14 @@ class CustomFloatingButton extends StatelessWidget {
                     if (result != null) {
                       List<File> files =
                           result.paths.map((path) => File(path!)).toList();
+                      List<String> names = [];
+                      for (File file in files) {
+                        String? newName = await _showRenameDialog(file.path);
+                        names.add(newName!);
+                      }
 
-                      filesController.uploadFiles(files, parentId ?? '');
+                      filesController.uploadFiles(files, parentId ?? '', names);
+                      //  filesController.uploadFiles(files, parentId ?? '');
                     } else {
                       // User canceled the picker
                     }
@@ -183,8 +228,14 @@ class CustomFloatingButton extends StatelessWidget {
                     if (result != null) {
                       List<File> files =
                           result.paths.map((path) => File(path!)).toList();
+                      List<String> names = [];
+                      for (File file in files) {
+                        String? newName = await _showRenameDialog(file.path);
+                        names.add(newName!);
+                      }
 
-                      filesController.uploadFiles(files, parentId ?? '');
+                      filesController.uploadFiles(files, parentId ?? '', names);
+                      // filesController.uploadFiles(files, parentId ?? '');
                     } else {
                       // User canceled the picker
                     }

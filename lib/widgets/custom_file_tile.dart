@@ -8,18 +8,19 @@ import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
+import '../constants/user_role.dart';
 import '../controllers/db_controller.dart';
 
 class CustomFileTile extends StatelessWidget {
   final String itemName;
-  // final VoidCallback? onRename;
+  final VoidCallback? onRename;
   final VoidCallback? onDelete;
   final bool? downloadable;
 
   CustomFileTile({
     super.key,
     required this.itemName,
-    // this.onRename,
+    this.onRename,
     this.onDelete,
     this.downloadable = false,
   });
@@ -79,29 +80,44 @@ class CustomFileTile extends StatelessWidget {
                         ),
                         PopupMenuButton<String>(
                           position: PopupMenuPosition.under,
+                          constraints: BoxConstraints(
+                            maxHeight: 400.h,
+                            maxWidth: 205.w,
+                          ),
                           color: Colors.white,
+                          surfaceTintColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           padding: EdgeInsets.zero,
                           onSelected: (value) {
-                            // if (value == 'rename' && onRename != null) {
-                            //   onRename!();
-                            // } else
-                            if (value == 'Delete' && onDelete != null) {
+                            print('on select value: $value');
+                            if (value == 'Rename' && onRename != null) {
+                              onRename!();
+                            } else if (value == 'Delete' && onDelete != null) {
                               onDelete!();
                             }
                           },
                           itemBuilder: (BuildContext context) {
-                            return ['Delete'].map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(
-                                  choice,
-                                  style: customTexttheme.bodyLarge,
-                                ),
-                              );
-                            }).toList();
+                            return dbController.userRole.value == UserRole.ADMIN
+                                ? ['Delete', 'Rename'].map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      value: choice,
+                                      child: Text(
+                                        choice,
+                                        style: customTexttheme.bodyLarge,
+                                      ),
+                                    );
+                                  }).toList()
+                                : ['Delete'].map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      value: choice,
+                                      child: Text(
+                                        choice,
+                                        style: customTexttheme.bodyLarge,
+                                      ),
+                                    );
+                                  }).toList();
                           },
                         ),
                       ],
@@ -178,23 +194,33 @@ class CustomFileTile extends StatelessWidget {
                   ),
                   padding: EdgeInsets.zero,
                   onSelected: (value) {
-                    // if (value == 'rename' && onRename != null) {
-                    //   onRename!();
-                    // } else
-                    if (value == 'Delete' && onDelete != null) {
+                    print('on select value: $value');
+                    if (value == 'Rename' && onRename != null) {
+                      onRename!();
+                    } else if (value == 'Delete' && onDelete != null) {
                       onDelete!();
                     }
                   },
                   itemBuilder: (BuildContext context) {
-                    return ['Delete'].map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(
-                          choice,
-                          style: customTexttheme.bodyLarge,
-                        ),
-                      );
-                    }).toList();
+                    return dbController.userRole.value == UserRole.ADMIN
+                        ? ['Delete', 'Rename'].map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(
+                                choice,
+                                style: customTexttheme.bodyLarge,
+                              ),
+                            );
+                          }).toList()
+                        : ['Delete'].map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(
+                                choice,
+                                style: customTexttheme.bodyLarge,
+                              ),
+                            );
+                          }).toList();
                   },
                 ),
               ],

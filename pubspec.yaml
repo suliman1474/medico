@@ -58,6 +58,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   fluttertoast: ^8.2.4
   flutter_statusbarcolor_ns: ^0.5.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,11 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   json_serializable: ^6.7.1
   build_runner: ^2.4.7
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon_new.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 
 # For information on the generic Dart part of this file, see the

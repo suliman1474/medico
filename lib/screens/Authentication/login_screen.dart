@@ -204,7 +204,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius:
                                   BorderRadius.circular(10.0.r), // Set y
                             ),
-                            hintText: 'idua93923',
                             hintStyle: customTexttheme.bodySmall!.copyWith(
                               color: textColor.withOpacity(0.25),
                             ),
