@@ -27,7 +27,7 @@ class DbController extends GetxController {
   RxString userRole = 'user'.obs;
   RxList<FolderModel> hiveFolders = <FolderModel>[].obs;
   RxBool isInternet = true.obs;
-  UserModel? admin;
+  // UserModel? admin;
   // FilesController filesController = Get.find();
   // static const String quizAttemptId = 'quiz_attempt_id';
   // static const String quizModelAttempt = 'quiz';
@@ -51,7 +51,7 @@ class DbController extends GetxController {
     await requestStoragePermission();
 
     await assignHiveFolders();
-    fetchAdmin();
+    // fetchAdmin();
   }
 
   Future<void> assignHiveFolders() async {
@@ -546,25 +546,25 @@ class DbController extends GetxController {
     }
   }
 
-  Future<void> fetchAdmin() async {
-    try {
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('role', isEqualTo: 'admin')
-          .get();
-      if (querySnapshot.docs.isNotEmpty) {
-        print('fetching admin');
-        print('doc is not empty');
-        final DocumentSnapshot doc = querySnapshot.docs.first;
-        final userData = doc.data() as Map<String, dynamic>;
-        admin = UserModel.fromJson(userData);
-      } else {
-        print('couldnt fetch admin');
-      }
-    } catch (e) {
-      print('Error fetching admin: $e');
-    }
-  }
+  // Future<void> fetchAdmin() async {
+  //   try {
+  //     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .where('role', isEqualTo: 'admin')
+  //         .get();
+  //     if (querySnapshot.docs.isNotEmpty) {
+  //       print('fetching admin');
+  //       print('doc is not empty');
+  //       final DocumentSnapshot doc = querySnapshot.docs.first;
+  //       final userData = doc.data() as Map<String, dynamic>;
+  //       admin = UserModel.fromJson(userData);
+  //     } else {
+  //       print('couldnt fetch admin');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching admin: $e');
+  //   }
+  // }
 // static Future<String?> getQuizId() async {
   //   var quizIdBox = await Hive.openBox(Db.quizIdBox);
   //   print(' get quiz id === ${quizIdBox.get('id')}');

@@ -58,7 +58,11 @@ dependencies:
   connectivity_plus: ^5.0.2
   fluttertoast: ^8.2.4
   flutter_statusbarcolor_ns: ^0.5.0
+<<<<<<< HEAD
+  url_launcher: ^6.2.5
+=======
   flutter_launcher_icons: ^0.13.1
+>>>>>>> main
 
 dev_dependencies:
   flutter_test:

@@ -103,11 +103,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   changeStat() async {
     await FlutterStatusbarcolor.setStatusBarColor(color1);
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
 
     await FlutterStatusbarcolor.setNavigationBarColor(color1);
 
-    FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
+    FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
   }
 
   @override
