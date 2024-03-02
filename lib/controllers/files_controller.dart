@@ -452,16 +452,20 @@ class FilesController extends GetxController {
         barrierDismissible: false);
   }
 
-  Future<void> uploadFiles(List<File> files, String folderId) async {
+  Future<void> uploadFiles(
+      List<File> files, String folderId, List<String> names) async {
     showProgressDialog();
     await checkAndCreateRootFolder();
+    int nme = 0;
     for (File filex in files) {
       try {
         // Extract the file name from the path
         uploading.value = true;
         // Create a Zip archive
 
-        String fileName = filex.path!.split('/').last;
+        String fileName = names[nme];
+        nme++; //filex.path!.split('/').last;
+        // String fileName = filex.path!.split('/').last;
         String ext = fileName.split('.').last;
         fileName = fileName.split('.').first;
 
@@ -553,7 +557,7 @@ class FilesController extends GetxController {
         folders[i].files?.addAll([file]);
         update();
         folders.refresh();
-         ;
+        ;
         // getFolders();
       } catch (e) {
         Get.snackbar(
@@ -571,25 +575,23 @@ class FilesController extends GetxController {
     }
   }
 
-  Future<void> deleteFileAdmin(
-      String folderId, String fileId, String path) async {
+  Future<void> renameFileAdmin(
+    String folderId,
+    String fileId,
+    String newName,
+  ) async {
     try {
       // Delete file from Firebase Storage
       Indicator.showLoading();
       CollectionReference<Map<String, dynamic>> foldersCollection =
           FirebaseFirestore.instance.collection('folders');
       FirebaseStorage storage = FirebaseStorage.instance;
-       ;
-      await storage.ref().child(path).delete();
 
       try {
-        // Remove file from the array in the document
-         ;
-         ;
         List<FileModel> files = await fetchFilesForFolder(folderId);
-         ;
-        files.removeWhere((element) => element.id == fileId);
-         ;
+
+        int ind = files.indexWhere((element) => element.id == fileId);
+        files[ind].name = newName;
         List<Map<String, dynamic>> filesJson =
             files.map((file) => file.toJson()).toList();
 
@@ -598,15 +600,55 @@ class FilesController extends GetxController {
             .doc(folderId)
             .update({'files': filesJson});
 
-         ;
+        ;
       } catch (e) {
         print('error: ' + e.toString());
       }
 
       await getFolders();
-       ;
     } catch (error) {
-       ;
+      Indicator.closeLoading();
+    } finally {
+      Indicator.closeLoading();
+    }
+  }
+
+  Future<void> deleteFileAdmin(
+      String folderId, String fileId, String path) async {
+    try {
+      // Delete file from Firebase Storage
+      Indicator.showLoading();
+      CollectionReference<Map<String, dynamic>> foldersCollection =
+          FirebaseFirestore.instance.collection('folders');
+      FirebaseStorage storage = FirebaseStorage.instance;
+      ;
+      await storage.ref().child(path).delete();
+
+      try {
+        // Remove file from the array in the document
+        ;
+        ;
+        List<FileModel> files = await fetchFilesForFolder(folderId);
+        ;
+        files.removeWhere((element) => element.id == fileId);
+        ;
+        List<Map<String, dynamic>> filesJson =
+            files.map((file) => file.toJson()).toList();
+
+        await FirebaseFirestore.instance
+            .collection('folders')
+            .doc(folderId)
+            .update({'files': filesJson});
+
+        ;
+      } catch (e) {
+        print('error: ' + e.toString());
+      }
+
+      await getFolders();
+      ;
+    } catch (error) {
+      ;
       Indicator.closeLoading();
     } finally {
       Indicator.closeLoading();
@@ -617,7 +659,7 @@ class FilesController extends GetxController {
   void showDownloadingProgressDialog() {
     Get.dialog(
         AlertDialog(
-          title: Text('Downlaoding'),
+          title: Text('Downloading'),
           content: Obx(
             () => Column(
               mainAxisSize: MainAxisSize.min,
@@ -627,7 +669,7 @@ class FilesController extends GetxController {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '${downloadProgress.value.toInt()}%',
+                  '${downloadProgress.value}%',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

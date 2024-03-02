@@ -34,7 +34,6 @@ class DbController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    await requestStoragePermission();
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == true) {
       isInternet.value = true;
@@ -49,6 +48,8 @@ class DbController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
     await loadUserRole();
+    await requestStoragePermission();
+
     await assignHiveFolders();
     // fetchAdmin();
   }
@@ -59,7 +60,6 @@ class DbController extends GetxController {
     var hiveBox = await Hive.openBox(foldersBox);
 
     if (!hiveBox.containsKey('root')) {
-      ;
       downloadRootFolder();
       // var rootFolder = FolderModel(
       //   id: '9876543210',
@@ -369,7 +369,9 @@ class DbController extends GetxController {
 
   Future<void> downloadRootFolder() async {
     try {
-      if (await requestStoragePermission()) {
+      print('download root folder');
+      if (await Permission.storage.isGranted) {
+        print('permission is granted');
         String folderId = '9876543210';
         String folderPath = '/folders';
         Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
@@ -450,6 +452,9 @@ class DbController extends GetxController {
           ;
           storeFolder(updatedFolder);
         }
+      } else {
+        await await Permission.storage.request();
+        downloadRootFolder();
       }
     } on FirebaseException catch (error) {
       Get.snackbar(
@@ -491,29 +496,26 @@ class DbController extends GetxController {
     // Find the folder with the specified ID
     FolderModel folderToDelete =
         hiveFolders.firstWhere((element) => element.id == id);
-    ;
+    int parentIndex = hiveFolders
+        .indexWhere((element) => element.id == folderToDelete.parentId);
     // Get the list of folders from the box
     hiveFolders.removeWhere((element) => element.id == id);
 
-    ;
     if (folderToDelete != null) {
       // Delete associated files from the application storage
-      ;
+
       if (folderToDelete.files != null && folderToDelete.files!.isNotEmpty) {
-        ;
         await deleteFilesFromAppStorage(folderToDelete.files!);
       }
 
       // Remove the folder from the list
       hiveFolders.remove(folderToDelete);
-
+      hiveFolders[parentIndex].actualSubfolders?.remove(folderToDelete);
       // Update the Hive box with the modified list
       await hiveBox.put('root', hiveFolders);
-
-      ;
-    } else {
-      ;
-    }
+      print('your folder deleted now gett all new');
+      await getAllHiveFolders();
+    } else {}
 
     //   hiveBox.put('root', hiveFolders);
 

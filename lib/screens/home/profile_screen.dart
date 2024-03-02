@@ -611,6 +611,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             GestureDetector(
                               onTap: () {
                                 authController.logout();
+                                screenController.bottomNavIndex.value = 0;
                               },
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.h),
