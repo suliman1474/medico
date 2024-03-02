@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/models/about_model.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
@@ -36,6 +37,7 @@ class AuthenticationController extends GetxController {
 
   DbController dbController = Get.find();
   Rx<UserModel?> userProfile = Rx<UserModel?>(null);
+  Rx<AboutModel?> aboutInfo = Rx<AboutModel?>(null);
 
   FirebaseService firebaseService = FirebaseService();
 
@@ -62,6 +64,7 @@ class AuthenticationController extends GetxController {
   void onReady() {
     super.onReady();
     // isLoggedIn();
+    fetchAboutInfo();
   }
 
   toggleObsecure() {
@@ -314,6 +317,51 @@ class AuthenticationController extends GetxController {
             email: email.text,
             semester: semester.text,
           ).toJson());
+    }
+  }
+
+  Future<void> updateInfo(
+    String description,
+    String whatsapp,
+    String insta,
+    String gmail,
+    String name,
+    XFile? selectedImage,
+  ) async {
+    try {
+      Indicator.showLoading();
+      await firebaseService.updateInfo(
+        description,
+        whatsapp,
+        insta,
+        gmail,
+        name,
+        selectedImage,
+      );
+      AboutModel? info = await firebaseService.fetchAboutInfo();
+      if (info != null) {
+        aboutInfo.value = info;
+      }
+      Indicator.closeLoading();
+      Get.off(MainPage());
+    } catch (e) {
+      // Handle errors if necessary
+      print("error updating about info: $e");
+      Indicator.closeLoading();
+    }
+  }
+
+  Future<void> fetchAboutInfo() async {
+    try {
+      // Fetch the about info from Firebase
+      AboutModel? info = await firebaseService.fetchAboutInfo();
+      if (info != null) {
+        // print('about info fetched');
+        aboutInfo.value = info;
+      }
+    } catch (e) {
+      // Handle errors if necessary
+      print('Error fetching about info: $e');
     }
   }
 

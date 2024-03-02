@@ -9,8 +9,10 @@ import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:medico/models/about_model.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 import 'package:medico/widgets/indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/user_model.dart';
 
@@ -29,10 +31,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ScreenController screenController = Get.find();
   late Future<UserModel?> user;
   late Future<Uint8List?> profile;
+  late AboutModel info;
   @override
   void initState() {
     user = dbController.getUser();
+    info = authController.aboutInfo.value!;
     super.initState();
+  }
+
+  launchInsta() async {
+    final url = info.insta;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  sendMail() async {
+    // Android and iOS
+    final uri = 'mailto:${info.gmail}?subject=FromMedicoApp&body=Hello';
+    if (await canLaunch(uri)) {
+      await launch(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+
+  whatsapp() async {
+    var androidUrl = "whatsapp://send?phone=${info.whatsapp}&text=Hello";
+
+    try {
+      await launchUrl(
+        Uri.parse(androidUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } on Exception {
+      throw 'Could not launch $androidUrl';
+    }
   }
 
   @override
@@ -395,10 +431,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   contactus = !contactus;
                                 });
                               },
-                              child: Padding(
+                              child: Container(
+                                width: ScreenUtil().screenWidth,
                                 padding: EdgeInsets.symmetric(vertical: 10.h),
                                 child: contactus == false
                                     ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Flexible(
                                             child: CustomImageView(
@@ -424,6 +463,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Expanded(
                                             flex: 1,
                                             child: CustomImageView(
+                                              onTap: () {
+                                                setState(() {
+                                                  contactus = !contactus;
+                                                });
+                                              },
                                               svgPath:
                                                   IconConstant.icForwardWhite,
                                               height: 15.h,
@@ -436,39 +480,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal: 20.w,
-                                                ),
-                                                child: Text(
-                                                  dbController.admin?.email ??
-                                                      'null',
-                                                  style: customTexttheme
-                                                      .bodyLarge!
-                                                      .copyWith(
-                                                    color: Colors.white,
-                                                  ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              sendMail();
+                                            },
+                                            child: Container(
+                                              height: 50.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: white,
+                                              ),
+                                              child: Center(
+                                                child: CustomImageView(
+                                                  imagePath:
+                                                      IconConstant.icGmail,
+                                                  height: 40.h,
+                                                  width: 40.w,
+                                                  fit: BoxFit.scaleDown,
                                                 ),
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal: 20.w,
-                                                ),
-                                                child: Text(
-                                                  dbController.admin?.contact ??
-                                                      'null',
-                                                  style: customTexttheme
-                                                      .bodyLarge!
-                                                      .copyWith(
-                                                    color: Colors.white,
-                                                  ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          GestureDetector(
+                                            onTap: () {
+                                              launchInsta();
+                                            },
+                                            child: Container(
+                                              height: 50.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: white,
+                                              ),
+                                              child: Center(
+                                                child: CustomImageView(
+                                                  imagePath:
+                                                      IconConstant.icInsta,
+                                                  height: 40.h,
+                                                  width: 40.w,
+                                                  fit: BoxFit.scaleDown,
                                                 ),
                                               ),
-                                            ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          GestureDetector(
+                                            onTap: () {
+                                              whatsapp();
+                                            },
+                                            child: Container(
+                                              height: 50.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: white,
+                                              ),
+                                              child: Center(
+                                                child: CustomImageView(
+                                                  imagePath:
+                                                      IconConstant.icWhatsapp,
+                                                  height: 40.h,
+                                                  width: 40.w,
+                                                  fit: BoxFit.scaleDown,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 180.w),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                contactus = !contactus;
+                                              });
+                                            },
+                                            child: Icon(
+                                              Icons.arrow_back_ios_new_rounded,
+                                              color: white,
+                                              size: 15,
+                                            ),
                                           ),
                                         ],
                                       ),

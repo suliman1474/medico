@@ -143,9 +143,10 @@ class _PostState extends State<Post> {
             ),
             post.image != null && post.image!.isNotEmpty
                 ? Container(
-                    height: 200.h,
-                    width: 293.w,
-                    margin: EdgeInsets.symmetric(horizontal: 35.w),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 40.w,
+                      vertical: 5.h,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         Get.to(

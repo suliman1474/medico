@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medico/models/about_model.dart';
 
 import '../models/poll_model.dart';
 import '../models/post_model.dart';
@@ -130,6 +131,62 @@ class FirebaseService {
       final updatedUserData = updatedUserDoc.data() as Map<String, dynamic>;
 
       return UserModel.fromJson(updatedUserData);
+    }
+  }
+
+  Future<AboutModel?> fetchAboutInfo() async {
+    try {
+      DocumentSnapshot docSnapshot =
+          await _firestore.collection('info').doc('5m400wzBwVt5zFlC4L3w').get();
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+        AboutModel aboutInfo = AboutModel.fromJson(data);
+
+        return aboutInfo;
+      } else {
+        // If the document does not exist, return null
+        return null;
+      }
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error fetching about info: $e');
+      return null;
+    }
+  }
+
+  Future<void> updateInfo(
+    String description,
+    String whatsapp,
+    String insta,
+    String gmail,
+    String name,
+    XFile? selectedImage,
+  ) async {
+    final infoFirestoreRef = FirebaseFirestore.instance
+        .collection('info')
+        .doc('5m400wzBwVt5zFlC4L3w');
+
+    await infoFirestoreRef.update({
+      'description': description,
+      'whatsapp': whatsapp,
+      'insta': insta,
+      'gmail': gmail,
+      'ownername': name,
+    });
+
+    if (selectedImage != null) {
+      final storageRef =
+          FirebaseStorage.instance.ref('info/${selectedImage.name}');
+
+      await storageRef.putFile(File(selectedImage.path));
+
+      final updatedProfileUrl = await storageRef.getDownloadURL();
+
+      await infoFirestoreRef.update({
+        'image': updatedProfileUrl,
+      });
     }
   }
 

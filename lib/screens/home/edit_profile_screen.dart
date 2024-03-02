@@ -134,8 +134,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   : (oldPic!.isNotEmpty
                                       ? NetworkImage(oldPic) as ImageProvider<
                                           Object>? // Assuming profileImage is a URL
-                                      : const AssetImage(
-                                          'assets/images/profile.png')),
+                                      : AssetImage(
+                                          IconConstant.icTopbarProfile)),
                             ),
                           ),
                           GestureDetector(
