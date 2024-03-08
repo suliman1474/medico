@@ -125,7 +125,7 @@ class DbController extends GetxController {
         temp.subFolders?.add(newFolder.id);
         hiveFolders[folderIndex] = temp;
         hiveFolders.add(newFolder);
-        ;
+
         update();
         // hiveFolders.value = rootFolder;
         hiveBox.put('root', hiveFolders);

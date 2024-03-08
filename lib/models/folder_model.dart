@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 import 'file_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'link_model.dart';
+
 part 'folder_model.g.dart';
 
 @JsonSerializable()
@@ -25,13 +27,14 @@ class FolderModel {
 
   @HiveField(5)
   List<FileModel>? files;
-
   @HiveField(6)
+  List<LinkModel>? links;
+  @HiveField(7)
   bool appearance;
 
-  @HiveField(7)
-  String downloadUrl;
   @HiveField(8)
+  String downloadUrl;
+  @HiveField(9)
   String parentId;
 
   FolderModel({
@@ -41,6 +44,7 @@ class FolderModel {
     this.subFolders,
     this.actualSubfolders, // Update here to use actualSubfolders
     this.files,
+    this.links,
     this.appearance = true,
     this.downloadUrl = '',
     this.parentId = '',
@@ -67,6 +71,9 @@ class FolderModel {
       files: (json['files'] as List<dynamic>)
           ?.map((e) => FileModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      links: (json['links'] as List<dynamic>)
+          ?.map((e) => LinkModel.fromJson(e as Map<String, dynamic>))
+          ?.toList(),
       appearance: json['appearance'] as bool? ?? true,
       parentId: json['parentId'] as String,
       downloadUrl: json['downloadUrl'] as String? ?? '',
@@ -83,6 +90,15 @@ class FolderModel {
       subFolders: List<String>.from(data['subFolders'] ?? []),
       actualSubfolders: [],
       files: [],
+      links: (data?['links'] != null)
+          ? (data?['links'] is List<dynamic>
+              ? (data?['links'] as List<dynamic>)
+                  .map((e) => LinkModel.fromJson(e as Map<String, dynamic>))
+                  .toList()
+              : (data?['links'] is Map<String, dynamic>
+                  ? [LinkModel.fromJson(data?['links'] as Map<String, dynamic>)]
+                  : null))
+          : null,
       appearance: data['appearance'] ?? true,
       downloadUrl: data['downloadUrl'] ?? '',
       parentId: data['parentId'] ?? '',

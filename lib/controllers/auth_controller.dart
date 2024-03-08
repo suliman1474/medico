@@ -10,11 +10,13 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/db_controller.dart';
+import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/models/about_model.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
 import '../screens/Authentication/login_screen.dart';
+import '../screens/home/folders_screen.dart';
 import '../screens/home/main_page.dart';
 import '../services/firebase_services.dart';
 import '../widgets/indicator.dart';
@@ -40,7 +42,7 @@ class AuthenticationController extends GetxController {
   Rx<AboutModel?> aboutInfo = Rx<AboutModel?>(null);
 
   FirebaseService firebaseService = FirebaseService();
-
+  ScreenController screenController = Get.find();
   void isLoggedIn() async {
     if (_auth.currentUser != null) {
       // user.value = _auth.currentUser;
@@ -249,7 +251,14 @@ class AuthenticationController extends GetxController {
 
       await dbController.signOut();
       Indicator.closeLoading();
+      screenController.updatePageAt(
+          AppPage.HomeScreen,
+          FoldersScreen(
+            // folders: rootFolders,
+            back: false,
 
+            path: '/folders',
+          ));
       Get.off(() => const LoginScreen());
     });
   }

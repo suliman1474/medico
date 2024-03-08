@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,56 @@ import 'package:medico/widgets/custom_elevated_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 import '../core/colors.dart';
+import '../models/link_model.dart';
+
+Future<Map<String, String>?> getLinkDialog() async {
+  final nameController = TextEditingController();
+  final linkController = TextEditingController();
+
+  return await Get.defaultDialog(
+    title: "Add Link",
+    content: Column(
+      children: [
+        TextField(
+          controller: nameController,
+          decoration: InputDecoration(
+            labelText: "Name",
+          ),
+        ),
+        TextField(
+          controller: linkController,
+          decoration: InputDecoration(
+            labelText: "Link",
+          ),
+        ),
+      ],
+    ),
+    textConfirm: "Save",
+    textCancel: "Cancel",
+    confirmTextColor: Colors.white,
+    cancelTextColor: Colors.black,
+    onConfirm: () {
+      String name = nameController.text;
+      String link = linkController.text;
+
+      if (name.isEmpty || link.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter both name and link",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return; // Don't close the dialog if validation fails
+      }
+
+      // Implement your logic to save the name and link (e.g., to a database, file, etc.)
+      print('Name: $name, Link: $link');
+
+      Get.back(result: {'name': name, 'link': link});
+    },
+  );
+}
 
 class CustomFloatingButton extends StatelessWidget {
   final String? parentId;
@@ -241,6 +292,39 @@ class CustomFloatingButton extends StatelessWidget {
                     }
                   },
                   text: 'Add Image',
+                  buttonTextStyle: customTexttheme.displaySmall!.copyWith(
+                    color: Colors.white,
+                  ),
+                  height: 40.h,
+                  width: 150.w,
+                  buttonStyle: ElevatedButton.styleFrom(
+                    backgroundColor: color1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10).r,
+                    ),
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                ),
+                // add link button
+                CustomElevatedButton(
+                  onTap: () async {
+                    Get.back();
+                    Map<String, String>? result = await getLinkDialog();
+                    if (result != null) {
+                      if (result['name'] != '' && result['link'] != '') {
+                        LinkModel link = LinkModel(
+                            id: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
+                            name: result['name']!,
+                            url: result['link']!);
+
+                        await filesController.addLink(link, parentId!);
+                      }
+                    }
+                    // Get.back();
+                  },
+                  text: 'Add Link',
                   buttonTextStyle: customTexttheme.displaySmall!.copyWith(
                     color: Colors.white,
                   ),

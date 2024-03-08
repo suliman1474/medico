@@ -23,16 +23,17 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       subFolders: (fields[3] as List?)?.cast<String>(),
       actualSubfolders: (fields[4] as List?)?.cast<FolderModel>(),
       files: (fields[5] as List?)?.cast<FileModel>(),
-      appearance: fields[6] as bool,
-      downloadUrl: fields[7] as String,
-      parentId: fields[8] as String,
+      links: (fields[6] as List?)?.cast<LinkModel>(),
+      appearance: fields[7] as bool,
+      downloadUrl: fields[8] as String,
+      parentId: fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,10 +47,12 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(5)
       ..write(obj.files)
       ..writeByte(6)
-      ..write(obj.appearance)
+      ..write(obj.links)
       ..writeByte(7)
-      ..write(obj.downloadUrl)
+      ..write(obj.appearance)
       ..writeByte(8)
+      ..write(obj.downloadUrl)
+      ..writeByte(9)
       ..write(obj.parentId);
   }
 
@@ -81,6 +84,9 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => FolderModel(
       files: (json['files'] as List<dynamic>?)
           ?.map((e) => FileModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      links: (json['links'] as List<dynamic>?)
+          ?.map((e) => LinkModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       appearance: json['appearance'] as bool? ?? true,
       downloadUrl: json['downloadUrl'] as String? ?? '',
       parentId: json['parentId'] as String? ?? '',
@@ -94,6 +100,7 @@ Map<String, dynamic> _$FolderModelToJson(FolderModel instance) =>
       'subFolders': instance.subFolders,
       'actualSubfolders': instance.actualSubfolders,
       'files': instance.files,
+      'links': instance.links,
       'appearance': instance.appearance,
       'downloadUrl': instance.downloadUrl,
       'parentId': instance.parentId,

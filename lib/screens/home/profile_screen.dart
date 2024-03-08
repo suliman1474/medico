@@ -41,8 +41,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   launchInsta() async {
     final url = info.insta;
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }
@@ -51,8 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   sendMail() async {
     // Android and iOS
     final uri = 'mailto:${info.gmail}?subject=FromMedicoApp&body=Hello';
-    if (await canLaunch(uri)) {
-      await launch(uri);
+    if (await canLaunchUrl(Uri.parse(uri))) {
+      await launchUrl(Uri.parse(uri));
     } else {
       throw 'Could not launch $uri';
     }
