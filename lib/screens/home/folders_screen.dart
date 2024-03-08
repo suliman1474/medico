@@ -24,6 +24,7 @@ import '../../core/colors.dart';
 import '../../core/text_theme.dart';
 import '../../models/file_model.dart';
 import '../../models/folder_model.dart';
+import '../../widgets/custom_link_tile.dart';
 import '../../widgets/indicator.dart';
 
 // class FoldersScreen extends StatefulWidget {
@@ -271,6 +272,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
           rootFolder = filesController.folders.firstWhere(
             (fol) => fol.id == '9876543210',
           );
+          print('folder.links .length: ${rootFolder?.links?.length}');
         }
 
         if (dbController.hiveFolders.length > 0) {
@@ -308,12 +310,12 @@ class _FoldersScreenState extends State<FoldersScreen> {
         if (filesController.folders.length > 0) {
           FolderModel temp =
               filesController.folders.firstWhere((fol) => fol.id == id);
-          ;
+
           folders = temp.actualSubfolders;
-          ;
 
           rootFolder =
               filesController.folders.firstWhere((fol) => fol.id == id);
+          print('folder.links .length: when back ${rootFolder?.links?.length}');
         }
 
         // for hive
@@ -421,6 +423,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                       delegate: SliverChildListDelegate([
                     Column(
                       children: [
+                        //offline folders
                         if (dbController.userRole.value == UserRole.USER)
                           hiveFolders!.length > 0
                               ? Padding(
@@ -945,6 +948,144 @@ class _FoldersScreenState extends State<FoldersScreen> {
                               );
                             },
                           ),
+
+                        //links for user online
+
+                        Text('links'),
+                        if (dbController.userRole.value == UserRole.ADMIN)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: rootFolder?.links?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                // onTap: () async {
+                                //   if (dbController.userRole.value ==
+                                //       UserRole.ADMIN) {
+                                //     var response = await http.get(Uri.parse(
+                                //         rootFolder!.files![index].downloadUrl));
+                                //
+                                //     // Get the temporary directory
+                                //     var tempDir = await getTemporaryDirectory();
+                                //
+                                //     // Save the file to the temporary directory
+                                //     File file =
+                                //     File('${tempDir.path}/downloaded_file');
+                                //     await file.writeAsBytes(response.bodyBytes);
+                                //
+                                //     // Open the downloaded file using OpenFile plugin
+                                //     OpenFile.open(file.path);
+                                //   } else {
+                                //     // Use http package to download the file
+                                //     ;
+                                //     ;
+                                //     // Get the temporary directory
+                                //     var appDocDir =
+                                //     await getApplicationDocumentsDirectory();
+                                //
+                                //     // Save the file to the temporary directory
+                                //     File file = File(
+                                //         '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
+                                //     //    await file.writeAsBytes(response.bodyBytes);
+                                //
+                                //     // Open the downloaded file using OpenFile plugin
+                                //     OpenFile.open(file.path);
+                                //   }
+                                // },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 5.h, bottom: 5.h),
+                                  child: CustomLinkTile(
+                                    itemName: rootFolder!.links![index].name,
+                                    onDelete: () {
+                                      Get.dialog<bool>(
+                                        AlertDialog(
+                                          title: Text(
+                                            'Delete Link',
+                                            style: customTexttheme.displaySmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                          backgroundColor: color1,
+                                          content: Text(
+                                            'Do you want to delete this link',
+                                            style: customTexttheme.displaySmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                Get.back();
+                                                print('ON DELETED CLICKED');
+                                                await filesController
+                                                    .deleteLink(
+                                                        rootFolder!.id,
+                                                        rootFolder!
+                                                            .links![index].id);
+                                              },
+                                              child: Text(
+                                                'Yes',
+                                                style: customTexttheme
+                                                    .displaySmall
+                                                    ?.copyWith(
+                                                        color: Colors.black),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Get.back(); // No button
+                                              },
+                                              child: Text(
+                                                'No',
+                                                style: customTexttheme
+                                                    .displaySmall
+                                                    ?.copyWith(
+                                                        color: Colors.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    onRename: () async {
+                                      Map<String, String>? result =
+                                          await _showEditDialog(
+                                              rootFolder!.links![index].name,
+                                              rootFolder!.links![index].url);
+
+                                      await filesController.editLink(
+                                          rootFolder!.id,
+                                          rootFolder!.links![index].id,
+                                          result!['name']!,
+                                          result['url']!);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                        if (dbController.userRole.value == UserRole.USER)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: rootFolder?.links?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  print('pressed');
+                                  filesController.goToYoutube(
+                                      rootFolder!.links![index].url);
+                                },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 5.h, bottom: 5.h),
+                                  child: CustomLinkTile(
+                                    itemName: rootFolder!.links![index].name,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     )
                   ]))
@@ -961,4 +1102,46 @@ class _FoldersScreenState extends State<FoldersScreen> {
       );
     });
   }
+}
+
+Future<Map<String, String>?> _showEditDialog(
+    String oldFileName, String oldUrl) async {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
+  nameController.text = oldFileName; // Default value in dialog
+  urlController.text = oldUrl; // Default value in dialog
+
+  return Get.defaultDialog<Map<String, String>>(
+    title: 'Edit Link',
+    content: Column(
+      children: [
+        TextField(
+          controller: nameController,
+          decoration: InputDecoration(
+            labelText: 'New Link Name',
+          ),
+        ),
+        SizedBox(height: 10),
+        TextField(
+          controller: urlController,
+          decoration: InputDecoration(
+            labelText: 'New Link URL',
+          ),
+        ),
+      ],
+    ),
+    textConfirm: 'OK',
+    textCancel: 'Cancel',
+    confirmTextColor: Colors.white,
+    buttonColor: Colors.blue, // Change to your desired button color
+    onConfirm: () {
+      print('Name: ${nameController.text}, URL: ${urlController.text}');
+      Get.back(
+        result: {
+          'name': nameController.text,
+          'url': urlController.text,
+        },
+      );
+    },
+  );
 }

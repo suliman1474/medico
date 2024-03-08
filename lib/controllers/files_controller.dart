@@ -13,9 +13,11 @@ import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/widgets/indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/file_model.dart';
 import '../models/folder_model.dart';
+import '../models/link_model.dart';
 
 class FilesController extends GetxController {
   RxList<FolderModel> folders = <FolderModel>[].obs;
@@ -86,10 +88,12 @@ class FilesController extends GetxController {
       folders.clear();
 
       for (QueryDocumentSnapshot folderDoc in foldersQuery.docs) {
+        Map<String, dynamic> data = folderDoc.data() as Map<String, dynamic>;
+        print('links: ${data['links']}');
         FolderModel folder = FolderModel.fromFirestore(folderDoc);
 
         folders.add(folder);
-
+        print('folder.links .length: ${folder.links?.length}');
         // Store the folder in the subfolderMap for future reference
         subfolderMap[folder.id] = folder;
       }
@@ -629,9 +633,9 @@ class FilesController extends GetxController {
         ;
         ;
         List<FileModel> files = await fetchFilesForFolder(folderId);
-        ;
+
         files.removeWhere((element) => element.id == fileId);
-        ;
+
         List<Map<String, dynamic>> filesJson =
             files.map((file) => file.toJson()).toList();
 
@@ -655,6 +659,153 @@ class FilesController extends GetxController {
     }
   }
 
+  // add link
+  Future<void> addLink(LinkModel link, String parentId) async {
+    print('in add link');
+    try {
+      Indicator.showLoading();
+      // Replace "your-collection" and "your-document-id" with your actual values
+      // DocumentSnapshot folderDoc = await FirebaseFirestore.instance
+      //     .collection('folders')
+      //     .doc(parentId)
+      //     .get();
+      // List<dynamic> existingFiles = folderDoc['links'] ?? [];
+
+      // // Extract existing links from folder data
+      // final List<dynamic> existingLinks =
+      //     folderDocSnapshot.data()?['links'] ?? [];
+      //
+      // // Add the new link to the existing links
+      // final List<dynamic> updatedLinks = List.from(existingLinks)
+      //   ..add(link.toJson());
+      //
+      // // Update the links field of the document with the updated links
+      // await folderDocRef.update({'links': updatedLinks});
+      // Add the new link to the links array with the link's ID as the key
+      print('here');
+      await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(parentId)
+          .update({
+        'links': FieldValue.arrayUnion([
+          link.toJson(),
+        ])
+      });
+
+      await getFolders();
+    } catch (e) {
+      // Handle potential exceptions during Firebase operations (e.g., network issues)
+      print("Error saving link to Firebase: $e");
+      Get.snackbar(
+        "Error",
+        "Failed to save link:",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      Indicator.closeLoading();
+    } finally {
+      Indicator.closeLoading();
+    }
+  }
+
+// delete link
+  Future<void> deleteLink(String parentId, String linkId) async {
+    try {
+      print('deleted link called');
+      Indicator.showLoading();
+      // Get the reference to the folder document
+      DocumentSnapshot folderDoc = await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(parentId)
+          .get();
+      print('got');
+      List<dynamic> existingFiles = folderDoc['links'] ?? [];
+
+      existingFiles.removeWhere((element) => element['id'] == linkId);
+      // Update the 'links' field by removing the link with the specified ID
+      print('linkid: $linkId');
+
+      await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(parentId)
+          .update({
+        'links': existingFiles,
+      });
+      await getFolders();
+      Indicator.closeLoading();
+      print('Link deleted successfully');
+    } catch (e) {
+      // Handle potential exceptions during Firebase operations (e.g., network issues)
+      print('error: ${e}');
+      Get.snackbar(
+        "Error",
+        "Failed to delete link:",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      Indicator.closeLoading();
+    }
+  }
+
+  // Function to rename a link in Firebase
+  Future<void> editLink(
+      String parentId, String linkId, String newName, String newUrl) async {
+    try {
+      Indicator.showLoading();
+      // Get the reference to the folder document
+
+      DocumentSnapshot folderDoc = await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(parentId)
+          .get();
+      print('got');
+      List<dynamic> existingFiles = folderDoc['links'] ?? [];
+
+      int index =
+          await existingFiles.indexWhere((element) => element['id'] == linkId);
+      existingFiles[index]['name'] = newName;
+      existingFiles[index]['url'] = newUrl;
+      // Update the 'links' field by updating the link's name and URL
+      await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(parentId)
+          .update({
+        'links': existingFiles,
+      });
+
+      print('Link edited successfully');
+      await getFolders();
+      Indicator.closeLoading();
+    } catch (e) {
+      // Handle potential exceptions during Firebase operations (e.g., network issues)
+
+      Get.snackbar(
+        "Error",
+        "Failed to rename link:",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      Indicator.closeLoading();
+    }
+  }
+
+  goToYoutube(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      Get.snackbar(
+        "Error",
+        "Failed to open link",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
 // folders downlading
   void showDownloadingProgressDialog() {
     Get.dialog(
@@ -669,7 +820,7 @@ class FilesController extends GetxController {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '${downloadProgress.value}%',
+                  '${downloadProgress.value.toInt()}%',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

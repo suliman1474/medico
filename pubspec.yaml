@@ -60,8 +60,6 @@ dependencies:
   flutter_statusbarcolor_ns: ^0.5.0
   url_launcher: ^6.2.5
   flutter_launcher_icons: ^0.13.1
-  image_gallery_saver: ^2.0.3
-  flutter_file_dialog: ^3.0.2
   flutter_file_downloader: ^1.2.1
 
 dev_dependencies:
