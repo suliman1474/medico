@@ -19,7 +19,7 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
     return PostModel(
       id: fields[0] as String,
       description: fields[1] as String?,
-      image: fields[2] as String?,
+      images: (fields[2] as List?)?.cast<String>(),
       timestamp: fields[3] as String?,
       like: (fields[4] as List?)?.cast<String>(),
     );
@@ -34,7 +34,7 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
       ..writeByte(1)
       ..write(obj.description)
       ..writeByte(2)
-      ..write(obj.image)
+      ..write(obj.images)
       ..writeByte(3)
       ..write(obj.timestamp)
       ..writeByte(4)
@@ -59,7 +59,8 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
 PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       id: json['id'] as String,
       description: json['description'] as String?,
-      image: json['image'] as String?,
+      images:
+          (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
       timestamp: json['timestamp'] as String?,
       like: (json['like'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
@@ -67,7 +68,7 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'id': instance.id,
       'description': instance.description,
-      'image': instance.image,
+      'images': instance.images,
       'timestamp': instance.timestamp,
       'like': instance.like,
     };

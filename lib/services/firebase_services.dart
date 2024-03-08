@@ -29,7 +29,7 @@ class FirebaseService {
     }
   }
 
-  Future<void> createPost(String? description, XFile? image) async {
+  Future<void> createPost(String? description, List<XFile>? images) async {
     try {
       // Get the current user
 
@@ -41,24 +41,28 @@ class FirebaseService {
         'id': id,
         'timestamp': DateTime.now().toUtc().microsecondsSinceEpoch.toString(),
         'description': description ?? '',
-        'image': '',
+        'image': <String>[],
         'like': <String>[],
         'timestamp': DateTime.now().toUtc().microsecondsSinceEpoch.toString(),
       });
 
       // If an image is provided, upload it to Firebase Storage
-      if (image != null) {
-        File imageFile = File(image.path);
-        String imageName = '${id}_post_image.jpg';
-        Reference storageRef = _storage.ref().child('posts_images/$imageName');
-        await storageRef.putFile(imageFile);
-        String imageUrl = await storageRef.getDownloadURL();
-
-        // Update the post document with the image URL
-        await _firestore
-            .collection('posts')
-            .doc(id)
-            .update({'image': imageUrl});
+      if (images != null && images.isNotEmpty) {
+        int i = 0;
+        for (XFile file in images) {
+          i++;
+          File imageFile = File(file.path);
+          String imageName = '${id}_post_image$i.jpg';
+          Reference storageRef =
+              _storage.ref().child('posts_images/$imageName');
+          await storageRef.putFile(imageFile);
+          String imageUrl = await storageRef.getDownloadURL();
+          print('image added to post.');
+          // Update the post document with the image URL
+          await _firestore.collection('posts').doc(id).update({
+            'images': FieldValue.arrayUnion([imageUrl])
+          });
+        }
       }
     } catch (e) {}
   }

@@ -13,86 +13,129 @@ class UserDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Icons.arrow_circle_left_outlined,
-            color: color1,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Icons.arrow_circle_left_outlined,
+              color: color1,
+            ),
           ),
         ),
-      ),
-      body: Container(
-        height: 250.h,
-        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.h),
-        margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-        decoration: BoxDecoration(
-          color: secondryColor,
-          borderRadius: BorderRadius.circular(30.r),
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 10.h,
-                    horizontal: 10.w,
-                  ),
-                  height: 65.h,
-                  width: 65.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(33.r),
-                    child: user.image!.isNotEmpty
-                        ? Image.network(
-                            user.image!,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            IconConstant.icTopbarProfile,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.name,
-                          style: customTexttheme.titleLarge!.copyWith(
-                            color: textColor,
-                          ),
-                        ),
-                        Text(
-                          user.email,
-                          style: customTexttheme.bodySmall,
-                        ),
-                      ],
+        body: Container(
+          height: 250.h,
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.h),
+          margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+          decoration: BoxDecoration(
+            color: secondryColor,
+            borderRadius: BorderRadius.circular(30.r),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 10.w,
+                    ),
+                    height: 65.h,
+                    width: 65.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(33.r),
+                      child: user.image!.isNotEmpty
+                          ? Image.network(
+                              user.image!,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              IconConstant.icTopbarProfile,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: customTexttheme.titleLarge!.copyWith(
+                              color: textColor,
+                            ),
+                          ),
+                          Text(
+                            user.email,
+                            style: customTexttheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.h),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: CustomImageView(
+                        svgPath: IconConstant.icCollege,
+                        height: 20.h,
+                        width: 20.w,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        user.college,
+                        style: customTexttheme.bodySmall,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.h),
-              child: Row(
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: CustomImageView(
+                        svgPath: IconConstant.icDegree,
+                        height: 24.h,
+                        width: 24.w,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Text(
+                        user.discipline,
+                        style: customTexttheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
                 children: [
                   Expanded(
                     flex: 1,
                     child: CustomImageView(
-                      svgPath: IconConstant.icCollege,
+                      svgPath: IconConstant.icContact,
                       height: 20.h,
                       width: 20.w,
                     ),
@@ -100,55 +143,14 @@ class UserDetailScreen extends StatelessWidget {
                   Expanded(
                     flex: 6,
                     child: Text(
-                      user.college,
+                      user.contact,
                       style: customTexttheme.bodySmall,
                     ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomImageView(
-                      svgPath: IconConstant.icDegree,
-                      height: 24.h,
-                      width: 24.w,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Text(
-                      user.discipline,
-                      style: customTexttheme.bodySmall,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: CustomImageView(
-                    svgPath: IconConstant.icContact,
-                    height: 20.h,
-                    width: 20.w,
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    user.contact,
-                    style: customTexttheme.bodySmall,
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
