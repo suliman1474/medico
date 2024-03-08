@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,6 +31,7 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> {
   FeedController feedController = Get.find();
   DbController dbController = Get.find();
+  int currentIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -141,48 +143,128 @@ class _PostState extends State<Post> {
                     )
                   : SizedBox(height: 10.h),
             ),
-            post.image != null && post.image!.isNotEmpty
-                ? Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 40.w,
-                      vertical: 5.h,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(
-                          ImageViewScreen(
-                            image: post.image!,
-                            isfile: false,
+            post.images != null && post.images!.isNotEmpty
+                ? post.images!.length > 1
+                    ? Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 40.w,
+                              vertical: 5.h,
+                            ),
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                aspectRatio: 16 / 20,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                enableInfiniteScroll: false,
+                                autoPlay: false,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    currentIndex = index;
+                                  });
+                                },
+                              ),
+                              items: post.images!.map((image) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      ImageViewScreen(
+                                        image: image,
+                                        isfile: false,
+                                      ),
+                                    );
+                                  },
+                                  onDoubleTap: () {
+                                    if (post.like!.contains(userId)) {
+                                      post.like?.remove(userId);
+                                    } else {
+                                      post.like?.add(userId);
+                                    }
+                                    feedController.isLiked.value = !isLiked;
+                                    feedController.likePost(post.id, userId);
+                                  },
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.scaleDown,
+                                    imageUrl: image,
+                                    placeholder: (context, url) => Image(
+                                      image: AssetImage(
+                                          IconConstant.placeHolderImage),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    errorWidget: (context, url, error) => Image(
+                                      image: AssetImage(
+                                          IconConstant.placeHolderImage),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
-                        );
-                      },
-                      onDoubleTap: () {
-                        if (post.like!.contains(userId)) {
-                          post.like?.remove(userId);
-                        } else {
-                          post.like?.add(userId);
-                        }
-                        feedController.isLiked.value = !isLiked;
-                        feedController.likePost(post.id, userId);
-                      },
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: post.image!,
-                        placeholder: (context, url) => Image(
-                          image: AssetImage(IconConstant.placeHolderImage),
-                          fit: BoxFit.cover,
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: post.images!.map((image) {
+                                int index = post.images!.indexOf(image);
+                                return Container(
+                                  width: 8,
+                                  height: 8,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: currentIndex == index
+                                        ? Colors.black
+                                        : const Color.fromRGBO(
+                                            206, 206, 206, 1),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 40.w,
+                          vertical: 5.h,
                         ),
-                        errorWidget: (context, url, error) => Image(
-                          image: AssetImage(IconConstant.placeHolderImage),
-                          fit: BoxFit.cover,
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              ImageViewScreen(
+                                image: post
+                                    .images!.first, // Assuming only one image
+                                isfile: false,
+                              ),
+                            );
+                          },
+                          onDoubleTap: () {
+                            if (post.like!.contains(userId)) {
+                              post.like?.remove(userId);
+                            } else {
+                              post.like?.add(userId);
+                            }
+                            feedController.isLiked.value = !isLiked;
+                            feedController.likePost(post.id, userId);
+                          },
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: post.images!.first,
+                            placeholder: (context, url) => Image(
+                              image: AssetImage(IconConstant.placeHolderImage),
+                              fit: BoxFit.cover,
+                            ),
+                            errorWidget: (context, url, error) => Image(
+                              image: AssetImage(IconConstant.placeHolderImage),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
-                      // Image.network(
-                      //   post.image!,
-                      //   fit: BoxFit.cover,
-                      // ),
-                    ),
-                  )
+                      )
                 : const SizedBox.shrink(),
             Divider(
               indent: 20.w,

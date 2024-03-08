@@ -11,7 +11,7 @@ class PostModel {
   @HiveField(1)
   String? description;
   @HiveField(2)
-  String? image;
+  List<String>? images;
   @HiveField(3)
   String? timestamp;
   @HiveField(4)
@@ -20,7 +20,7 @@ class PostModel {
   PostModel({
     required this.id,
     this.description,
-    this.image,
+    this.images,
     this.timestamp,
     this.like,
   });

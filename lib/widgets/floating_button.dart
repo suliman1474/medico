@@ -273,7 +273,7 @@ class CustomFloatingButton extends StatelessWidget {
                     FilePickerResult? result =
                         await FilePicker.platform.pickFiles(
                       allowMultiple: true,
-                      type: FileType.image,
+                      type: FileType.any,
                     );
 
                     if (result != null) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medico/models/post_model.dart';
@@ -24,10 +25,11 @@ class FeedController extends GetxController {
   RxBool isLiked = false.obs;
   RxBool loading = false.obs;
   RxList<dynamic> combinedList = <dynamic>[].obs;
-  void createPost(String? description, XFile? image) async {
+
+  void createPost(String? description, List<XFile>? images) async {
     try {
       Indicator.showLoading();
-      await firebaseService.createPost(description, image);
+      await firebaseService.createPost(description, images);
       Indicator.closeLoading();
       Get.off(MainPage(), preventDuplicates: false);
     } catch (e) {
@@ -139,6 +141,7 @@ class FeedController extends GetxController {
     for (int index = 0; index < combinedData.length; index++) {
       if (combinedData[index]['type'] == 'post') {
         PostModel post = PostModel.fromJson(combinedData[index]);
+
         postModels.add(post);
       } else if (combinedData[index]['type'] == 'poll') {
         PollModel poll = PollModel.fromJson(combinedData[index]);
@@ -149,11 +152,6 @@ class FeedController extends GetxController {
     update();
     loading.value = false;
     RxStatus.success();
-    // Indicator.closeLoading();
-    ;
-    ;
-
-    // return combinedData;
   }
 
   Future<void> likePost(String postId, String userId) async {
@@ -345,6 +343,45 @@ class FeedController extends GetxController {
       Get.snackbar(
         'Error',
         'An error occurred while deleting the post',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> downloadImage(String imagePath) async {
+    try {
+      Indicator.showLoading();
+      FileDownloader.downloadFile(
+        url: imagePath,
+        onDownloadCompleted: (path) {
+          Indicator.closeLoading();
+          // Get.off(MainPage(), preventDuplicates: false);
+          Get.snackbar(
+            'Success',
+            'Image saved to gallery successfully',
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        },
+        onDownloadError: (errorMessage) {
+          Indicator.closeLoading();
+          Get.snackbar(
+            'Error',
+            'An error occurred while downloading the image',
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        },
+      );
+    } catch (e) {
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        'An error occurred while downloading the image',
         duration: const Duration(seconds: 3),
         backgroundColor: Colors.red,
         colorText: Colors.white,
