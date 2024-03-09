@@ -25,8 +25,15 @@ class CustomFileTile extends StatelessWidget {
     this.downloadable = false,
   });
   DbController dbController = Get.find();
+
   @override
   Widget build(BuildContext context) {
+    final bool video = itemName.toLowerCase().endsWith('mp4') ||
+        itemName.toLowerCase().endsWith('mov') ||
+        itemName.toLowerCase().endsWith('mkv') ||
+        itemName.toLowerCase().endsWith('avi');
+    print('itemname: $itemName');
+    print('video: $video');
     return downloadable!
         ? Stack(
             alignment: Alignment.centerRight,
@@ -50,21 +57,40 @@ class CustomFileTile extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Container(
-                            margin: EdgeInsets.all(10).w,
-                            width: 45.w,
-                            height: 55.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15).r,
-                              color: color2,
-                            ),
-                            child: CustomImageView(
-                              svgPath: IconConstant.icFile,
-                              height: 30.h,
-                              width: 30.w,
-                              fit: BoxFit.scaleDown,
-                            ),
-                          ),
+                          child: video
+                              ? Container(
+                                  // margin: EdgeInsets.all(10.r),
+                                  width: 50.w,
+                                  height: 50.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: color2,
+                                  ),
+                                  child: Center(
+                                    child: CustomImageView(
+                                      svgPath: IconConstant.icPlay,
+                                      height: 25.h,
+                                      width: 25.w,
+                                      fit: BoxFit.scaleDown,
+                                      margin: EdgeInsets.only(left: 3.w),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  margin: EdgeInsets.all(10).w,
+                                  width: 45.w,
+                                  height: 55.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15).r,
+                                    color: color2,
+                                  ),
+                                  child: CustomImageView(
+                                    svgPath: IconConstant.icFile,
+                                    height: 30.h,
+                                    width: 30.w,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
                         ),
                         Expanded(
                           flex: 7,
@@ -153,21 +179,40 @@ class CustomFileTile extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Container(
-                    margin: EdgeInsets.all(10).w,
-                    width: 45.w,
-                    height: 55.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15).r,
-                      color: color2,
-                    ),
-                    child: CustomImageView(
-                      svgPath: IconConstant.icFile,
-                      height: 30.h,
-                      width: 30.w,
-                      fit: BoxFit.scaleDown,
-                    ),
-                  ),
+                  child: video
+                      ? Container(
+                          // margin: EdgeInsets.all(10.r),
+                          width: 50.w,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color2,
+                          ),
+                          child: Center(
+                            child: CustomImageView(
+                              svgPath: IconConstant.icPlay,
+                              height: 25.h,
+                              width: 25.w,
+                              fit: BoxFit.scaleDown,
+                              margin: EdgeInsets.only(left: 3.w),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          margin: EdgeInsets.all(10).w,
+                          width: 45.w,
+                          height: 55.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15).r,
+                            color: color2,
+                          ),
+                          child: CustomImageView(
+                            svgPath: IconConstant.icFile,
+                            height: 30.h,
+                            width: 30.w,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
                 ),
                 Expanded(
                   flex: 7,

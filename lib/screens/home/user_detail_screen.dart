@@ -5,6 +5,7 @@ import 'package:medico/core/colors.dart';
 import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/user_model.dart';
+import 'package:medico/widgets/custom_elevated_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
 class UserDetailScreen extends StatelessWidget {
@@ -27,6 +28,33 @@ class UserDetailScreen extends StatelessWidget {
               color: color1,
             ),
           ),
+          actions: [
+            CustomElevatedButton(
+              onTap: () {},
+              text: 'Block',
+              buttonTextStyle: customTexttheme.bodyLarge!.copyWith(
+                color: white,
+              ),
+              buttonStyle: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                side: BorderSide.none,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10).r,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                    spreadRadius: 4,
+                  ),
+                ],
+              ),
+              height: 30.h,
+              width: 70.w,
+              margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+            ),
+          ],
         ),
         body: Container(
           height: 250.h,

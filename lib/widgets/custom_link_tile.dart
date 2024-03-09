@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -36,7 +34,7 @@ class CustomLinkTile extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Container(
                 margin: EdgeInsets.all(10).w,
                 width: 45.w,
@@ -46,15 +44,15 @@ class CustomLinkTile extends StatelessWidget {
                   color: color2,
                 ),
                 child: CustomImageView(
-                  svgPath: IconConstant.icApple,
-                  height: 30.h,
-                  width: 30.w,
+                  svgPath: IconConstant.icLink,
+                  // height: 45.h,
+                  // width: 45.w,
                   fit: BoxFit.scaleDown,
                 ),
               ),
             ),
             Expanded(
-              flex: 7,
+              flex: 4,
               child: Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
