@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -408,8 +407,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
                   )
                 : null,
             body: RefreshIndicator(
+              color: color2,
               onRefresh: () async {
-                print('refresh called');
                 if (await InternetConnectionChecker().hasConnection) {
                   filesController.getFolders();
                 } else {
@@ -759,7 +758,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                         }
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: EdgeInsets.only(
+                                            top: 5.h, bottom: 5.h),
                                         // child: Container(
                                         //   height:
                                         //       300, // Set a fixed height or adjust it according to your layout
@@ -808,7 +808,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                   }
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding:
+                                      EdgeInsets.only(top: 5.h, bottom: 5.h),
                                   // child: Container(
                                   //   height:
                                   //       300, // Set a fixed height or adjust it according to your layout
@@ -1093,8 +1094,11 @@ class _FoldersScreenState extends State<FoldersScreen> {
               ),
             ),
             floatingActionButton: dbController.userRole.value == UserRole.ADMIN
-                ? CustomFloatingButton(
-                    parentId: parentId,
+                ? Align(
+                    alignment: Alignment(-0.8, 1.0),
+                    child: CustomFloatingButton(
+                      parentId: parentId,
+                    ),
                   )
                 : null,
           ),

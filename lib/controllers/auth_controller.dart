@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -12,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/models/about_model.dart';
+import 'package:medico/screens/home/blocked_user_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../models/user_model.dart';
@@ -45,18 +47,19 @@ class AuthenticationController extends GetxController {
   ScreenController screenController = Get.find();
   void isLoggedIn() async {
     if (_auth.currentUser != null) {
-      // user.value = _auth.currentUser;
-      // userProfile.value = await firebaseService.getProfile(user.value!.uid);
-      await _firebaseMessaging.requestPermission();
-      // Get FCM token
-      String? fcmToken = await _firebaseMessaging.getToken();
-
-      if (_auth.currentUser != null && fcmToken != null) {
-        ;
-        await firebaseService.updateFCMToken(_auth.currentUser!.uid, fcmToken);
+      user.value = _auth.currentUser;
+      userProfile.value = await firebaseService.getProfile(user.value!.uid);
+      if (userProfile.value!.blocked == true) {
+        Get.to(() => const BlockedUserScreen());
+      } else {
+        await _firebaseMessaging.requestPermission();
+        String? fcmToken = await _firebaseMessaging.getToken();
+        if (fcmToken != null) {
+          await firebaseService.updateFCMToken(
+              _auth.currentUser!.uid, fcmToken);
+        }
+        Get.to(() => const MainPage());
       }
-      ;
-      Get.to(() => const MainPage());
     } else {
       Get.toNamed('/login-screen');
     }
@@ -119,10 +122,13 @@ class AuthenticationController extends GetxController {
 
       await fetchUserProfile();
       await dbController.storeUser(userProfile.value!);
-
-      Indicator.closeLoading();
-
-      Get.offAndToNamed('/home');
+      if (userProfile.value!.blocked == true) {
+        Indicator.closeLoading();
+        Get.to(() => const BlockedUserScreen());
+      } else {
+        Indicator.closeLoading();
+        Get.offAndToNamed('/home');
+      }
     } on FirebaseAuthException catch (e) {
       Indicator.closeLoading();
 
@@ -325,6 +331,7 @@ class AuthenticationController extends GetxController {
             discipline: discipline.text,
             email: email.text,
             semester: semester.text,
+            blocked: false,
           ).toJson());
     }
   }
@@ -371,6 +378,60 @@ class AuthenticationController extends GetxController {
     } catch (e) {
       // Handle errors if necessary
       print('Error fetching about info: $e');
+    }
+  }
+
+  Future<void> blockUser(String id) async {
+    try {
+      Indicator.showLoading();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id)
+          .update({'blocked': true});
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Success',
+        'This user has been blocked.',
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        '$e',
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> unblockUser(String id) async {
+    try {
+      Indicator.showLoading();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id)
+          .update({'blocked': false});
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Success',
+        'This user has been unblocked.',
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        '$e',
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

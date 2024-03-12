@@ -27,13 +27,14 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       role: fields[8] as String,
       semester: fields[6] as String,
       token: fields[9] as String?,
+      blocked: fields[10] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(8)
       ..write(obj.role)
       ..writeByte(9)
-      ..write(obj.token);
+      ..write(obj.token)
+      ..writeByte(10)
+      ..write(obj.blocked);
   }
 
   @override
@@ -82,6 +85,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       role: json['role'] as String? ?? 'user',
       semester: json['semester'] as String,
       token: json['token'] as String?,
+      blocked: json['blocked'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -95,4 +99,5 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'contact': instance.contact,
       'role': instance.role,
       'token': instance.token,
+      'blocked': instance.blocked,
     };

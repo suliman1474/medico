@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +128,7 @@ class CustomFloatingButton extends StatelessWidget {
         builder: (context) {
           return Container(
             margin: EdgeInsets.symmetric(vertical: 180.h, horizontal: 50.w),
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
