@@ -32,8 +32,6 @@ class CustomFileTile extends StatelessWidget {
         itemName.toLowerCase().endsWith('mov') ||
         itemName.toLowerCase().endsWith('mkv') ||
         itemName.toLowerCase().endsWith('avi');
-    print('itemname: $itemName');
-    print('video: $video');
     return downloadable!
         ? Stack(
             alignment: Alignment.centerRight,

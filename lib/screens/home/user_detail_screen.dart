@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medico/controllers/auth_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/icons.dart';
 import 'package:medico/core/text_theme.dart';
@@ -8,9 +10,23 @@ import 'package:medico/models/user_model.dart';
 import 'package:medico/widgets/custom_elevated_button.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 
-class UserDetailScreen extends StatelessWidget {
+class UserDetailScreen extends StatefulWidget {
   UserModel user;
   UserDetailScreen({super.key, required this.user});
+
+  @override
+  State<UserDetailScreen> createState() => _UserDetailScreenState();
+}
+
+class _UserDetailScreenState extends State<UserDetailScreen> {
+  late bool blocked;
+  AuthenticationController authController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    blocked = widget.user.blocked;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +46,15 @@ class UserDetailScreen extends StatelessWidget {
           ),
           actions: [
             CustomElevatedButton(
-              onTap: () {},
-              text: 'Block',
+              onTap: () {
+                !blocked
+                    ? authController.blockUser(widget.user.id)
+                    : authController.unblockUser(widget.user.id);
+                setState(() {
+                  blocked = !blocked;
+                });
+              },
+              text: !blocked ? 'Block' : 'Unblock',
               buttonTextStyle: customTexttheme.bodyLarge!.copyWith(
                 color: white,
               ),
@@ -41,17 +64,9 @@ class UserDetailScreen extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10).r,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                    spreadRadius: 4,
-                  ),
-                ],
               ),
-              height: 30.h,
-              width: 70.w,
+              height: 40.h,
+              width: 80.w,
               margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
             ),
           ],
@@ -79,17 +94,29 @@ class UserDetailScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(33.r),
-                      child: user.image!.isNotEmpty
-                          ? Image.network(
-                              user.image!,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              IconConstant.icTopbarProfile,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
+                        borderRadius: BorderRadius.circular(33.r),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: widget.user.image!,
+                          placeholder: (context, url) => Image(
+                            image: AssetImage(IconConstant.icTopbarProfile),
+                            fit: BoxFit.cover,
+                          ),
+                          errorWidget: (context, url, error) => Image(
+                            image: AssetImage(IconConstant.icTopbarProfile),
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                        // widget.user.image!.isNotEmpty
+                        //     ? Image.network(
+                        //         widget.user.image!,
+                        //         fit: BoxFit.cover,
+                        //       )
+                        //     : Image.asset(
+                        //         IconConstant.icTopbarProfile,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        ),
                   ),
                   Expanded(
                     flex: 3,
@@ -99,13 +126,13 @@ class UserDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user.name,
+                            widget.user.name,
                             style: customTexttheme.titleLarge!.copyWith(
                               color: textColor,
                             ),
                           ),
                           Text(
-                            user.email,
+                            widget.user.email,
                             style: customTexttheme.bodySmall,
                           ),
                         ],
@@ -129,7 +156,7 @@ class UserDetailScreen extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        user.college,
+                        widget.user.college,
                         style: customTexttheme.bodySmall,
                       ),
                     ),
@@ -151,7 +178,7 @@ class UserDetailScreen extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Text(
-                        user.discipline,
+                        widget.user.discipline,
                         style: customTexttheme.bodySmall,
                       ),
                     ),
@@ -171,7 +198,7 @@ class UserDetailScreen extends StatelessWidget {
                   Expanded(
                     flex: 6,
                     child: Text(
-                      user.contact,
+                      widget.user.contact,
                       style: customTexttheme.bodySmall,
                     ),
                   ),
