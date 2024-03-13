@@ -61,6 +61,7 @@ dependencies:
   url_launcher: ^6.2.5
   flutter_launcher_icons: ^0.13.1
   flutter_file_downloader: ^1.2.1
+  flutter_native_splash: ^2.3.10
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +76,19 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icon_new.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
+flutter_native_splash:
 
+  color: "#ffffff"
+  color_dark: '#ffffff'
+  image: assets/icon_new.png
+  #  background_image: assets/logo8.jpg
+
+  android_12:
+    color: "#ffffff"
+    color_dark: '#121212'
+    #   color: "#0E4A6A"
+    #icon_background_color: "#164A66"
+    image: assets/icon_new.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
