@@ -952,7 +952,6 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
                         //links for user online
 
-                        Text('links'),
                         if (dbController.userRole.value == UserRole.ADMIN)
                           ListView.builder(
                             shrinkWrap: true,
@@ -960,39 +959,10 @@ class _FoldersScreenState extends State<FoldersScreen> {
                             itemCount: rootFolder?.links?.length ?? 0,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                // onTap: () async {
-                                //   if (dbController.userRole.value ==
-                                //       UserRole.ADMIN) {
-                                //     var response = await http.get(Uri.parse(
-                                //         rootFolder!.files![index].downloadUrl));
-                                //
-                                //     // Get the temporary directory
-                                //     var tempDir = await getTemporaryDirectory();
-                                //
-                                //     // Save the file to the temporary directory
-                                //     File file =
-                                //     File('${tempDir.path}/downloaded_file');
-                                //     await file.writeAsBytes(response.bodyBytes);
-                                //
-                                //     // Open the downloaded file using OpenFile plugin
-                                //     OpenFile.open(file.path);
-                                //   } else {
-                                //     // Use http package to download the file
-                                //     ;
-                                //     ;
-                                //     // Get the temporary directory
-                                //     var appDocDir =
-                                //     await getApplicationDocumentsDirectory();
-                                //
-                                //     // Save the file to the temporary directory
-                                //     File file = File(
-                                //         '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
-                                //     //    await file.writeAsBytes(response.bodyBytes);
-                                //
-                                //     // Open the downloaded file using OpenFile plugin
-                                //     OpenFile.open(file.path);
-                                //   }
-                                // },
+                                onTap: () {
+                                  filesController.goToYoutube(
+                                      rootFolder!.links![index].url);
+                                },
                                 child: Padding(
                                   padding:
                                       EdgeInsets.only(top: 5.h, bottom: 5.h),

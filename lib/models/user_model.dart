@@ -27,7 +27,7 @@ class UserModel {
   @HiveField(9)
   String? token;
   @HiveField(10)
-  bool blocked;
+  final bool blocked;
 
   UserModel({
     required this.id,
@@ -40,8 +40,8 @@ class UserModel {
     this.role = 'user',
     required this.semester,
     this.token,
-    this.blocked = false,
-  });
+    required bool? blocked,
+  }) : blocked = blocked ?? false;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

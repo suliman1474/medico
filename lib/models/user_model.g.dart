@@ -27,7 +27,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       role: fields[8] as String,
       semester: fields[6] as String,
       token: fields[9] as String?,
-      blocked: fields[10] as bool,
+      blocked: fields[10] as bool?,
     );
   }
 
@@ -85,7 +85,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       role: json['role'] as String? ?? 'user',
       semester: json['semester'] as String,
       token: json['token'] as String?,
-      blocked: json['blocked'] as bool? ?? false,
+      blocked: json['blocked'] as bool?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
