@@ -10,8 +10,8 @@ class FirebaseNotifications {
   final DbController dbController = DbController();
 
   Future<void> initNotifications() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    print('fcmtoken: $fcmToken');
+    // String? fcmToken = await FirebaseMessaging.instance.getToken();
+    // print('fcmtoken: $fcmToken');
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
