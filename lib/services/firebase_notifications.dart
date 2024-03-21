@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medico/constants/user_role.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/models/notification_model.dart';
@@ -10,8 +11,8 @@ class FirebaseNotifications {
   final DbController dbController = DbController();
 
   Future<void> initNotifications() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    print('fcmtoken: $fcmToken');
+    // String? fcmToken = await FirebaseMessaging.instance.getToken();
+    // print('fcmtoken: $fcmToken');
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -23,10 +24,14 @@ class FirebaseNotifications {
       (message) async {},
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      onHandleMessage(message);
+      dbController.userRole.value == UserRole.USER
+          ? onHandleMessage(message)
+          : null;
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      saveMessage(message);
+      dbController.userRole.value == UserRole.USER
+          ? saveMessage(message)
+          : null;
     });
   }
 
@@ -70,7 +75,7 @@ class FirebaseNotifications {
       onTap: (snack) {
         Get.to(NotificationsScreen());
       },
-      duration: Duration(seconds: 10),
+      duration: Duration(seconds: 2),
       colorText: Colors.black,
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.white,

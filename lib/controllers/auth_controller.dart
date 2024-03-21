@@ -281,18 +281,13 @@ class AuthenticationController extends GetxController {
         if (doc.exists) {
           Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
 
-          // Check if the 'role' field is not equal to 'admin'
-          if (userData['role'] != 'admin') {
-            // If the document exists, update the fcmToken field
-            await _firebaseMessaging.requestPermission();
-            String? fcmToken = await FirebaseMessaging.instance.getToken();
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .update({'fcmToken': fcmToken});
-          } else {
-            ;
-          }
+          // If the document exists, update the fcmToken field
+          await _firebaseMessaging.requestPermission();
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .update({'fcmToken': fcmToken});
 
           // Fetch the updated document
           final updatedDoc = await FirebaseFirestore.instance
