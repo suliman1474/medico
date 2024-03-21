@@ -701,6 +701,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       false
                                   ? GestureDetector(
                                       onTap: () async {
+                                        print('upfatable download click');
                                         if (dbController.userRole.value ==
                                             UserRole.ADMIN) {
                                           // Use http package to download the file
@@ -722,13 +723,19 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                           OpenFile.open(file.path);
                                         } else {
                                           //download file
+
                                           Get.dialog<bool>(
                                             AlertDialog(
-                                              title:
-                                                  Text('Download Confirmation'),
+                                              title: Text(
+                                                  'Download Confirmation',
+                                                  style: TextStyle(
+                                                      color: Colors.white)),
                                               backgroundColor: color1,
                                               content: Text(
-                                                  'Do you want to download this file?'),
+                                                'Do you want to download this file?',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
                                               actions: [
                                                 ElevatedButton(
                                                   onPressed: () {
@@ -769,6 +776,49 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                         child: CustomFileTile(
                                           itemName:
                                               rootFolder!.files![index].name,
+                                          downloadable: true,
+                                          onDownload: () async {
+                                            print('on downlaod clicked');
+                                            Get.dialog<bool>(
+                                              AlertDialog(
+                                                title: Text(
+                                                  'Download Confirmation',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                backgroundColor: color1,
+                                                content: Text(
+                                                  'Do you want to download this file?',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      filesController
+                                                          .downloadSingleFile(
+                                                              rootFolder!.id,
+                                                              rootFolder!.path,
+                                                              rootFolder!
+                                                                  .files![index]
+                                                                  .name,
+                                                              rootFolder!
+                                                                  .files![index]
+                                                                  .id);
+                                                      // Yes button
+                                                    },
+                                                    child: Text('Yes'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.back(); // No button
+                                                    },
+                                                    child: Text('No'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     )
