@@ -944,8 +944,10 @@ class FilesController extends GetxController {
   Future<void> downloadSingleFile(String folderId, String folderPath,
       String fileName, String fileId) async {
     try {
+      downloadProgress.value = 0.0;
+      filesDownloaded.value = 0;
+      totalFiles.value = 0;
       showDownloadingProgressDialog();
-      ;
 
       Reference storageRef =
           FirebaseStorage.instance.ref().child('$folderPath/$fileName');
@@ -963,7 +965,6 @@ class FilesController extends GetxController {
         ;
         try {
           parentDirectory.createSync(recursive: true);
-          ;
         } catch (e) {
           ;
           // Handle the error (print, log, or throw)
@@ -1224,6 +1225,9 @@ class FilesController extends GetxController {
 
   Future<void> findFilesToDownload(String folderId) async {
     try {
+      downloadProgress.value = 0.0;
+      filesDownloaded.value = 0;
+      totalFiles.value = 0;
       showDownloadingProgressDialog();
 
       FolderModel onlineFolder = folders.value.firstWhere(

@@ -15,6 +15,7 @@ class CustomFileTile extends StatelessWidget {
   final String itemName;
   final VoidCallback? onRename;
   final VoidCallback? onDelete;
+  final VoidCallback? onDownload;
   final bool? downloadable;
 
   CustomFileTile({
@@ -22,6 +23,7 @@ class CustomFileTile extends StatelessWidget {
     required this.itemName,
     this.onRename,
     this.onDelete,
+    this.onDownload,
     this.downloadable = false,
   });
   DbController dbController = Get.find();
@@ -154,7 +156,7 @@ class CustomFileTile extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10).r,
                   ),
-                  onPressed: () {},
+                  onPressed: onDownload,
                   child: Text(
                     'Download',
                     style: customTexttheme.bodyLarge!.copyWith(

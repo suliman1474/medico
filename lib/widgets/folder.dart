@@ -146,10 +146,37 @@ class _FolderState extends State<Folder> {
                               dbController.userRole.value == UserRole.USER,
                           child: GestureDetector(
                             onTap: () {
-                              // filesController.downloadFilesFromFolder(
-                              //     folder!.id, folder?.path);
-                              ;
-                              filesController.findFilesToDownload(folder!.id);
+                              print('should download the uploadable files');
+                              Get.dialog<bool>(
+                                AlertDialog(
+                                  title: Text('Download Confirmation',
+                                      style: TextStyle(color: Colors.white)),
+                                  backgroundColor: color1,
+                                  content: Text(
+                                    'Do you want to update this folder?',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        print(
+                                            'do you want to update this folder');
+                                        filesController
+                                            .findFilesToDownload(folder!.id);
+                                        // Yes button
+                                      },
+                                      child: Text('Yes'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.back(); // No button
+                                      },
+                                      child: Text('No'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              // filesController.findFilesToDownload(folder!.id);
                             },
                             child: CustomImageView(
                               svgPath: IconConstant.icDownload,
