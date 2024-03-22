@@ -73,7 +73,9 @@ class FirebaseNotifications {
       'Notification',
       '$title\n$body',
       onTap: (snack) {
-        Get.to(NotificationsScreen());
+        if (dbController.userRole.value == UserRole.USER) {
+          Get.to(NotificationsScreen());
+        }
       },
       duration: Duration(seconds: 2),
       colorText: Colors.black,

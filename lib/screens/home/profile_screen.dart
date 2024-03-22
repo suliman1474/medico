@@ -59,7 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   whatsapp() async {
-    var androidUrl = "whatsapp://send?phone=${info.whatsapp}&text=Hello";
+    var androidUrl =
+        "whatsapp://send?phone=${info.whatsapp}&text=Assalamualaikum, I Am here directly through Medico Slides App. Can you facilitate me, please!";
 
     try {
       await launchUrl(

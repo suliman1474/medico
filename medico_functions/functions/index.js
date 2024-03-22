@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const serviceAccount = require("./admin_key/medico-3e595-firebase-adminsdk-74iat-7360f37a42.json");
-// functions.config().firebase,
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://medico-3e595.firebaseio.com",
@@ -10,8 +9,11 @@ admin.initializeApp({
 
 exports.postTrigger = functions.firestore
     .document("posts/{postId}")
-    .onCreate((_, context) => {
+    .onCreate((snapshot, context) => {
       const postId = context.params.postId;
+      const post = snapshot.data();
+
+      const description = post.description || "A new post is available. Check it out now!";
 
       return admin
           .firestore()
@@ -31,7 +33,7 @@ exports.postTrigger = functions.firestore
               const payload = {
                 notification: {
                   title: "New Post!",
-                  body: "A new post is available. Check it out now!",
+                  body: description,
                 },
                 data: {
                   type: "post",
@@ -57,8 +59,11 @@ exports.postTrigger = functions.firestore
 
 exports.pollTrigger = functions.firestore
     .document("polls/{pollId}")
-    .onCreate((_, context) => {
+    .onCreate((snapshot, context) => {
       const pollId = context.params.pollId;
+      const poll = snapshot.data();
+
+      const description = poll.description || "A new poll is available. Vote now!";
 
       return admin
           .firestore()
@@ -78,7 +83,7 @@ exports.pollTrigger = functions.firestore
               const payload = {
                 notification: {
                   title: "New Poll!",
-                  body: "A new poll is available. Vote now!",
+                  body: description,
                 },
                 data: {
                   type: "poll",
