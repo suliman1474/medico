@@ -25,6 +25,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       files: (fields[5] as List?)?.cast<FileModel>(),
       links: (fields[6] as List?)?.cast<LinkModel>(),
       appearance: fields[7] as bool,
+      isLocked: fields[10] as dynamic,
       downloadUrl: fields[8] as String,
       parentId: fields[9] as String,
     );
@@ -33,7 +34,7 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
   @override
   void write(BinaryWriter writer, FolderModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class FolderModelAdapter extends TypeAdapter<FolderModel> {
       ..writeByte(8)
       ..write(obj.downloadUrl)
       ..writeByte(9)
-      ..write(obj.parentId);
+      ..write(obj.parentId)
+      ..writeByte(10)
+      ..write(obj.isLocked);
   }
 
   @override
@@ -88,6 +91,7 @@ FolderModel _$FolderModelFromJson(Map<String, dynamic> json) => FolderModel(
           ?.map((e) => LinkModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       appearance: json['appearance'] as bool? ?? true,
+      isLocked: json['isLocked'],
       downloadUrl: json['downloadUrl'] as String? ?? '',
       parentId: json['parentId'] as String? ?? '',
     );
@@ -104,4 +108,5 @@ Map<String, dynamic> _$FolderModelToJson(FolderModel instance) =>
       'appearance': instance.appearance,
       'downloadUrl': instance.downloadUrl,
       'parentId': instance.parentId,
+      'isLocked': instance.isLocked,
     };

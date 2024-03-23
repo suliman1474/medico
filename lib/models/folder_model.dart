@@ -36,7 +36,8 @@ class FolderModel {
   String downloadUrl;
   @HiveField(9)
   String parentId;
-
+  @HiveField(10)
+  bool isLocked;
   FolderModel({
     required this.id,
     required this.name,
@@ -46,9 +47,10 @@ class FolderModel {
     this.files,
     this.links,
     this.appearance = true,
+    isLocked,
     this.downloadUrl = '',
     this.parentId = '',
-  });
+  }) : isLocked = isLocked ?? false;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) {
     final List<dynamic>? subFolderList = json['subFolders'];
@@ -75,6 +77,7 @@ class FolderModel {
           ?.map((e) => LinkModel.fromJson(e as Map<String, dynamic>))
           ?.toList(),
       appearance: json['appearance'] as bool? ?? true,
+      isLocked: json['isLocked'] as bool? ?? false,
       parentId: json['parentId'] as String,
       downloadUrl: json['downloadUrl'] as String? ?? '',
     );
@@ -100,6 +103,7 @@ class FolderModel {
                   : null))
           : null,
       appearance: data['appearance'] ?? true,
+      isLocked: data['isLocked'] ?? false,
       downloadUrl: data['downloadUrl'] ?? '',
       parentId: data['parentId'] ?? '',
     );

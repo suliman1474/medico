@@ -15,6 +15,7 @@ import 'package:medico/widgets/floating_button.dart';
 import 'package:medico/widgets/folder.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../constants/user_role.dart';
 import '../../controllers/auth_controller.dart';
@@ -209,6 +210,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         );
       });
     }
+
     // checkNet();
     // listener = InternetConnectionChecker().onStatusChange.listen(
     //   (InternetConnectionStatus status) {
@@ -340,7 +342,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         // rootIndex = filesController.folders
         //     .indexWhere((fol) => fol.id == '9876543210');
       }
-
+      print('role: ${dbController.userRole.value}');
       return PopScope(
         canPop: false,
         onPopInvoked: (didPop) async {
@@ -515,16 +517,15 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                     var tempDir = await getTemporaryDirectory();
 
                                     // Save the file to the temporary directory
-                                    File file =
-                                        File('${tempDir.path}/downloaded_file');
+                                    File file = File(
+                                        '${tempDir.path}/${rootFolder!.files![index].name}');
                                     await file.writeAsBytes(response.bodyBytes);
 
                                     // Open the downloaded file using OpenFile plugin
                                     OpenFile.open(file.path);
                                   } else {
                                     // Use http package to download the file
-                                    ;
-                                    ;
+                                    print('open file for user');
                                     // Get the temporary directory
                                     var appDocDir =
                                         await getApplicationDocumentsDirectory();
@@ -533,7 +534,9 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                     File file = File(
                                         '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
                                     //    await file.writeAsBytes(response.bodyBytes);
-
+                                    // /data/user/0/com.example.medico/app_flutter/folders/Bs Nursing/Semester 1st/books//my_video_.mp4
+                                    print(
+                                        'file for user tot open exsit: ${File('${appDocDir.path}${filesController.folderPath.value}/${filez?.name}').existsSync()}');
                                     // Open the downloaded file using OpenFile plugin
                                     OpenFile.open(file.path);
                                   }
@@ -544,6 +547,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                   child: CustomFileTile(
                                     itemName:
                                         hiveRootFolder!.files![index].name,
+                                    isLocked: hiveRootFolder!.isLocked,
                                     downloadable: false,
                                     onDelete: () {
                                       Get.dialog<bool>(
@@ -591,6 +595,37 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                           ],
                                         ),
                                       );
+                                    },
+                                    onShare: () async {
+                                      Indicator.showLoading();
+                                      var appDocDir =
+                                          await getApplicationDocumentsDirectory();
+
+                                      // Create a file for the downloaded file
+                                      // File file = File(
+                                      String filePath =
+                                          '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}';
+                                      try {
+                                        print(
+                                            'file exist ${File(filePath).existsSync()}');
+                                        final result = await Share.shareXFiles(
+                                          [XFile(filePath)],
+                                        );
+                                        print('999afa95');
+
+                                        if (result.status ==
+                                            ShareResultStatus.success) {
+                                          print(
+                                              'Thank you for sharing the picture!');
+                                        } else {
+                                          print('failed');
+                                        }
+                                        Indicator.closeLoading();
+                                      } catch (error) {
+                                        Indicator.closeLoading();
+
+                                        print('Error sharing file: $error');
+                                      }
                                     },
                                   ),
                                 ),
@@ -776,6 +811,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                         child: CustomFileTile(
                                           itemName:
                                               rootFolder!.files![index].name,
+                                          isLocked: rootFolder!.isLocked,
                                           downloadable: true,
                                           onDownload: () async {
                                             print('on downlaod clicked');
@@ -846,16 +882,13 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                     var tempDir = await getTemporaryDirectory();
 
                                     // Save the file to the temporary directory
-                                    File file =
-                                        File('${tempDir.path}/downloaded_file');
+                                    File file = File(
+                                        '${tempDir.path}/${rootFolder!.files![index].name}');
                                     await file.writeAsBytes(response.bodyBytes);
 
                                     // Open the downloaded file using OpenFile plugin
                                     OpenFile.open(file.path);
-                                  } else {
-                                    //download file
-                                    ;
-                                  }
+                                  } else {}
                                 },
                                 child: Padding(
                                   padding:
@@ -868,6 +901,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
                                   child: CustomFileTile(
                                     itemName: rootFolder!.files![index].name,
+                                    isLocked: rootFolder!.isLocked,
+
                                     onDelete: () {
                                       Get.dialog<bool>(
                                         AlertDialog(
@@ -960,7 +995,55 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                         },
                                       );
                                     },
+                                    onShare: () async {
+                                      Indicator.showLoading();
+                                      var response = await http.get(Uri.parse(
+                                          rootFolder!
+                                              .files![index].downloadUrl));
 
+                                      // Get the temporary directory
+                                      var tempDir =
+                                          await getTemporaryDirectory();
+
+                                      // Save the file to the temporary directory
+                                      File file = File(
+                                          '${tempDir.path}/${rootFolder!.files![index].name}');
+                                      await file
+                                          .writeAsBytes(response.bodyBytes);
+
+                                      // Create a file for the downloaded file
+
+                                      try {
+                                        //s  final XFile file = XFile(filePath);
+
+                                        final result = await Share.shareXFiles(
+                                          [XFile(file.path)],
+                                        );
+                                        print('999afa95');
+
+                                        if (result.status ==
+                                            ShareResultStatus.success) {
+                                          print(
+                                              'Thank you for sharing the picture!');
+                                        } else {
+                                          print('failed');
+                                        }
+                                        // await Share.shareXFiles(
+                                        //   [file],
+                                        // );
+                                        Indicator.closeLoading();
+                                      } catch (error) {
+                                        print('Error sharing file: $error');
+                                        Indicator.closeLoading();
+                                        Get.snackbar(
+                                          'Error',
+                                          error.toString() ?? '',
+                                          duration: const Duration(seconds: 3),
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white,
+                                        );
+                                      }
+                                    },
                                     // onRename: () {
                                     //   print('on rename clicked');
                                     //   TextEditingController controller =

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medico/core/app_export.dart';
+import 'package:medico/screens/Authentication/reset_password.dart';
 import 'package:medico/widgets/auth_screen_button.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -227,7 +228,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(ResetPasswordScreen());
+                            },
                             style: ButtonStyle(
                               padding:
                                   MaterialStateProperty.all(EdgeInsets.zero),

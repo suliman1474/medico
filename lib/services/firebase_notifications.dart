@@ -20,9 +20,6 @@ class FirebaseNotifications {
       sound: true,
     );
 
-    FirebaseMessaging.onBackgroundMessage(
-      (message) async {},
-    );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       dbController.userRole.value == UserRole.USER
           ? onHandleMessage(message)

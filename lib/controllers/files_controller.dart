@@ -246,31 +246,33 @@ class FilesController extends GetxController {
             id: folderId,
             name: folderName,
             path:
-                '${folderPath.value}/${folderName.replaceAll(' ', '_')}/', // Update the path as needed
+                '${folderPath.value}/${folderName}/', // Update the path as needed
             downloadUrl:
                 '', // Initially set to null, will be updated after storage upload
             subFolders: [],
             parentId: parId != '' ? parId : '9876543210',
+            isLocked: false,
             files: []);
 
         // Save the new folder to Firebase
         await foldersCollection.doc(folderId).set(newFolder.toJson());
-
+        print(
+            'folder path while creating new folder: ${folderPath.value}/${folderName}/');
         // Create a folder in Firebase Storage with the same name as the Firestore folder
-        final Reference storageFolder = FirebaseStorage.instance
-            .ref()
-            .child('${folderPath.value}/${folderName.replaceAll(' ', '_')}/');
-        await storageFolder.putData(
-            Uint8List(0)); // Uploading an empty file to create the folder
+        // final Reference storageFolder = FirebaseStorage.instance
+        //     .ref()
+        //     .child('${folderPath.value}/$folderName/');
+        // await storageFolder.putData(
+        //     Uint8List(0)); // Uploading an empty file to create the folder
 
         // Get the download URL of the folder in Firebase Storage
-        final String downloadUrl = await storageFolder.getDownloadURL();
+        // final String downloadUrl = await storageFolder.getDownloadURL();
         if (parId.isNotEmpty || parId != '') {
           await foldersCollection.doc(parId).update({
             'subFolders': FieldValue.arrayUnion([folderId]),
           });
           await foldersCollection.doc(folderId).update({
-            'downloadUrl': downloadUrl,
+            //  'downloadUrl': downloadUrl,
             'parentId': parId,
           });
         } else {
@@ -278,13 +280,13 @@ class FilesController extends GetxController {
             'subFolders': FieldValue.arrayUnion([folderId]),
           });
           await foldersCollection.doc(folderId).update({
-            'downloadUrl': downloadUrl,
+            //   'downloadUrl': downloadUrl,
             'parentId': '9876543210',
           });
         }
         // // Update the downloadUrl field in Firestore
         await foldersCollection.doc(folderId).update({
-          'downloadUrl': downloadUrl,
+          //  'downloadUrl': downloadUrl,
           'parentId': parId,
         });
         FolderModel? folder = await fetchFolderFromFirebase(folderId);
@@ -331,7 +333,7 @@ class FilesController extends GetxController {
               '${folderPath.value}/$uniqueFolderName/', // Update the path as needed
           subFolders: [],
           parentId: parId != '' ? parId : '9876543210',
-
+          isLocked: false,
           files: [],
         );
 
@@ -340,9 +342,12 @@ class FilesController extends GetxController {
             .doc(folderId)
             .set(newFolder.toJson()); // Assuming toJson method in FolderModel
         // Create a folder in Firebase Storage with the same name as the Firestore folder
+        print(
+            'folder path while creating new folder: 344 ${folderPath.value}/${folderName}/');
+
         final Reference storageFolder = FirebaseStorage.instance
             .ref()
-            .child('${folderPath.value}/${folderName.replaceAll(' ', '_')}/');
+            .child('${folderPath.value}/${folderName}/');
         await storageFolder.putData(
             Uint8List(0)); // Uploading an empty file to create the folder
 
@@ -390,6 +395,37 @@ class FilesController extends GetxController {
       }
     }
     // Indicator.closeLoading();
+  }
+
+  Future<void> lockUnlockFolder(String folderId, bool isLocked) async {
+    try {
+      Indicator.showLoading();
+      print('isLocked: $isLocked');
+      final folderRef =
+          FirebaseFirestore.instance.collection('folders').doc(folderId);
+      print('folderId: ${folderId}');
+      // Update the document with the new isLocked value
+      await folderRef.update({'isLocked': isLocked});
+      // await folderRef.set({'isLocked': isLocked}, SetOptions(merge: true));
+      print('403');
+      int index = folders.indexWhere((p0) => p0.id == folderId);
+      folders[index].isLocked = isLocked;
+      folders.refresh();
+      print('406');
+      Indicator.closeLoading();
+    } catch (e) {
+      // Handle any errors
+      print('Error updating folder isLocked: $e');
+      Indicator.closeLoading();
+      Get.snackbar(
+        'Error',
+        e.toString() ?? '',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      throw e; // Throw the error for handling at the caller level if needed
+    }
   }
 
   Future<bool> isFolderNameExists(String folderName) async {
@@ -522,7 +558,7 @@ class FilesController extends GetxController {
             uploadProgress.value = progress * 100;
           },
           onDone: () {
-            // Reset progress when
+            // Reset progress whens
 
             uploadProgress.value = 0.0;
             Get.back();
@@ -854,24 +890,21 @@ class FilesController extends GetxController {
       if (await requestStoragePermission()) {
         showDownloadingProgressDialog();
         ;
+        print('folderPatth: $folderPath');
         Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
         ListResult items = await storageRef.listAll();
         Directory appDocDir = await getApplicationDocumentsDirectory();
-        //  Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-        // // Create a folder in the documents directory
-        // Directory folderDirectory =
-        //     Directory('${documentsDirectory.path}$folderPath');
-        // await folderDirectory.create(recursive: false);
-        //  var appDocDir = await getApplicationDocumentsDirectory();
+        print('downlaoding file');
         totalFiles.value = items.items.length;
+        print('items.items: ${items.items.length}');
         await Future.wait(
           items.items.map((item) async {
             if (item is Reference) {
+              print('item.name: ${item.name}}');
               if (item.name.contains('.')) {
                 //  File file = File('${folderDirectory.path}/${item.name}');
                 File file = File('${appDocDir.path}${folderPath}/${item.name}');
-                ;
+                print('file saved at path: ${file.path}');
 
                 Directory parentDirectory = file.parent;
 
@@ -913,24 +946,28 @@ class FilesController extends GetxController {
         // );
         if (folderDoc.exists) {
           FolderModel folder = FolderModel.fromFirestore(folderDoc);
+          print('downloaded folder.isLocked: ${folder.isLocked}');
           List<FileModel> files = await fetchFilesForFolder(folder.id);
           FolderModel updatedFolder = FolderModel(
-              id: folder.id,
-              name: folder.name,
-              actualSubfolders: [],
-              path: folder.path,
-              subFolders: folder.subFolders,
-              files: files,
-              downloadUrl: folder.downloadUrl,
-              parentId: folder.parentId,
-              appearance: folder.appearance // Set to an empty list
-              // Copy other properties as needed
-              );
+            id: folder.id,
+            name: folder.name,
+            actualSubfolders: [],
+            path: folder.path,
+            subFolders: folder.subFolders,
+            files: files,
+            downloadUrl: folder.downloadUrl,
+            parentId: folder.parentId,
+            appearance: folder.appearance,
+            isLocked: folder.isLocked,
+            // Set to an empty list
+            // Copy other properties as needed
+          );
 
           dbController.storeFolder(updatedFolder);
         }
       }
     } on FirebaseException catch (e) {
+      print('error: $e');
     } finally {
       downloadProgress.value = 0.0;
       filesDownloaded.value = 0;
@@ -1143,7 +1180,7 @@ class FilesController extends GetxController {
 
       // Create a file for the downloaded file
       File file = File('${appDocDir.path}$folderPath/$fileName');
-      ;
+
       Directory parentDirectory = file.parent;
 
       // Check if the parent directory exists
@@ -1152,7 +1189,6 @@ class FilesController extends GetxController {
         ;
         try {
           parentDirectory.createSync(recursive: true);
-          ;
         } catch (e) {
           ;
           // Handle the error (print, log, or throw)

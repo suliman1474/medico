@@ -62,6 +62,8 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_file_downloader: ^1.2.1
   flutter_native_splash: ^2.3.10
+  share_plus: ^8.0.2
+  flutter_windowmanager: ^0.2.0
 
 dev_dependencies:
   flutter_test:

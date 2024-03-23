@@ -42,15 +42,6 @@ class _FolderState extends State<Folder> {
     await dbController.loadUserRole();
   }
 
-  List<String> menuOptions = [
-    //   'Rename',
-    // 'Copy',
-    // 'Move',
-    'Delete',
-    // 'Sharing',
-    // 'Appearance',
-  ];
-
   late Widget newscreen;
   // bool visibility = widget.updatable;
   late String foldername;
@@ -58,6 +49,7 @@ class _FolderState extends State<Folder> {
   bool options = false;
   bool sharing = false;
   bool appearance = false;
+  late bool isLocked;
   FolderModel? folder;
   late UniqueKey key;
   @override
@@ -70,15 +62,32 @@ class _FolderState extends State<Folder> {
     key = widget.keyU;
     ifdownloaded = widget.ifdownloaded;
     foldername = folder!.name;
+    isLocked = folder!.isLocked;
     // ifdownloaded = widget.downloaded;
   }
 
   @override
   Widget build(BuildContext context) {
     FilesController filesController = Get.find();
-    return Obx(() {
-      ;
+    List<String> menuOptions = dbController.userRole.value == UserRole.ADMIN
+        ? [
+            //   'Rename',
+            // 'Copy',
+            'Lock',
+            'Delete',
+            // 'Sharing',
+            // 'Appearance',
+          ]
+        : [
+            //   'Rename',
+            // 'Copy',
+            // 'Move',
+            'Delete',
+            // 'Sharing',
+            // 'Appearance',
+          ];
 
+    return Obx(() {
       return dbController.userRole.value == UserRole.ADMIN || ifdownloaded
           ? Stack(
               key: key,
@@ -218,6 +227,7 @@ class _FolderState extends State<Folder> {
                               // case 'Move':
                               // Handle move actions
                               // break;
+
                               case 'Delete':
                                 //if addmin then delete folder from database
                                 if (dbController.userRole.value ==
@@ -228,19 +238,29 @@ class _FolderState extends State<Folder> {
                                 }
                                 // if user then delette folder from hive database
                                 else {
-                                  ;
                                   dbController.deleteFolderUser(folder!.id);
                                   break;
                                 }
 
                               // Handle delete action
                               // break;
-                              // case 'Sharing':
-                              //   // Handle delete action
-                              //   setState(() {
-                              //     sharing = !sharing;
-                              //   });
-                              // // break;
+                              case 'Lock':
+                                // Handle delete action
+                                print('lock triggered');
+                                isLocked = true;
+                                filesController.lockUnlockFolder(
+                                    folder!.id, isLocked);
+
+                                break;
+                              case 'Unlock':
+                                // Handle delete action
+                                isLocked = false;
+
+                                print('Ulock triggered');
+                                filesController.lockUnlockFolder(
+                                    folder!.id, isLocked);
+
+                                break;
                               // case 'Appearance':
                               // Handle delete action
                               // setState(() {
@@ -250,80 +270,172 @@ class _FolderState extends State<Folder> {
                             }
                           },
                           itemBuilder: (BuildContext context) {
-                            return {
-                              // 'Rename',
-                              // 'Copy',
-                              // 'Move',
-                              'Delete',
-                              // 'Sharing',
-                              // 'Appearance',
-                            }.map((String choice) {
-                              return PopupMenuItem<String>(
-                                height: 40.h,
-                                textStyle: customTexttheme.displaySmall,
-                                value: choice,
-                                child: choice == 'Sharing'
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            choice,
-                                            style: customTexttheme.displaySmall,
-                                          ),
-                                          Transform.scale(
-                                            scale: 0.6,
-                                            child: Switch(
-                                              value: sharing,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  sharing = value;
-                                                });
-                                              },
-                                              activeColor: color1,
-                                              inactiveTrackColor: Colors.grey,
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : choice == 'Appearance'
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                choice,
-                                                style: customTexttheme
-                                                    .displaySmall,
-                                              ),
-                                              Transform.scale(
-                                                scale: 0.6,
-                                                child: Switch(
-                                                  value: appearance,
-                                                  onChanged: (value) {
-                                                    // setState(() {
-                                                    //   appearance = value;
-                                                    // });
-                                                  },
-                                                  activeColor: color1,
-                                                  inactiveTrackColor:
-                                                      Colors.grey,
-                                                  materialTapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .shrinkWrap,
+                            return dbController.userRole.value == UserRole.USER
+                                ? {
+                                    // 'Rename',
+                                    // 'Copy',
+                                    // 'Move',
+                                    'Delete',
+                                    // 'Sharing',
+                                    // 'Appearance',
+                                  }.map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      height: 40.h,
+                                      textStyle: customTexttheme.displaySmall,
+                                      value: choice,
+                                      child: choice == 'Sharing'
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  choice,
+                                                  style: customTexttheme
+                                                      .displaySmall,
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            choice,
-                                            style: customTexttheme.displaySmall,
-                                          ),
-                              );
-                            }).toList();
+                                                Transform.scale(
+                                                  scale: 0.6,
+                                                  child: Switch(
+                                                    value: sharing,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        sharing = value;
+                                                      });
+                                                    },
+                                                    activeColor: color1,
+                                                    inactiveTrackColor:
+                                                        Colors.grey,
+                                                    materialTapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : choice == 'Appearance'
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      choice,
+                                                      style: customTexttheme
+                                                          .displaySmall,
+                                                    ),
+                                                    Transform.scale(
+                                                      scale: 0.6,
+                                                      child: Switch(
+                                                        value: appearance,
+                                                        onChanged: (value) {
+                                                          // setState(() {
+                                                          //   appearance = value;
+                                                          // });
+                                                        },
+                                                        activeColor: color1,
+                                                        inactiveTrackColor:
+                                                            Colors.grey,
+                                                        materialTapTargetSize:
+                                                            MaterialTapTargetSize
+                                                                .shrinkWrap,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  choice,
+                                                  style: customTexttheme
+                                                      .displaySmall,
+                                                ),
+                                    );
+                                  }).toList()
+                                : {
+                                    // 'Rename',
+                                    // 'Copy',
+                                    folder!.isLocked ? 'Unlock' : 'Lock',
+                                    'Delete',
+                                    // 'Sharing',
+                                    // 'Appearance',
+                                  }.map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      height: 40.h,
+                                      textStyle: customTexttheme.displaySmall,
+                                      value: choice,
+                                      child: choice == 'Sharing'
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  choice,
+                                                  style: customTexttheme
+                                                      .displaySmall,
+                                                ),
+                                                Transform.scale(
+                                                  scale: 0.6,
+                                                  child: Switch(
+                                                    value: isLocked,
+                                                    onChanged: (value) {
+                                                      print('change tto true');
+                                                      setState(() {
+                                                        isLocked = value;
+                                                      });
+                                                      // print(
+                                                      //     'isLocked before: ${isLocked.value}');
+                                                      //
+                                                      // isLocked.value = value;
+                                                      // print(
+                                                      //     'isLocked after: ${isLocked.value}');
+                                                    },
+                                                    activeColor: color1,
+                                                    inactiveTrackColor:
+                                                        Colors.grey,
+                                                    materialTapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : choice == 'Appearance'
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      choice,
+                                                      style: customTexttheme
+                                                          .displaySmall,
+                                                    ),
+                                                    Transform.scale(
+                                                      scale: 0.6,
+                                                      child: Switch(
+                                                        value: appearance,
+                                                        onChanged: (value) {
+                                                          // setState(() {
+                                                          //   appearance = value;
+                                                          // });
+                                                        },
+                                                        activeColor: color1,
+                                                        inactiveTrackColor:
+                                                            Colors.grey,
+                                                        materialTapTargetSize:
+                                                            MaterialTapTargetSize
+                                                                .shrinkWrap,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  choice,
+                                                  style: customTexttheme
+                                                      .displaySmall,
+                                                ),
+                                    );
+                                  }).toList();
                           },
                         ),
                       ),

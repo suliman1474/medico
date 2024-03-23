@@ -16,15 +16,19 @@ class CustomFileTile extends StatelessWidget {
   final VoidCallback? onRename;
   final VoidCallback? onDelete;
   final VoidCallback? onDownload;
+  final VoidCallback? onShare;
   final bool? downloadable;
+  final bool isLocked;
 
   CustomFileTile({
     super.key,
     required this.itemName,
     this.onRename,
+    this.onShare,
     this.onDelete,
     this.onDownload,
     this.downloadable = false,
+    required this.isLocked,
   });
   DbController dbController = Get.find();
 
@@ -34,6 +38,8 @@ class CustomFileTile extends StatelessWidget {
         itemName.toLowerCase().endsWith('mov') ||
         itemName.toLowerCase().endsWith('mkv') ||
         itemName.toLowerCase().endsWith('avi');
+    print('item name: ${itemName} downloadable: ${downloadable!}');
+    print('isLocked: ${isLocked}');
     return downloadable!
         ? Stack(
             alignment: Alignment.centerRight,
@@ -244,28 +250,52 @@ class CustomFileTile extends StatelessWidget {
                       onRename!();
                     } else if (value == 'Delete' && onDelete != null) {
                       onDelete!();
+                    } else if (value == 'Share' && onDelete != null) {
+                      print('on share');
+                      onShare!();
                     }
                   },
                   itemBuilder: (BuildContext context) {
                     return dbController.userRole.value == UserRole.ADMIN
-                        ? ['Delete', 'Rename'].map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child: Text(
-                                choice,
-                                style: customTexttheme.bodyLarge,
-                              ),
-                            );
-                          }).toList()
-                        : ['Delete'].map((String choice) {
-                            return PopupMenuItem<String>(
-                              value: choice,
-                              child: Text(
-                                choice,
-                                style: customTexttheme.bodyLarge,
-                              ),
-                            );
-                          }).toList();
+                        ? isLocked
+                            ? ['Delete', 'Rename'].map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(
+                                    choice,
+                                    style: customTexttheme.bodyLarge,
+                                  ),
+                                );
+                              }).toList()
+                            : ['Delete', 'Rename', 'Share']
+                                .map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(
+                                    choice,
+                                    style: customTexttheme.bodyLarge,
+                                  ),
+                                );
+                              }).toList()
+                        : isLocked
+                            ? ['Delete'].map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(
+                                    choice,
+                                    style: customTexttheme.bodyLarge,
+                                  ),
+                                );
+                              }).toList()
+                            : ['Delete', 'Share'].map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(
+                                    choice,
+                                    style: customTexttheme.bodyLarge,
+                                  ),
+                                );
+                              }).toList();
                   },
                 ),
               ],
