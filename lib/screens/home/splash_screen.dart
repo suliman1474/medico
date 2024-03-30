@@ -23,11 +23,9 @@ class _SplashScreenState extends State<SplashScreen>
     late bool blocked;
     bool loggedIn = await dbController.isLoggedIn();
     if (await InternetConnectionChecker().hasConnection) {
-      print('here');
       await authController.fetchUserProfile();
       blocked = await authController.userProfile.value?.blocked ?? false;
     } else {
-      print('or elsee');
       blocked = await dbController.isBlocked();
     }
 
