@@ -5,8 +5,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:medico/screens/Authentication/login_screen.dart';
 import 'package:medico/screens/Authentication/signup_screen.dart';
 import 'package:medico/screens/home/about_screen.dart';
-import 'package:medico/screens/home/folders_screen.dart';
-import 'package:medico/screens/home/home_screen.dart';
+import 'package:medico/screens/home/blocked_user_screen.dart';
 import 'package:medico/screens/home/main_page.dart';
 import 'package:medico/screens/home/news_feed_screen.dart';
 import 'package:medico/screens/home/profile_screen.dart';
@@ -58,6 +57,12 @@ Routes() => [
       GetPage(
         name: '/signup',
         page: () => const SignUpScreen(),
+        transition: Transition.leftToRightWithFade,
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+      GetPage(
+        name: '/blocked',
+        page: () => const BlockedUserScreen(),
         transition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 600),
       ),

@@ -58,10 +58,10 @@ class AuthenticationController extends GetxController {
           await firebaseService.updateFCMToken(
               _auth.currentUser!.uid, fcmToken);
         }
-        Get.to(() => const MainPage());
+        // Get.to(() => const MainPage());
       }
     } else {
-      Get.toNamed('/login-screen');
+      // Get.toNamed('/login-screen');
     }
   }
 

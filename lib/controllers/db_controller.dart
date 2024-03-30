@@ -54,6 +54,19 @@ class DbController extends GetxController {
     // fetchAdmin();
   }
 
+  Future<bool> isBlocked() async {
+    var userIdBox = await Hive.openBox<UserModel>(userBox);
+    var currentUser = userIdBox.get('current_user');
+
+    if (currentUser != null && currentUser.blocked == true) {
+      // User is blocked
+      return true;
+    } else {
+      // User is not blocked
+      return false;
+    }
+  }
+
   Future<void> assignHiveFolders() async {
     hiveFolders.clear();
 

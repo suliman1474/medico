@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:hive/hive.dart';
 import 'package:medico/controllers/db_controller.dart';
-import 'package:medico/controllers/files_controller.dart';
 import 'package:medico/core/app_export.dart';
-import 'package:medico/widgets/custom_image_view.dart';
-
-import '../../models/folder_model.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,16 +14,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   DbController dbController = Get.find();
-  // FilesController filesController = Get.find();
+  // AuthenticationController authController = Get.find();
   delayMethod() async {
     // ignore: use_build_context_synchronously
     bool loggedIn = await dbController.isLoggedIn();
+    bool blocked = await dbController.isBlocked();
     FlutterNativeSplash.remove();
 
     if (loggedIn) {
-      Get.offAllNamed(
-        '/home',
-      );
+      if (blocked == false) {
+        Get.offAllNamed(
+          '/home',
+        );
+      } else {
+        Get.offAndToNamed('/blocked');
+      }
     } else {
       Get.offAndToNamed('/login');
     }
