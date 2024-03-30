@@ -270,6 +270,7 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> fetchUserProfile() async {
+    print('======fecthing user profile: =====');
     final userId = _auth.currentUser?.uid;
     try {
       if (userId != null) {

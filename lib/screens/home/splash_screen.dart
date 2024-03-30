@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:medico/controllers/db_controller.dart';
 import 'package:medico/core/app_export.dart';
+
+import '../../controllers/auth_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,11 +17,20 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   DbController dbController = Get.find();
-  // AuthenticationController authController = Get.find();
+  AuthenticationController authController = Get.find();
   delayMethod() async {
     // ignore: use_build_context_synchronously
+    late bool blocked;
     bool loggedIn = await dbController.isLoggedIn();
-    bool blocked = await dbController.isBlocked();
+    if (await InternetConnectionChecker().hasConnection) {
+      print('here');
+      await authController.fetchUserProfile();
+      blocked = await authController.userProfile.value?.blocked ?? false;
+    } else {
+      print('or elsee');
+      blocked = await dbController.isBlocked();
+    }
+
     FlutterNativeSplash.remove();
 
     if (loggedIn) {
