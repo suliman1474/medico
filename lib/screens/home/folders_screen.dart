@@ -717,6 +717,34 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                   folder: folders![index],
                                   keyU: UniqueKey(),
                                   ifdownloaded: false,
+                                  onRename: () async {
+                                    TextEditingController controller =
+                                        TextEditingController();
+                                    String folderName = folders![index].name;
+                                    controller.text =
+                                        folderName; // Default value in dialog
+
+                                    await Get.defaultDialog<String>(
+                                      title: 'Rename Folder',
+                                      content: TextField(
+                                        controller: controller,
+                                        decoration: InputDecoration(
+                                          labelText: 'New Folder Name',
+                                        ),
+                                      ),
+                                      textConfirm: 'OK',
+                                      textCancel: 'Cancel',
+                                      confirmTextColor: Colors.white,
+                                      buttonColor: color1,
+                                      onConfirm: () async {
+                                        Get.back();
+                                        await filesController.renameFolderAdmin(
+                                          folders![index].id,
+                                          controller.text,
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               );
                             },

@@ -653,6 +653,37 @@ class FilesController extends GetxController {
     }
   }
 
+  Future<void> renameFolderAdmin(
+    String folderId,
+    String newName,
+  ) async {
+    try {
+      // Delete file from Firebase Storage
+      Indicator.showLoading();
+      CollectionReference<Map<String, dynamic>> foldersCollection =
+          FirebaseFirestore.instance.collection('folders');
+      FirebaseStorage storage = FirebaseStorage.instance;
+
+      try {
+        print('changing folder name: $folderId');
+        await FirebaseFirestore.instance
+            .collection('folders')
+            .doc(folderId)
+            .update({'name': newName});
+        int ind = folders.indexWhere((element) => element.id == folderId);
+        folders[ind].name = newName;
+      } catch (e) {
+        print('error: ' + e.toString());
+      }
+
+      await getFolders();
+    } catch (error) {
+      Indicator.closeLoading();
+    } finally {
+      Indicator.closeLoading();
+    }
+  }
+
   Future<void> deleteFileAdmin(
       String folderId, String fileId, String path) async {
     try {

@@ -1,12 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medico/controllers/auth_controller.dart';
 import 'package:medico/core/colors.dart';
 import 'package:medico/core/text_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class PrivacyPolicy extends StatelessWidget {
-  const PrivacyPolicy({super.key});
+class PrivacyPolicy extends StatefulWidget {
+  String gmail;
+  PrivacyPolicy({super.key, required this.gmail});
 
+  @override
+  State<PrivacyPolicy> createState() => _PrivacyPolicyState();
+}
+
+class _PrivacyPolicyState extends State<PrivacyPolicy> {
+  AuthenticationController authController = Get.find();
+  sendMail() async {
+    // Android and iOS
+    final uri = 'mailto:${widget.gmail}?subject=FromMedicoApp&body=Hello';
+    if (await canLaunchUrl(Uri.parse(uri))) {
+      await launchUrl(Uri.parse(uri));
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,8 +58,10 @@ class PrivacyPolicy extends StatelessWidget {
               color: secondryColor,
               borderRadius: BorderRadius.circular(20.r),
             ),
-            child: Text(
-              '''
+            child: Column(
+              children: [
+                Text(
+                  '''
 
 Medico Slides is committed to protecting the privacy of its users. This Privacy Policy outlines the types of personal information collected by the app, how it is used, and how it is protected.
         
@@ -63,9 +86,22 @@ Medico Slides does not sell, trade, or otherwise transfer personal information t
 This Privacy Policy may be updated from time to time to reflect changes in our practices or applicable laws. Users will be notified of any significant changes to the Privacy Policy within the app.
         
 - Contact Us:
-If you have any questions or concerns about this Privacy Policy or the app's data practices, please contact us at [ medicoslidesofficial@gmail.com ].''',
-              style: customTexttheme.bodyLarge,
-              textAlign: TextAlign.start,
+If you have any questions or concerns about this Privacy Policy or the app's data practices, please contact us at:''',
+                  style: customTexttheme.bodyLarge,
+                  textAlign: TextAlign.start,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    sendMail();
+                  },
+                  child: Text(
+                    widget.gmail,
+                    style: customTexttheme.bodyLarge
+                        ?.copyWith(color: Colors.blueAccent),
+                    textAlign: TextAlign.start,
+                  ),
+                )
+              ],
             ),
           ),
         ),

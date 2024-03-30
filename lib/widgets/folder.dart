@@ -22,12 +22,14 @@ class Folder extends StatefulWidget {
   UniqueKey keyU;
   bool ifdownloaded;
   bool updatable;
+  final VoidCallback? onRename;
 
   Folder(
       {super.key,
       required this.folder,
       required this.keyU,
       required this.ifdownloaded,
+      this.onRename,
       this.updatable = false});
 
   @override
@@ -71,7 +73,7 @@ class _FolderState extends State<Folder> {
     FilesController filesController = Get.find();
     List<String> menuOptions = dbController.userRole.value == UserRole.ADMIN
         ? [
-            //   'Rename',
+            'Rename',
             // 'Copy',
             'Lock',
             'Delete',
@@ -218,9 +220,9 @@ class _FolderState extends State<Folder> {
                           onSelected: (value) async {
                             // Handle the selected option
                             switch (value) {
-                              //  case 'Rename':
-                              // Handle rename action
-                              // break;
+                              case 'Rename':
+                                widget.onRename!();
+                                break;
                               // case 'Copy':
                               // // Handle copy action
                               // // break;
@@ -351,7 +353,7 @@ class _FolderState extends State<Folder> {
                                     );
                                   }).toList()
                                 : {
-                                    // 'Rename',
+                                    'Rename',
                                     // 'Copy',
                                     folder!.isLocked ? 'Unlock' : 'Lock',
                                     'Delete',

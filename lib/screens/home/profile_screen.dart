@@ -572,7 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Get.to(PrivacyPolicy());
+                                Get.to(PrivacyPolicy(gmail: info.gmail));
                               },
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.h),
