@@ -10,6 +10,7 @@ import 'package:medico/controllers/screen_controller.dart';
 import 'package:medico/core/app_export.dart';
 import 'package:medico/core/text_theme.dart';
 import 'package:medico/models/about_model.dart';
+import 'package:medico/screens/home/privacy_screen.dart';
 import 'package:medico/widgets/custom_image_view.dart';
 import 'package:medico/widgets/indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -570,6 +571,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.white70,
                             ),
                             GestureDetector(
+                              onTap: () {
+                                Get.to(PrivacyPolicy());
+                              },
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.h),
                                 child: Row(
