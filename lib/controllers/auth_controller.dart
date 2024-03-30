@@ -270,7 +270,7 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> fetchUserProfile() async {
-    print('======fecthing user profile: =====');
+    ;
     final userId = _auth.currentUser?.uid;
     try {
       if (userId != null) {
@@ -358,7 +358,7 @@ class AuthenticationController extends GetxController {
       Get.off(MainPage());
     } catch (e) {
       // Handle errors if necessary
-      print("error updating about info: $e");
+      ;
       Indicator.closeLoading();
     }
   }
@@ -368,12 +368,12 @@ class AuthenticationController extends GetxController {
       // Fetch the about info from Firebase
       AboutModel? info = await firebaseService.fetchAboutInfo();
       if (info != null) {
-        // print('about info fetched');
+        //  ;
         aboutInfo.value = info;
       }
     } catch (e) {
       // Handle errors if necessary
-      print('Error fetching about info: $e');
+      ;
     }
   }
 

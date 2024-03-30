@@ -57,7 +57,7 @@ class FirebaseService {
               _storage.ref().child('posts_images/$imageName');
           await storageRef.putFile(imageFile);
           String imageUrl = await storageRef.getDownloadURL();
-          print('image added to post.');
+          ;
           // Update the post document with the image URL
           await _firestore.collection('posts').doc(id).update({
             'images': FieldValue.arrayUnion([imageUrl])
@@ -155,7 +155,7 @@ class FirebaseService {
       }
     } catch (e) {
       // Handle any errors that occur during the process
-      print('Error fetching about info: $e');
+      ;
       return null;
     }
   }

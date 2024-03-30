@@ -32,6 +32,7 @@ class FilesController extends GetxController {
   late StreamSubscription<InternetConnectionStatus> listener;
 
   RxBool isInternet = false.obs;
+
   void checkNet() async {
     isInternet.value = await InternetConnectionChecker().hasConnection;
     ;
@@ -93,7 +94,7 @@ class FilesController extends GetxController {
         FolderModel folder = FolderModel.fromFirestore(folderDoc);
 
         folders.add(folder);
-        print('folder.links .length: ${folder.links?.length}');
+        ;
         // Store the folder in the subfolderMap for future reference
         subfolderMap[folder.id] = folder;
       }
@@ -185,9 +186,10 @@ class FilesController extends GetxController {
       final FolderModel rootFolder = FolderModel(
         id: folderId,
         name: 'Root Folder',
-        path: '/folders/', // Update the path as needed
-        downloadUrl:
-            '', // Initially set to null, will be updated after storage upload
+        path: '/folders/',
+        // Update the path as needed
+        downloadUrl: '',
+        // Initially set to null, will be updated after storage upload
         subFolders: [],
         parentId: '',
         files: [],
@@ -245,10 +247,10 @@ class FilesController extends GetxController {
         final FolderModel newFolder = FolderModel(
             id: folderId,
             name: folderName,
-            path:
-                '${folderPath.value}/${folderName}/', // Update the path as needed
-            downloadUrl:
-                '', // Initially set to null, will be updated after storage upload
+            path: '${folderPath.value}/${folderName}/',
+            // Update the path as needed
+            downloadUrl: '',
+            // Initially set to null, will be updated after storage upload
             subFolders: [],
             parentId: parId != '' ? parId : '9876543210',
             isLocked: false,
@@ -256,8 +258,7 @@ class FilesController extends GetxController {
 
         // Save the new folder to Firebase
         await foldersCollection.doc(folderId).set(newFolder.toJson());
-        print(
-            'folder path while creating new folder: ${folderPath.value}/${folderName}/');
+        ;
         // Create a folder in Firebase Storage with the same name as the Firestore folder
         // final Reference storageFolder = FirebaseStorage.instance
         //     .ref()
@@ -329,8 +330,8 @@ class FilesController extends GetxController {
         final FolderModel newFolder = FolderModel(
           id: folderId,
           name: uniqueFolderName,
-          path:
-              '${folderPath.value}/$uniqueFolderName/', // Update the path as needed
+          path: '${folderPath.value}/$uniqueFolderName/',
+          // Update the path as needed
           subFolders: [],
           parentId: parId != '' ? parId : '9876543210',
           isLocked: false,
@@ -342,8 +343,7 @@ class FilesController extends GetxController {
             .doc(folderId)
             .set(newFolder.toJson()); // Assuming toJson method in FolderModel
         // Create a folder in Firebase Storage with the same name as the Firestore folder
-        print(
-            'folder path while creating new folder: 344 ${folderPath.value}/${folderName}/');
+        ;
 
         final Reference storageFolder = FirebaseStorage.instance
             .ref()
@@ -400,22 +400,22 @@ class FilesController extends GetxController {
   Future<void> lockUnlockFolder(String folderId, bool isLocked) async {
     try {
       Indicator.showLoading();
-      print('isLocked: $isLocked');
+      ;
       final folderRef =
           FirebaseFirestore.instance.collection('folders').doc(folderId);
-      print('folderId: ${folderId}');
+      ;
       // Update the document with the new isLocked value
       await folderRef.update({'isLocked': isLocked});
       // await folderRef.set({'isLocked': isLocked}, SetOptions(merge: true));
-      print('403');
+      ;
       int index = folders.indexWhere((p0) => p0.id == folderId);
       folders[index].isLocked = isLocked;
       folders.refresh();
-      print('406');
+      ;
       Indicator.closeLoading();
     } catch (e) {
       // Handle any errors
-      print('Error updating folder isLocked: $e');
+      ;
       Indicator.closeLoading();
       Get.snackbar(
         'Error',
@@ -665,7 +665,7 @@ class FilesController extends GetxController {
       FirebaseStorage storage = FirebaseStorage.instance;
 
       try {
-        print('changing folder name: $folderId');
+        ;
         await FirebaseFirestore.instance
             .collection('folders')
             .doc(folderId)
@@ -728,7 +728,7 @@ class FilesController extends GetxController {
 
   // add link
   Future<void> addLink(LinkModel link, String parentId) async {
-    print('in add link');
+    ;
     try {
       Indicator.showLoading();
       // Replace "your-collection" and "your-document-id" with your actual values
@@ -749,7 +749,7 @@ class FilesController extends GetxController {
       // // Update the links field of the document with the updated links
       // await folderDocRef.update({'links': updatedLinks});
       // Add the new link to the links array with the link's ID as the key
-      print('here');
+      ;
       await FirebaseFirestore.instance
           .collection('folders')
           .doc(parentId)
@@ -762,7 +762,7 @@ class FilesController extends GetxController {
       await getFolders();
     } catch (e) {
       // Handle potential exceptions during Firebase operations (e.g., network issues)
-      print("Error saving link to Firebase: $e");
+      ;
       Get.snackbar(
         "Error",
         "Failed to save link:",
@@ -779,19 +779,19 @@ class FilesController extends GetxController {
 // delete link
   Future<void> deleteLink(String parentId, String linkId) async {
     try {
-      print('deleted link called');
+      ;
       Indicator.showLoading();
       // Get the reference to the folder document
       DocumentSnapshot folderDoc = await FirebaseFirestore.instance
           .collection('folders')
           .doc(parentId)
           .get();
-      print('got');
+      ;
       List<dynamic> existingFiles = folderDoc['links'] ?? [];
 
       existingFiles.removeWhere((element) => element['id'] == linkId);
       // Update the 'links' field by removing the link with the specified ID
-      print('linkid: $linkId');
+      ;
 
       await FirebaseFirestore.instance
           .collection('folders')
@@ -801,10 +801,10 @@ class FilesController extends GetxController {
       });
       await getFolders();
       Indicator.closeLoading();
-      print('Link deleted successfully');
+      ;
     } catch (e) {
       // Handle potential exceptions during Firebase operations (e.g., network issues)
-      print('error: ${e}');
+      ;
       Get.snackbar(
         "Error",
         "Failed to delete link:",
@@ -827,7 +827,7 @@ class FilesController extends GetxController {
           .collection('folders')
           .doc(parentId)
           .get();
-      print('got');
+      ;
       List<dynamic> existingFiles = folderDoc['links'] ?? [];
 
       int index =
@@ -842,7 +842,7 @@ class FilesController extends GetxController {
         'links': existingFiles,
       });
 
-      print('Link edited successfully');
+      ;
       await getFolders();
       Indicator.closeLoading();
     } catch (e) {
@@ -918,24 +918,25 @@ class FilesController extends GetxController {
 
   Future<void> downloadFilesFromFolder(String folderId, folderPath) async {
     try {
-      if (await requestStoragePermission()) {
+      if (true) {
         showDownloadingProgressDialog();
-        ;
-        print('folderPatth: $folderPath');
+
         Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
         ListResult items = await storageRef.listAll();
         Directory appDocDir = await getApplicationDocumentsDirectory();
-        print('downlaoding file');
+
         totalFiles.value = items.items.length;
-        print('items.items: ${items.items.length}');
+
         await Future.wait(
           items.items.map((item) async {
             if (item is Reference) {
-              print('item.name: ${item.name}}');
+              ;
               if (item.name.contains('.')) {
                 //  File file = File('${folderDirectory.path}/${item.name}');
+                print(
+                    'file downlaoded too: ${appDocDir.path}${folderPath}/${item.name}');
                 File file = File('${appDocDir.path}${folderPath}/${item.name}');
-                print('file saved at path: ${file.path}');
+                ;
 
                 Directory parentDirectory = file.parent;
 
@@ -977,7 +978,7 @@ class FilesController extends GetxController {
         // );
         if (folderDoc.exists) {
           FolderModel folder = FolderModel.fromFirestore(folderDoc);
-          print('downloaded folder.isLocked: ${folder.isLocked}');
+          ;
           List<FileModel> files = await fetchFilesForFolder(folder.id);
           FolderModel updatedFolder = FolderModel(
             id: folder.id,
@@ -998,7 +999,7 @@ class FilesController extends GetxController {
         }
       }
     } on FirebaseException catch (e) {
-      print('error: $e');
+      ;
     } finally {
       downloadProgress.value = 0.0;
       filesDownloaded.value = 0;
@@ -1478,16 +1479,16 @@ class FilesController extends GetxController {
   }
 
 // Future<Uint8List> compressFile(File file) async {
-  //   try {
-  //     final encoder = ZipEncoder();
-  //     final inputBytes = await file.readAsBytes();
-  //     final archive = Archive()
-  //       ..addFile(ArchiveFile('file', inputBytes.length, inputBytes));
-  //     final compressedData = encoder.encode(archive);
-  //     return Uint8List.fromList(compressedData!);
-  //   } catch (e) {
-  //
-  //     return Uint8List(0);
-  //   }
-  // }
+//   try {
+//     final encoder = ZipEncoder();
+//     final inputBytes = await file.readAsBytes();
+//     final archive = Archive()
+//       ..addFile(ArchiveFile('file', inputBytes.length, inputBytes));
+//     final compressedData = encoder.encode(archive);
+//     return Uint8List.fromList(compressedData!);
+//   } catch (e) {
+//
+//     return Uint8List(0);
+//   }
+// }
 }

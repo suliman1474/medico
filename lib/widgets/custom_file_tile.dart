@@ -38,8 +38,8 @@ class CustomFileTile extends StatelessWidget {
         itemName.toLowerCase().endsWith('mov') ||
         itemName.toLowerCase().endsWith('mkv') ||
         itemName.toLowerCase().endsWith('avi');
-    print('item name: ${itemName} downloadable: ${downloadable!}');
-    print('isLocked: ${isLocked}');
+    ;
+    ;
     return downloadable!
         ? Stack(
             alignment: Alignment.centerRight,
@@ -123,7 +123,7 @@ class CustomFileTile extends StatelessWidget {
                           ),
                           padding: EdgeInsets.zero,
                           onSelected: (value) {
-                            print('on select value: $value');
+                            ;
                             if (value == 'Rename' && onRename != null) {
                               onRename!();
                             } else if (value == 'Delete' && onDelete != null) {
@@ -245,13 +245,13 @@ class CustomFileTile extends StatelessWidget {
                   ),
                   padding: EdgeInsets.zero,
                   onSelected: (value) {
-                    print('on select value: $value');
+                    ;
                     if (value == 'Rename' && onRename != null) {
                       onRename!();
                     } else if (value == 'Delete' && onDelete != null) {
                       onDelete!();
                     } else if (value == 'Share' && onDelete != null) {
-                      print('on share');
+                      ;
                       onShare!();
                     }
                   },

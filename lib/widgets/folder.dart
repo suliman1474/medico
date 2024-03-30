@@ -157,7 +157,7 @@ class _FolderState extends State<Folder> {
                               dbController.userRole.value == UserRole.USER,
                           child: GestureDetector(
                             onTap: () {
-                              print('should download the uploadable files');
+                              ;
                               Get.dialog<bool>(
                                 AlertDialog(
                                   title: Text('Download Confirmation',
@@ -170,8 +170,7 @@ class _FolderState extends State<Folder> {
                                   actions: [
                                     ElevatedButton(
                                       onPressed: () {
-                                        print(
-                                            'do you want to update this folder');
+                                        ;
                                         filesController
                                             .findFilesToDownload(folder!.id);
                                         // Yes button
@@ -248,7 +247,7 @@ class _FolderState extends State<Folder> {
                               // break;
                               case 'Lock':
                                 // Handle delete action
-                                print('lock triggered');
+                                ;
                                 isLocked = true;
                                 filesController.lockUnlockFolder(
                                     folder!.id, isLocked);
@@ -258,7 +257,7 @@ class _FolderState extends State<Folder> {
                                 // Handle delete action
                                 isLocked = false;
 
-                                print('Ulock triggered');
+                                ;
                                 filesController.lockUnlockFolder(
                                     folder!.id, isLocked);
 
@@ -380,7 +379,7 @@ class _FolderState extends State<Folder> {
                                                   child: Switch(
                                                     value: isLocked,
                                                     onChanged: (value) {
-                                                      print('change tto true');
+                                                      ;
                                                       setState(() {
                                                         isLocked = value;
                                                       });

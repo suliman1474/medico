@@ -273,7 +273,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
           rootFolder = filesController.folders.firstWhere(
             (fol) => fol.id == '9876543210',
           );
-          print('folder.links .length: ${rootFolder?.links?.length}');
+          ;
         }
 
         if (dbController.hiveFolders.length > 0) {
@@ -316,7 +316,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
           rootFolder =
               filesController.folders.firstWhere((fol) => fol.id == id);
-          print('folder.links .length: when back ${rootFolder?.links?.length}');
+          ;
         }
 
         // for hive
@@ -342,7 +342,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
         // rootIndex = filesController.folders
         //     .indexWhere((fol) => fol.id == '9876543210');
       }
-      print('role: ${dbController.userRole.value}');
+      ;
       return PopScope(
         canPop: false,
         onPopInvoked: (didPop) async {
@@ -442,7 +442,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       );
                                       bool? updatable;
 
-                                      print('indexH: ${indexH}');
+                                      ;
                                       if (indexH != -1) {
                                         int? indexInFolders = filesController
                                             .folders
@@ -525,18 +525,18 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                     OpenFile.open(file.path);
                                   } else {
                                     // Use http package to download the file
-                                    print('open file for user');
+                                    ;
                                     // Get the temporary directory
                                     var appDocDir =
                                         await getApplicationDocumentsDirectory();
 
                                     // Save the file to the temporary directory
                                     File file = File(
-                                        '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}');
+                                        '${appDocDir.path}${hiveRootFolder!.path}/${filez?.name}');
                                     //    await file.writeAsBytes(response.bodyBytes);
                                     // /data/user/0/com.example.medico/app_flutter/folders/Bs Nursing/Semester 1st/books//my_video_.mp4
                                     print(
-                                        'file for user tot open exsit: ${File('${appDocDir.path}${filesController.folderPath.value}/${filez?.name}').existsSync()}');
+                                        'file for user tot open exsit: ${File('${appDocDir.path}${hiveRootFolder?.path}/${filez?.name}').existsSync()}');
                                     // Open the downloaded file using OpenFile plugin
                                     OpenFile.open(file.path);
                                   }
@@ -606,25 +606,23 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       String filePath =
                                           '${appDocDir.path}${filesController.folderPath.value}/${filez?.name}';
                                       try {
-                                        print(
-                                            'file exist ${File(filePath).existsSync()}');
+                                        ;
                                         final result = await Share.shareXFiles(
                                           [XFile(filePath)],
                                         );
-                                        print('999afa95');
+                                        ;
 
                                         if (result.status ==
                                             ShareResultStatus.success) {
-                                          print(
-                                              'Thank you for sharing the picture!');
+                                          ;
                                         } else {
-                                          print('failed');
+                                          ;
                                         }
                                         Indicator.closeLoading();
                                       } catch (error) {
                                         Indicator.closeLoading();
 
-                                        print('Error sharing file: $error');
+                                        ;
                                       }
                                     },
                                   ),
@@ -764,7 +762,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       false
                                   ? GestureDetector(
                                       onTap: () async {
-                                        print('upfatable download click');
+                                        ;
                                         if (dbController.userRole.value ==
                                             UserRole.ADMIN) {
                                           // Use http package to download the file
@@ -842,7 +840,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                           isLocked: rootFolder!.isLocked,
                                           downloadable: true,
                                           onDownload: () async {
-                                            print('on downlaod clicked');
+                                            ;
                                             Get.dialog<bool>(
                                               AlertDialog(
                                                 title: Text(
@@ -1047,21 +1045,20 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                         final result = await Share.shareXFiles(
                                           [XFile(file.path)],
                                         );
-                                        print('999afa95');
+                                        ;
 
                                         if (result.status ==
                                             ShareResultStatus.success) {
-                                          print(
-                                              'Thank you for sharing the picture!');
+                                          ;
                                         } else {
-                                          print('failed');
+                                          ;
                                         }
                                         // await Share.shareXFiles(
                                         //   [file],
                                         // );
                                         Indicator.closeLoading();
                                       } catch (error) {
-                                        print('Error sharing file: $error');
+                                        ;
                                         Indicator.closeLoading();
                                         Get.snackbar(
                                           'Error',
@@ -1073,7 +1070,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                       }
                                     },
                                     // onRename: () {
-                                    //   print('on rename clicked');
+                                    //    ;
                                     //   TextEditingController controller =
                                     //       TextEditingController();
                                     //   controller.text = rootFolder!
@@ -1147,7 +1144,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                             ElevatedButton(
                                               onPressed: () async {
                                                 Get.back();
-                                                print('ON DELETED CLICKED');
+                                                ;
                                                 await filesController
                                                     .deleteLink(
                                                         rootFolder!.id,
@@ -1204,7 +1201,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () async {
-                                  print('pressed');
+                                  ;
                                   filesController.goToYoutube(
                                       rootFolder!.links![index].url);
                                 },
@@ -1270,7 +1267,7 @@ Future<Map<String, String>?> _showEditDialog(
     confirmTextColor: Colors.white,
     buttonColor: Colors.blue, // Change to your desired button color
     onConfirm: () {
-      print('Name: ${nameController.text}, URL: ${urlController.text}');
+      ;
       Get.back(
         result: {
           'name': nameController.text,

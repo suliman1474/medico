@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medico/controllers/db_controller.dart';
@@ -23,6 +24,7 @@ class _MainPageState extends State<MainPage> {
   ScreenController screenController = Get.find<ScreenController>();
   FilesController filesController = Get.put(FilesController());
   //DbController dbController = Get.put(DbController());
+
   Future<void> requestStoragePermission() async {
     var status = await Permission.storage.status;
     if (status.isGranted) {
@@ -41,11 +43,27 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Future<void> _getStoragePermission() async {
+    DeviceInfoPlugin plugin = DeviceInfoPlugin();
+    AndroidDeviceInfo android = await plugin.androidInfo;
+    if (android.version.sdkInt < 33) {
+      if (await Permission.storage.request().isGranted) {
+      } else if (await Permission.storage.request().isPermanentlyDenied) {
+        await openAppSettings();
+      } else if (await Permission.audio.request().isDenied) {}
+    } else {
+      if (await Permission.photos.request().isGranted) {
+      } else if (await Permission.photos.request().isPermanentlyDenied) {
+        await openAppSettings();
+      } else if (await Permission.photos.request().isDenied) {}
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    requestStoragePermission();
+    //  _getStoragePermission();
   }
 
   @override

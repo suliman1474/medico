@@ -12,7 +12,7 @@ class FirebaseNotifications {
 
   Future<void> initNotifications() async {
     // String? fcmToken = await FirebaseMessaging.instance.getToken();
-    // print('fcmtoken: $fcmToken');
+    //  ;
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,

@@ -53,7 +53,7 @@ dependencies:
   archive: ^3.4.10
   syncfusion_flutter_pdfviewer: ^24.1.45
   open_file_plus: ^3.4.1
-  permission_handler: ^11.2.0
+  permission_handler: ^11.3.1
   path_provider: ^2.1.2
   connectivity_plus: ^5.0.2
   fluttertoast: ^8.2.4
@@ -64,6 +64,7 @@ dependencies:
   flutter_native_splash: ^2.3.10
   share_plus: ^8.0.2
   flutter_windowmanager: ^0.2.0
+  device_info_plus: ^9.1.2
 
 dev_dependencies:
   flutter_test:

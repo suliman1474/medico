@@ -56,7 +56,7 @@ Future<Map<String, String>?> getLinkDialog() async {
       }
 
       // Implement your logic to save the name and link (e.g., to a database, file, etc.)
-      print('Name: $name, Link: $link');
+      ;
 
       Get.back(result: {'name': name, 'link': link});
     },
@@ -112,7 +112,7 @@ class CustomFloatingButton extends StatelessWidget {
       confirmTextColor: Colors.white,
       buttonColor: color1,
       onConfirm: () {
-        print('Controller.text: ${controller.text}');
+        ;
         Get.back(
           result: controller.text + '.' + oldFileName.split('.').last,
         );

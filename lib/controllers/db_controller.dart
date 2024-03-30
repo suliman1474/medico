@@ -48,7 +48,7 @@ class DbController extends GetxController {
   Future<void> onReady() async {
     super.onReady();
     await loadUserRole();
-    await requestStoragePermission();
+    //await requestStoragePermission();
 
     await assignHiveFolders();
     // fetchAdmin();
@@ -382,9 +382,9 @@ class DbController extends GetxController {
 
   Future<void> downloadRootFolder() async {
     try {
-      print('download root folder');
+      ;
       if (await Permission.storage.isGranted) {
-        print('permission is granted');
+        ;
         String folderId = '9876543210';
         String folderPath = '/folders';
         Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
@@ -526,7 +526,7 @@ class DbController extends GetxController {
       hiveFolders[parentIndex].actualSubfolders?.remove(folderToDelete);
       // Update the Hive box with the modified list
       await hiveBox.put('root', hiveFolders);
-      print('your folder deleted now gett all new');
+      ;
       await getAllHiveFolders();
     } else {}
 
@@ -566,16 +566,16 @@ class DbController extends GetxController {
   //         .where('role', isEqualTo: 'admin')
   //         .get();
   //     if (querySnapshot.docs.isNotEmpty) {
-  //       print('fetching admin');
-  //       print('doc is not empty');
+  //        ;
+  //        ;
   //       final DocumentSnapshot doc = querySnapshot.docs.first;
   //       final userData = doc.data() as Map<String, dynamic>;
   //       admin = UserModel.fromJson(userData);
   //     } else {
-  //       print('couldnt fetch admin');
+  //        ;
   //     }
   //   } catch (e) {
-  //     print('Error fetching admin: $e');
+  //      ;
   //   }
   // }
 // static Future<String?> getQuizId() async {

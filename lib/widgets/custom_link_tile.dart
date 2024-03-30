@@ -77,7 +77,7 @@ class CustomLinkTile extends StatelessWidget {
                 ),
                 padding: EdgeInsets.zero,
                 onSelected: (value) {
-                  print('on select value: $value');
+                  ;
                   if (value == 'Edit' && onRename != null) {
                     onRename!();
                   } else if (value == 'Delete' && onDelete != null) {
