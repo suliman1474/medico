@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1038885316501',
     projectId: 'medico-3e595',
     storageBucket: 'medico-3e595.appspot.com',
-    iosBundleId: 'com.example.medico',
+    iosBundleId: 'com.slides.medico',
   );
 }

@@ -545,7 +545,7 @@ class DbController extends GetxController {
       // Construct the file path
       String filePath = '${appDocDir.path}${file.path}';
       ;
-      // /data/user/0/com.example.medico/app_flutter/folders/folder1//sample.pdf
+      // /data/user/0/com.slides.medico/app_flutter/folders/folder1//sample.pdf
       // Check if the file exists and delete it
       File fileToDelete = File(filePath);
       if (await fileToDelete.exists()) {

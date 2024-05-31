@@ -534,7 +534,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
                                     File file = File(
                                         '${appDocDir.path}${hiveRootFolder!.path}/${filez?.name}');
                                     //    await file.writeAsBytes(response.bodyBytes);
-                                    // /data/user/0/com.example.medico/app_flutter/folders/Bs Nursing/Semester 1st/books//my_video_.mp4
+                                    // /data/user/0/com.slides.medico/app_flutter/folders/Bs Nursing/Semester 1st/books//my_video_.mp4
                                     print(
                                         'file for user tot open exsit: ${File('${appDocDir.path}${hiveRootFolder?.path}/${filez?.name}').existsSync()}');
                                     // Open the downloaded file using OpenFile plugin

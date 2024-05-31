@@ -1,4 +1,4 @@
-package com.example.medico
+package com.slides.medico
 
 import io.flutter.embedding.android.FlutterActivity
 
