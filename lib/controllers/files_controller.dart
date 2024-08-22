@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -461,7 +460,7 @@ class FilesController extends GetxController {
         ElevatedButton(
           onPressed: () async {
             await createFolder(folderNameController.text.trim(), parentId);
-            Get.back(); // Close the dialog
+            //   Get.back(); // Close the dialog
           },
           child: Text('Create'),
         ),
@@ -610,7 +609,7 @@ class FilesController extends GetxController {
       } finally {
         uploadProgress.value = 0.0;
         uploading.value = false;
-        Get.back();
+        // Get.back();
       }
     }
   }
@@ -1408,14 +1407,19 @@ class FilesController extends GetxController {
       }
 
       // Delete folder and its contents from Firebase Storage
+      print('folder path in delte: $folderPath');
+
+      print('deleting folder ');
       Reference storageRef = FirebaseStorage.instance.ref().child(folderPath);
       await storageRef.listAll().then((ListResult result) async {
         await Future.forEach(result.items, (Reference item) async {
+          print('item : ${item.fullPath}');
           await item.delete();
         });
       });
       // Delete the "folder" itself
-      await storageRef.delete();
+      // await storageRef.delete();
+
       try {
         // Delete folder from Firebase Firestore
 
@@ -1425,7 +1429,9 @@ class FilesController extends GetxController {
             .doc(folderId)
             .delete();
         ;
-      } catch (e) {}
+      } catch (e) {
+        print('error in sub folders deleting: ${e.toString()}');
+      }
 
       // Remove folder from list of Rx FolderModel
       int index = folders.value.indexWhere((element) => element.id == folderId);
@@ -1439,9 +1445,9 @@ class FilesController extends GetxController {
       folders.refresh();
       update();
       Indicator.closeLoading();
-    } catch (e) {
+    } catch (e, stack) {
       Indicator.closeLoading();
-      ;
+      print('storage error: ${stack}');
       Get.snackbar(
         'Error',
         e.toString() ?? '',

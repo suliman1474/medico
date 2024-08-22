@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -129,8 +128,6 @@ class _MyAppState extends State<MyApp> {
       builder: (_, child) {
         return GetMaterialApp(
           useInheritedMediaQuery: true,
-          locale: DevicePreview.locale(context),
-          builder: DevicePreview.appBuilder,
           title: 'Medico',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
